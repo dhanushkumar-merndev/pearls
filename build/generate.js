@@ -574,14 +574,14 @@ function homePage() {
         </div>
       </div>
       <div class="split__visual reveal">
-        <!-- Drop consented images into the two panes below. -->
-        <div class="ba">
-          <div class="ba__pane ba__pane--before"></div>
-          <div class="ba__pane ba__pane--after"></div>
+        <!-- AI-generated illustrations, not genuine patient photographs. -->
+        <div class="ba" data-lenis-prevent>
+          <div class="ba__pane ba__pane--before"><img src="assets/img/results-before-ai.png" alt="AI-generated illustrative before view of a fictional rhinoplasty patient" width="1456" height="1088" loading="lazy" decoding="async"></div>
+          <div class="ba__pane ba__pane--after"><img src="assets/img/results-after-ai-v2.png" alt="AI-generated illustrative after view of the same fictional rhinoplasty patient" width="1448" height="1086" loading="lazy" decoding="async"></div>
           <span class="ba__label ba__label--before">Before</span>
           <span class="ba__label ba__label--after">After</span>
           <span class="ba__handle"></span>
-          <span class="ba__note">Drag to compare &middot; Illustrative placeholder &mdash; replace with consented patient images</span>
+          <span class="ba__note">Drag to compare &middot; AI-generated illustration &mdash; not a patient result</span>
         </div>
       </div>
     </div>

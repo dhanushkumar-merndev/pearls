@@ -289,11 +289,13 @@
 
     var dragging = false;
     var pending = null;
+    var initial = parseFloat(getComputedStyle(ba).getPropertyValue('--compare-pos')) || 68;
 
     function paint() {
       if (pending === null) return;
       after.style.clipPath = 'inset(0 0 0 ' + pending + '%)';
       handle.style.left = pending + '%';
+      ba.setAttribute('aria-valuenow', String(Math.round(pending)));
       pending = null;
     }
 
@@ -306,12 +308,17 @@
     }
 
     on(ba, 'pointerdown', function (e) {
+      e.preventDefault();
       dragging = true;
       ba.setPointerCapture(e.pointerId);
       if (lenis) lenis.stop();
       setPos(e.clientX);
-    });
-    on(ba, 'pointermove', function (e) { if (dragging) setPos(e.clientX); });
+    }, { passive: false });
+    on(ba, 'pointermove', function (e) {
+      if (!dragging) return;
+      e.preventDefault();
+      setPos(e.clientX);
+    }, { passive: false });
     var release = function () {
       dragging = false;
       if (lenis) lenis.start();
@@ -324,12 +331,12 @@
     ba.setAttribute('aria-label', 'Before and after comparison');
     ba.setAttribute('aria-valuemin', '0');
     ba.setAttribute('aria-valuemax', '100');
-    ba.setAttribute('aria-valuenow', '50');
+    ba.setAttribute('aria-valuenow', String(Math.round(initial)));
 
     on(ba, 'keydown', function (e) {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
       e.preventDefault();
-      var current = parseFloat(handle.style.left) || 50;
+      var current = parseFloat(handle.style.left) || initial;
       var next = Math.max(0, Math.min(100, e.key === 'ArrowLeft' ? current - 4 : current + 4));
       after.style.clipPath = 'inset(0 0 0 ' + next + '%)';
       handle.style.left = next + '%';
@@ -434,4 +441,71 @@
      10. Current year
      ========================================================= */
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+
+  /* =========================================================
+     11. Number counter animation (IntersectionObserver triggered)
+     ========================================================= */
+  var counters = $$('[data-count]');
+  if (counters.length) {
+    var animateCounter = function (el) {
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      var suffix = el.getAttribute('data-suffix') || '';
+      var prefix = el.getAttribute('data-prefix') || '';
+      if (isNaN(target)) return;
+
+      // Lock ALL parent container heights to prevent any layout shifts/jiggling
+      var lockHeight = function (container) {
+        if (container && !container.dataset.heightLocked) {
+          container.style.minHeight = container.offsetHeight + 'px';
+          container.dataset.heightLocked = '1';
+        }
+      };
+      lockHeight(el.closest('.stats'));
+      lockHeight(el.closest('.hero__trust'));
+      lockHeight(el.closest('.split__visual'));
+      // Lock this cell's own height too
+      var cell = el.closest('.stats > div');
+      if (cell) { cell.style.minHeight = cell.offsetHeight + 'px'; }
+
+      var duration = 1600;
+      var startTime = null;
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        var progress = Math.min((timestamp - startTime) / duration, 1);
+        var easeOut = 1 - Math.pow(1 - progress, 3);
+        var current = Math.floor(easeOut * target);
+        el.textContent = prefix + current + suffix;
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = prefix + target + suffix;
+        }
+      }
+
+      requestAnimationFrame(step);
+    };
+
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      var counterObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      counters.forEach(function (el) {
+        counterObserver.observe(el);
+      });
+    } else {
+      counters.forEach(function (el) {
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var suffix = el.getAttribute('data-suffix') || '';
+        var prefix = el.getAttribute('data-prefix') || '';
+        if (!isNaN(target)) el.textContent = prefix + target + suffix;
+      });
+    }
+  }
 })();

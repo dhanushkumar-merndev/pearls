@@ -20,15 +20,15 @@
   /* Accents */
   --gold:       #B38B59;
   --gold-deep:  #8A6D4B;
-  --ink:        #17110A;
-  --ink-soft:   #2E2212;
+  --ink:        #2C1A0E;
+  --ink-soft:   #3D2A1A;
 
   /* Semantic */
   --bg:          var(--sand-50);
   --bg-alt:      var(--sand-100);
   --surface:     #FFFFFF;
   --text:        var(--ink-soft);
-  --text-muted:  #6B5B47;
+  --text-muted:  #7A6550;
   --line:        var(--sand-200);
   --line-strong: var(--sand-300);
 
@@ -276,12 +276,15 @@ p { margin: 0; }
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent;
+  box-shadow: 0 8px 26px rgba(46, 34, 18, .1);
   transition: box-shadow .35s, border-color .35s, background .35s;
 }
 .nav.is-stuck {
   background: rgba(253, 251, 247, .97);
   border-bottom-color: var(--line);
-  box-shadow: 0 6px 30px rgba(46, 34, 18, .09);
+  box-shadow:
+    0 12px 34px rgba(46, 34, 18, .14),
+    0 3px 10px rgba(46, 34, 18, .06);
 }
 .nav__inner {
   display: flex;
@@ -350,13 +353,20 @@ p { margin: 0; }
 .has-menu.is-open .nav__caret,
 .has-menu:hover .nav__caret { transform: rotate(180deg); }
 
-/* The primary nav CTA stays gold — it is the main conversion target. */
+/* Dark-brown treatment for the primary navigation CTA. */
 .nav .btn--primary {
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+  background: var(--ink);
   color: #fff;
-  box-shadow: 0 8px 24px rgba(179, 139, 89, .3);
+  box-shadow:
+    0 14px 28px rgba(44, 26, 14, .28),
+    0 5px 10px rgba(44, 26, 14, .18);
 }
-.nav .btn--primary:hover { box-shadow: 0 14px 32px rgba(179, 139, 89, .45); }
+.nav .btn--primary:hover {
+  background: var(--sand-950);
+  box-shadow:
+    0 20px 38px rgba(44, 26, 14, .34),
+    0 8px 14px rgba(44, 26, 14, .2);
+}
 
 /* Mega dropdown */
 .mega {
@@ -491,20 +501,22 @@ p { margin: 0; }
   border-bottom: 1px solid var(--line);
   margin-bottom: 1.3rem;
 }
-.drawer__head .logo__img { height: 46px; max-width: 180px; }
+.drawer__head .logo__img { height: 46px; max-width: 180px; object-fit: contain; }
 .drawer__close {
-  width: 42px; height: 42px;
+  width: 44px; height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--sand-300);
+  background: var(--sand-50);
   display: grid;
   place-items: center;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   line-height: 1;
-  color: var(--text-muted);
+  color: var(--ink);
   flex: none;
-  transition: border-color .25s, color .25s;
+  cursor: pointer;
+  transition: border-color .25s, color .25s, background .25s, transform .25s var(--ease);
 }
-.drawer__close:hover { border-color: var(--gold); color: var(--gold-deep); }
+.drawer__close:hover, .drawer__close:active { border-color: var(--gold); color: var(--gold-deep); background: #fff; transform: scale(1.05); }
 .drawer nav a {
   display: block;
   padding: .8rem 0;
@@ -598,6 +610,7 @@ p { margin: 0; }
   line-height: 1;
   letter-spacing: -.03em;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .hero__trust div span {
   font-size: .76rem;
@@ -809,7 +822,7 @@ p { margin: 0; }
    --------------------------------------------------------- */
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -818,17 +831,33 @@ p { margin: 0; }
 }
 .stats > div {
   background: var(--surface);
-  padding: 2.2rem 1.6rem;
+  padding: 2rem 1rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 125px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .stats strong {
   display: block;
   font-family: var(--font-serif);
   font-weight: 600;
-  font-size: clamp(2.3rem, 4vw, 3.4rem);
-  line-height: 1;
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  line-height: 1.1;
+  height: 1.1em;
   letter-spacing: -.03em;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  width: 100%;
+}
+[data-count] {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  white-space: nowrap;
 }
 .stats span {
   display: block;
@@ -882,20 +911,21 @@ p { margin: 0; }
    Before / After slider
    --------------------------------------------------------- */
 .ba {
+  --compare-pos: 68%;
   position: relative;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
   user-select: none;
-  touch-action: pan-y;
+  touch-action: none;
   cursor: ew-resize;
   background: var(--sand-200);
 }
 .ba__pane { position: absolute; inset: 0; }
 .ba__pane img { width: 100%; height: 100%; object-fit: cover; }
 .ba__pane--before { background: linear-gradient(150deg, var(--sand-300), var(--sand-500)); }
-.ba__pane--after  { background: linear-gradient(150deg, var(--sand-100), var(--sand-300)); clip-path: inset(0 0 0 50%); }
+.ba__pane--after  { background: linear-gradient(150deg, var(--sand-100), var(--sand-300)); clip-path: inset(0 0 0 var(--compare-pos)); }
 .ba__label {
   position: absolute;
   top: 1.2rem;
@@ -917,7 +947,7 @@ p { margin: 0; }
 .ba__handle {
   position: absolute;
   top: 0; bottom: 0;
-  left: 50%;
+  left: var(--compare-pos);
   width: 2px;
   background: rgba(253, 251, 247, .95);
   z-index: 5;
@@ -944,6 +974,14 @@ p { margin: 0; }
   color: var(--gold-deep);
   letter-spacing: .1em;
   font-weight: 700;
+}
+.ba__handle::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  font-size: 0;
+  letter-spacing: 0;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238A6D4B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 7 5 12l5 5'/%3E%3Cpath d='m14 7 5 5-5 5'/%3E%3C/svg%3E");
 }
 .ba__note {
   position: absolute;
@@ -1205,10 +1243,23 @@ p { margin: 0; }
 /* The supplied logo has a dark brown wordmark, which would disappear against
    the ink footer — so the light typographic lockup is used here instead. If a
    gold-on-dark logo variant is ever supplied, show the image here too. */
-.footer .logo__img { display: none; }
+.footer .logo__img {
+  display: block;
+  height: 48px;
+  width: 48px;
+  object-fit: cover;
+  object-position: left center;
+  border-radius: 50%;
+  filter: none;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  flex: none;
+}
 .footer .logo__fallback { display: flex; }
-.footer .logo__name { color: var(--sand-50); }
-.footer .logo__sub { color: var(--gold); }
+.footer .logo__mark { display: none; }
+.footer .logo__name { color: var(--sand-50); font-family: var(--font-serif); font-size: 1.25rem; }
+.footer .logo__sub { color: var(--gold); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; }
 .footer h4 {
   font-size: .74rem;
   letter-spacing: .16em;
@@ -1672,7 +1723,11 @@ p { margin: 0; }
 @media (max-width: 700px) {
   :root { --nav-h: 76px; }
   .container { width: min(100% - 2rem, var(--container)); }
-  .logo__img { height: 52px; max-width: 165px; }
+  .logo__img { height: 48px; max-width: 165px; }
+  .hero { padding: 1.2rem 0 2.8rem; }
+  .hero__badge { display: none !important; }
+  .hero__actions { display: flex; flex-direction: column; width: 100%; gap: .8rem; margin-top: 1.8rem; }
+  .hero__actions .btn { width: 100%; justify-content: center; text-align: center; }
   .topbar { font-size: .74rem; }
   .topbar__inner { min-height: 36px; }
   .topbar__list { gap: .4rem 1rem; justify-content: center; }
