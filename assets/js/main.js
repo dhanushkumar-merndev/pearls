@@ -90,29 +90,49 @@
         layout work on every wheel event.
      ========================================================= */
   var nav = $('.nav');
-  if (nav) {
-    var ticking = false;
-    var applyStuck = function () {
-      nav.classList.toggle('is-stuck', window.scrollY > 10);
-      ticking = false;
-    };
-    applyStuck();
-    var onScroll = function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(applyStuck);
-    };
-    if (lenis) lenis.on('scroll', onScroll);
-    else window.addEventListener('scroll', onScroll, { passive: true });
+  var ticking = false;
+
+  function onFrame() {
+    // Only the layout-reading work (parallax) is deferred to a frame.
+    if (typeof paintParallax === 'function') paintParallax();
+    ticking = false;
   }
+
+  function onScroll(known) {
+    // Cheap, write-only work runs immediately — a class toggle and one
+    // transform. Deferring these to rAF means they visibly lag whenever the
+    // frame loop is throttled.
+    var y = window.scrollY;
+    if (nav) nav.classList.toggle('is-stuck', y > 10);
+    if (typeof paintProgress === 'function') paintProgress(y, known);
+
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(onFrame);
+  }
+
+  // Both, deliberately. Lenis's own event covers its animated frames, and the
+  // native listener catches programmatic scrolls and anything Lenis misses.
+  // onScroll is rAF-throttled, so subscribing twice costs nothing.
+  if (lenis) {
+    lenis.on('scroll', function (e) {
+      onScroll(e && typeof e.progress === 'number' ? e.progress : undefined);
+    });
+  }
+  window.addEventListener('scroll', function () { onScroll(); }, { passive: true });
+  window.addEventListener('resize', function () { onScroll(); }, { passive: true });
 
   /* =========================================================
      3. Treatments dropdown
-     Works by click/tap as well as hover. CSS handles hover, but only
-     behind (hover: hover) — on touch, :hover latches after a tap and
-     the menu can never be dismissed.
+     Open state is a class, driven by JS — for hover as well as tap.
+     Doing hover purely in CSS is fragile here: the panel sits below a
+     small gap, and the moment :hover is lost it gets pointer-events:none,
+     so the pointer can never land on it to restore hover. A class does
+     not have that chicken-and-egg.
      ========================================================= */
   var menus = $$('.has-menu');
+  var canHover = window.matchMedia &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   function closeMenus(except) {
     menus.forEach(function (m) {
@@ -131,14 +151,41 @@
     trigger.setAttribute('aria-haspopup', 'true');
     trigger.setAttribute('aria-expanded', 'false');
 
+    var closeTimer = null;
+
+    function openMenu() {
+      clearTimeout(closeTimer);
+      m.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      closeMenus(m);
+    }
+    function closeMenu(delay) {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(function () {
+        m.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }, delay || 0);
+    }
+
     on(trigger, 'click', function (e) {
       // The trigger is also a real link to #treatments. First tap opens the
       // menu; the links inside are the actual destinations.
       e.preventDefault();
-      var open = m.classList.toggle('is-open');
-      trigger.setAttribute('aria-expanded', String(open));
-      closeMenus(m);
+      if (m.classList.contains('is-open')) closeMenu(0);
+      else openMenu();
     });
+
+    if (canHover) {
+      // Hover opens it — no click needed.
+      on(m, 'mouseenter', openMenu);
+
+      // Hovering any other top-level nav item closes it immediately, rather
+      // than waiting out the grace period.
+      $$('.nav__links > li').forEach(function (li) {
+        if (li === m) return;
+        on(li, 'mouseenter', function () { closeMenu(0); });
+      });
+    }
 
     on(trigger, 'keydown', function (e) {
       if (e.key === 'ArrowDown') {
@@ -150,10 +197,40 @@
       }
     });
 
-    // Leaving with the pointer closes a click-opened menu too.
-    on(m, 'mouseleave', function () {
-      m.classList.remove('is-open');
-      trigger.setAttribute('aria-expanded', 'false');
+    // Leaving closes it, but on a short grace period so clipping a corner or
+    // crossing a sub-pixel seam on the way to the panel does not dismiss it.
+    on(m, 'mouseleave', function () { closeMenu(180); });
+
+    /* ---- Two-panel rail: switch the right-hand panel ---- */
+    var cats = $$('.mega__cat', panel);
+    var pans = $$('.mega__panel', panel);
+
+    function showCat(slug, focus) {
+      cats.forEach(function (c) {
+        var on_ = c.dataset.cat === slug;
+        c.classList.toggle('is-active', on_);
+        c.setAttribute('aria-selected', String(on_));
+        if (on_ && focus) c.focus();
+      });
+      pans.forEach(function (p) { p.classList.toggle('is-active', p.dataset.cat === slug); });
+    }
+
+    cats.forEach(function (c, i) {
+      // Hover previews on desktop; tap/click commits on touch.
+      on(c, 'mouseenter', function () { showCat(c.dataset.cat); });
+      on(c, 'focus', function () { showCat(c.dataset.cat); });
+      on(c, 'click', function (e) {
+        e.preventDefault();
+        showCat(c.dataset.cat);
+        var first = $('.mega__links a', panel.querySelector('.mega__panel.is-active'));
+        if (first) first.focus();
+      });
+      on(c, 'keydown', function (e) {
+        if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+        e.preventDefault();
+        var next = cats[(i + (e.key === 'ArrowDown' ? 1 : -1) + cats.length) % cats.length];
+        showCat(next.dataset.cat, true);
+      });
     });
   });
 
@@ -240,6 +317,109 @@
     } else {
       revealables.forEach(function (el) { el.classList.add('is-in'); });
     }
+  }
+
+  /* =========================================================
+     5b. Hero entrance
+     The hero is already on screen at load, so it plays once on
+     ready rather than waiting for a scroll observer.
+     ========================================================= */
+  var hero = $('.hero');
+  if (hero) {
+    var ready = function () { hero.classList.add('is-ready'); };
+    if (reduceMotion) ready();
+    else {
+      requestAnimationFrame(function () { requestAnimationFrame(ready); });
+      // rAF does not fire in a background tab. Without this the hero would
+      // stay at opacity 0 until the tab is focused.
+      setTimeout(ready, 1200);
+      // Once the entrance is over, drop the animation entirely. If the
+      // animation engine never advanced, `backwards` fill would otherwise
+      // hold the hero at its opening (invisible) frame indefinitely.
+      setTimeout(function () { hero.classList.add('is-settled'); }, 2000);
+    }
+  }
+
+  /* =========================================================
+     5c. Counting numbers
+     ========================================================= */
+  var counters = $$('[data-count]');
+  if (counters.length && !reduceMotion && 'IntersectionObserver' in window) {
+    var countIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        countIO.unobserve(el);
+
+        var target = parseInt(el.dataset.count, 10);
+        var suffix = el.dataset.suffix || '';
+        if (isNaN(target)) return;
+
+        var dur = 1100;
+        var start = null;
+        var done = false;
+        var finish = function () {
+          if (done) return;
+          done = true;
+          el.textContent = target + suffix;
+        };
+        var step = function (ts) {
+          if (done) return;
+          if (start === null) start = ts;
+          var p = Math.min(1, (ts - start) / dur);
+          // ease-out cubic, so it decelerates into the final figure
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+          else finish();
+        };
+        requestAnimationFrame(step);
+        // If rAF stalls the number must not be left stranded on a wrong figure.
+        setTimeout(finish, dur + 500);
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(function (el) { countIO.observe(el); });
+  }
+
+  /* =========================================================
+     5d. Scroll progress + parallax
+     Both driven from the single scroll handler below, and both
+     write only transforms.
+     ========================================================= */
+  var progress = $('.scroll-progress span');
+  var parallaxImgs = $$('.band__img img');
+
+  function paintProgress(y, known) {
+    if (!progress) return;
+    var pct;
+    if (typeof known === 'number' && isFinite(known)) {
+      // Lenis reports its own 0..1 progress and is the authority while it
+      // owns the scroll — deriving it from the DOM can read a stale height.
+      pct = known;
+    } else {
+      // Measured here rather than cached: a value taken before the stylesheet
+      // applies is wildly wrong (the mega menu's 263 links lay out as a
+      // full-height list unstyled) and the bar would then never fill.
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      pct = max > 0 ? y / max : 0;
+    }
+    pct = Math.min(1, Math.max(0, pct));
+    progress.style.transform = 'scaleX(' + pct.toFixed(4) + ')';
+  }
+
+  function paintParallax() {
+    if (reduceMotion || !parallaxImgs.length) return;
+    var vh = window.innerHeight;
+    parallaxImgs.forEach(function (img) {
+      var band = img.closest('.band');
+      if (!band) return;
+      var r = band.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) return;
+      // -1 (band below the fold) .. 1 (band above it)
+      var rel = (vh / 2 - (r.top + r.height / 2)) / (vh / 2 + r.height / 2);
+      img.style.transform = 'translate3d(0,' + (rel * 26).toFixed(2) + 'px,0) scale(1.12)';
+    });
   }
 
   /* =========================================================
@@ -441,6 +621,17 @@
      10. Current year
      ========================================================= */
   $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+
+  // Paint once now and again after load, so the progress bar and any in-view
+  // parallax are correct before the first scroll event.
+  onScroll();
+  window.addEventListener('load', function () {
+    // Lenis caches the scrollable limit when it initialises. Images and fonts
+    // finish after that and change the page height, so without this its
+    // progress (and therefore the progress bar) reads against a stale limit.
+    if (lenis) lenis.resize();
+    onScroll();
+  });
 
   /* =========================================================
      11. Number counter animation (IntersectionObserver triggered)

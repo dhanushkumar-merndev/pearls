@@ -26,6 +26,18 @@ const svg = (body, cls = '') =>
 const totalServices = CATEGORIES.reduce((n, c) =>
   n + c.groups.reduce((m, g) => m + g.services.length, 0), 0);
 
+/** Stable anchor id for a procedure, e.g. "Fotona 4D Laser Facelift" -> "fotona-4d-laser-facelift" */
+const slugify = (s) => String(s)
+  .toLowerCase()
+  .replace(/[’'"]/g, '')
+  .replace(/&/g, 'and')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '');
+
+/** Flat list of every procedure in a category, with its deep link. */
+const servicesOf = (cat) => cat.groups.flatMap((g) =>
+  g.services.map(([n]) => ({ name: n, id: slugify(n) })));
+
 const catBySlug = Object.fromEntries(CATEGORIES.map((c) => [c.slug, c]));
 
 const fmtDate = (iso) => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', {
@@ -57,7 +69,10 @@ const UI = {
   lock:   '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
   user:   '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
   cal:    '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
-  caret:  '<path d="m6 9 6 6 6-6"/>'
+  caret:  '<path d="m6 9 6 6 6-6"/>',
+  chevR:  '<path d="m9 6 6 6-6 6"/>',
+  close:  '<path d="M18 6 6 18M6 6l12 12"/>',
+  grid:   '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
 };
 
 /* ---------------------------------------------------------
@@ -81,35 +96,46 @@ const FAQS = [
 /* ---------------------------------------------------------
    <head>
    --------------------------------------------------------- */
-function head({ title, description, base, canonical, keywords, ogImage }) {
+function head({ title, description, base, canonical, keywords, ogImage, ogImageAlt, article, preload }) {
   const image = SITE_URL + '/assets/img/' + (ogImage || 'hero.jpg');
+  const alt = ogImageAlt || `${CLINIC.name}, Koramangala, Bengaluru`;
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="keywords" content="${esc(keywords)}">
-<meta name="author" content="${esc(CLINIC.name)}">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="${esc(article ? article.author : CLINIC.name)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="${canonical}">
 <meta name="theme-color" content="#17110A">
 
 <meta name="geo.region" content="IN-KA">
 <meta name="geo.placename" content="Koramangala, Bengaluru">
+<meta name="geo.position" content="12.9345;77.6266">
+<meta name="ICBM" content="12.9345, 77.6266">
 
-<meta property="og:type" content="website">
+<meta property="og:type" content="${article ? 'article' : 'website'}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:site_name" content="${esc(CLINIC.name)}">
 <meta property="og:locale" content="en_IN">
 <meta property="og:image" content="${image}">
+<meta property="og:image:alt" content="${esc(alt)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="800">
+${article ? `<meta property="article:published_time" content="${article.date}T09:00:00+05:30">
+<meta property="article:modified_time" content="${article.date}T09:00:00+05:30">
+<meta property="article:author" content="${esc(article.author)}">
+<meta property="article:section" content="${esc(article.section)}">
+${article.tags.map((t) => `<meta property="article:tag" content="${esc(t)}">`).join('\n')}` : ''}
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${image}">
+<meta name="twitter:image:alt" content="${esc(alt)}">
+${preload ? `<link rel="preload" as="image" href="${base}assets/img/${preload}" fetchpriority="high">` : ''}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,12 +183,43 @@ function logo(base) {
 </a>`;
 }
 
+/**
+ * Two-panel mega menu: divisions in a left rail, that division's procedures
+ * in the right panel. Every one of the 263 procedures is a real deep link
+ * into its category page, which is also the site's main internal-linking.
+ */
 function megaMenu(base) {
-  return `<div class="mega">
-      ${CATEGORIES.map((c) => `<a href="${base}procedures/${c.slug}.html">${esc(c.name)}</a>`).join('\n      ')}
-      <div class="mega__foot">
-        <span>${CATEGORIES.length} specialist divisions &middot; ${totalServices}+ procedures</span>
-        <a class="link-arrow" href="${base}index.html#treatments">View all treatments ${svg(UI.arrow)}</a>
+  const rail = CATEGORIES.map((c, i) => {
+    const n = servicesOf(c).length;
+    return `<button class="mega__cat${i === 0 ? ' is-active' : ''}" type="button" role="tab"
+          aria-selected="${i === 0}" aria-controls="megapanel-${c.slug}" data-cat="${c.slug}">
+          <span>${esc(c.name)}</span><span class="mega__count">${n}</span>${svg(UI.chevR)}
+        </button>`;
+  }).join('\n        ');
+
+  const panels = CATEGORIES.map((c, i) => {
+    const links = servicesOf(c).map((s) =>
+      `<a href="${base}procedures/${c.slug}.html#${s.id}">${esc(s.name)}</a>`).join('\n            ');
+    return `<div class="mega__panel${i === 0 ? ' is-active' : ''}" id="megapanel-${c.slug}" role="tabpanel" data-cat="${c.slug}">
+          <div class="mega__panel-head">
+            <h4>${esc(c.name)}</h4>
+            <a class="link-arrow" href="${base}procedures/${c.slug}.html">Division overview ${svg(UI.arrow)}</a>
+          </div>
+          <div class="mega__links">
+            ${links}
+          </div>
+        </div>`;
+  }).join('\n        ');
+
+  // Both panes scroll, so Lenis must leave their wheel events alone —
+  // otherwise the page scrolls instead of the list under the cursor.
+  return `<div class="mega mega--split">
+      <div class="mega__rail" role="tablist" aria-label="Treatment divisions" data-lenis-prevent>
+        ${rail}
+        <a class="mega__all" href="${base}index.html#treatments">${svg(UI.grid)} All ${totalServices} procedures</a>
+      </div>
+      <div class="mega__panels" data-lenis-prevent>
+        ${panels}
       </div>
     </div>`;
 }
@@ -172,34 +229,40 @@ function nav(base, active) {
   return `<header class="nav">
   <div class="container nav__inner">
     ${logo(base)}
-    <nav aria-label="Primary">
+    <nav class="nav__primary" aria-label="Primary">
       <ul class="nav__links">
-        <li><a href="${base}index.html#about"${is('about')}>About</a></li>
         <li class="has-menu">
           <a href="${base}index.html#treatments"${is('treatments')}>Treatments ${svg(UI.caret, 'nav__caret')}</a>
           ${megaMenu(base)}
         </li>
+        <li><a href="${base}index.html#about"${is('about')}>About Us</a></li>
         <li><a href="${base}index.html#surgeon"${is('surgeon')}>Our Surgeon</a></li>
+        <li><a href="${base}index.html#results"${is('results')}>Before &amp; After</a></li>
         <li><a href="${base}blog.html"${is('blog')}>Blog</a></li>
-        <li><a href="${base}appointment.html"${is('appointment')}>Appointment</a></li>
         <li><a href="${base}index.html#contact"${is('contact')}>Contact</a></li>
       </ul>
     </nav>
     <div class="nav__cta">
-      <a class="btn btn--ghost" href="tel:${CLINIC.phoneRaw}">${svg(UI.phone)} Call</a>
+      <a class="nav__icon" href="tel:${CLINIC.phoneRaw}" aria-label="Call ${esc(CLINIC.phoneDisplay)}" title="Call ${esc(CLINIC.phoneDisplay)}">${svg(UI.phone)}</a>
+      <a class="nav__icon" href="mailto:${CLINIC.email}" aria-label="Email the clinic" title="${esc(CLINIC.email)}">${svg(UI.mail)}</a>
+      <a class="nav__icon nav__icon--wa" href="https://wa.me/${CLINIC.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp the clinic" title="WhatsApp">${svg(UI.wa)}</a>
       <a class="btn btn--primary" href="${base}appointment.html">Book Appointment</a>
       <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span></button>
     </div>
   </div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 </header>`;
 }
 
 function drawer(base) {
+  // data-lenis-prevent is essential, not decorative: the drawer opens with
+  // lenis.stop(), and a stopped Lenis calls preventDefault() on every
+  // touchmove — which would make this panel impossible to scroll.
   return `<div class="scrim"></div>
-<aside class="drawer" id="drawer" aria-label="Mobile menu">
+<aside class="drawer" id="drawer" aria-label="Mobile menu" data-lenis-prevent>
   <div class="drawer__head">
     ${logo(base)}
-    <button class="drawer__close" type="button" aria-label="Close menu">&times;</button>
+    <button class="drawer__close" type="button" aria-label="Close menu">${svg(UI.close)}</button>
   </div>
   <nav>
     <a href="${base}index.html#about">About</a>
@@ -276,6 +339,12 @@ function footer(base) {
       </div>
     </div>
 
+    <p class="footer__areas">
+      <strong>Serving patients across Bengaluru</strong> — Koramangala, Indiranagar, HSR Layout,
+      BTM Layout, Jayanagar, JP Nagar, Whitefield, Electronic City, Marathahalli, Sarjapur Road
+      and Hebbal, as well as patients travelling from across Karnataka and India.
+    </p>
+
     <p class="footer__disclaimer">
       <strong>Medical disclaimer:</strong> The information on this website, including all articles in the blog, is provided for general education and does not constitute medical advice. It is not a substitute for an in-person consultation with a qualified practitioner. All surgical and non-surgical procedures carry risk, and results vary between individuals. No outcome is guaranteed. Suitability for any procedure can only be established at consultation. Photography on this site is illustrative and does not depict patients of this clinic unless explicitly labelled as a patient result.
     </p>
@@ -301,12 +370,13 @@ function floaters(base) {
 </div>`;
 }
 
-function shell({ title, description, base, canonical, active, body, jsonld, keywords, ogImage }) {
+function shell({ title, description, base, canonical, active, body, jsonld, keywords,
+                 ogImage, ogImageAlt, article, preload }) {
   const blocks = (Array.isArray(jsonld) ? jsonld : [jsonld]).filter(Boolean);
   return `<!doctype html>
 <html lang="en-IN">
 <head>
-${head({ title, description, base, canonical, keywords, ogImage })}
+${head({ title, description, base, canonical, keywords, ogImage, ogImageAlt, article, preload })}
 ${blocks.map((b) => `<script type="application/ld+json">${JSON.stringify(b)}</script>`).join('\n')}
 </head>
 <body>
@@ -352,7 +422,21 @@ const clinicSchema = {
     opens: '10:00', closes: '20:00'
   }],
   sameAs: [CLINIC.instagram, CLINIC.facebook],
-  medicalSpecialty: 'PlasticSurgery'
+  medicalSpecialty: 'PlasticSurgery',
+  areaServed: [
+    { '@type': 'City', name: 'Bengaluru' },
+    { '@type': 'State', name: 'Karnataka' }
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Procedure divisions',
+    itemListElement: CATEGORIES.map((c) => ({
+      '@type': 'OfferCatalog',
+      name: c.name,
+      url: `${SITE_URL}/procedures/${c.slug}.html`,
+      numberOfItems: servicesOf(c).length
+    }))
+  }
 };
 
 const crumbs = (items) => ({
@@ -371,8 +455,8 @@ function homePage() {
 
   const catCards = CATEGORIES.map((c, i) => {
     const count = c.groups.reduce((m, g) => m + g.services.length, 0);
-    return `<a class="card cat-card reveal" href="procedures/${c.slug}.html" style="padding:0">
-        <div class="post-card__media" style="aspect-ratio:16/10">${img(base, 'cat-' + c.slug + '.jpg', c.name + ' at Pearl Aesthetic, Bengaluru', { w: 1000, h: 625 })}</div>
+    return `<a class="card cat-card reveal" data-dir="zoom" href="procedures/${c.slug}.html" style="padding:0">
+        <div class="post-card__media cat-card__media" style="aspect-ratio:16/10">${img(base, 'cat-' + c.slug + '.jpg', c.name + ' treatments at Pearl Aesthetic, Koramangala, Bengaluru', { w: 1000, h: 625 })}</div>
         <div style="padding:1.7rem 1.8rem 1.9rem;display:flex;flex-direction:column;flex:1">
           <span class="cat-card__icon">${svg(ICONS[c.icon])}</span>
           <h3>${esc(c.name)}</h3>
@@ -435,17 +519,21 @@ function homePage() {
 <section class="hero">
   <div class="container hero__grid">
     <div>
-      <span class="hero__badge"><b>Koramangala</b> Surgeon-led aesthetic &amp; reconstructive care</span>
-      <h1 class="display">Where science<br>meets <em>artistry</em></h1>
-      <p class="lead">Plastic surgery, laser dermatology and non-surgical medicine under one roof in Bengaluru — <strong>planned around your anatomy</strong>, delivered with restraint, and explained to you honestly before anything is booked.</p>
-      <div class="hero__actions">
+      <span class="hero__badge stagger"><b>Koramangala</b> Surgeon-led aesthetic &amp; reconstructive care</span>
+      <!-- H1 leads with the primary search term, then carries the brand tagline. -->
+      <h1 class="display hero__title">
+        <span class="hero__line stagger">Plastic Surgery<br>in Bengaluru</span>
+        <span class="hero__tagline stagger">where science meets <em>artistry</em></span>
+      </h1>
+      <p class="lead stagger">Cosmetic surgery, laser dermatology and non-surgical aesthetics under one roof in Koramangala — <strong>planned around your anatomy</strong>, delivered with restraint, and explained honestly before anything is booked.</p>
+      <div class="hero__actions stagger">
         <a class="btn btn--primary btn--lg" href="appointment.html">${svg(UI.cal)} Book an Appointment</a>
         <a class="btn btn--ghost btn--lg" href="#treatments">Explore Treatments ${svg(UI.arrow)}</a>
       </div>
       <!-- Add a "years of experience" figure here once confirmed with the clinic. -->
-      <div class="hero__trust">
-        <div><strong>${CATEGORIES.length}</strong><span>Specialist Divisions</span></div>
-        <div><strong>${totalServices}+</strong><span>Procedures Offered</span></div>
+      <div class="hero__trust stagger">
+        <div><strong data-count="${CATEGORIES.length}">${CATEGORIES.length}</strong><span>Specialist Divisions</span></div>
+        <div><strong data-count="${totalServices}" data-suffix="+">${totalServices}+</strong><span>Procedures Offered</span></div>
         <div><strong>1:1</strong><span>Surgeon-Led Consults</span></div>
       </div>
     </div>
@@ -476,7 +564,7 @@ function homePage() {
 <section class="section" id="about">
   <div class="container">
     <div class="split">
-      <div class="reveal">
+      <div class="reveal" data-dir="left">
         <p class="eyebrow">The Practice</p>
         <h2 class="h2">A clinic built around <em>judgement</em>, not volume</h2>
         <p class="lead" style="margin-top:1.3rem">Pearl Aesthetic &amp; Wellness brings surgical, laser and non-surgical aesthetic medicine together in one Koramangala practice — so that the recommendation you receive is shaped by what will actually work, not by what happens to be available in the building.</p>
@@ -487,13 +575,13 @@ function homePage() {
           <li>${svg(UI.check)}<span><b>We decline cases we should decline</b><p>Where expectations cannot be safely met, or a simpler option exists, we say so. That is the point of an assessment.</p></span></li>
         </ul>
       </div>
-      <div class="split__visual reveal">
+      <div class="split__visual reveal" data-dir="right">
         <div class="fig fig--tall">${img(base, 'about.jpg', 'Consultation space at Pearl Aesthetic & Wellness', { w: 960, h: 1280 })}</div>
         <div class="stats" style="margin-top:1.5rem">
-          <div><strong>${CATEGORIES.length}</strong><span>Divisions</span></div>
-          <div><strong>${totalServices}+</strong><span>Procedures</span></div>
+          <div><strong data-count="${CATEGORIES.length}">${CATEGORIES.length}</strong><span>Divisions</span></div>
+          <div><strong data-count="${totalServices}" data-suffix="+">${totalServices}+</strong><span>Procedures</span></div>
           <div><strong>Fotona&reg;</strong><span>Laser Platform</span></div>
-          <div><strong>100%</strong><span>Confidential</span></div>
+          <div><strong data-count="100" data-suffix="%">100%</strong><span>Confidential</span></div>
         </div>
       </div>
     </div>
@@ -561,7 +649,7 @@ function homePage() {
 <section class="section" id="results">
   <div class="container">
     <div class="split">
-      <div class="reveal">
+      <div class="reveal" data-dir="left">
         <p class="eyebrow">Results</p>
         <h2 class="h2">What a realistic result <em>looks like</em></h2>
         <p class="lead" style="margin-top:1.3rem">Before-and-after images are useful only when they show a comparable starting point. During your consultation you will be shown cases matched to your anatomy, age and skin type — not the best result the clinic has ever produced.</p>
@@ -576,10 +664,13 @@ function homePage() {
       <div class="split__visual reveal">
         <!-- AI-generated illustrations, not genuine patient photographs. -->
         <div class="ba" data-lenis-prevent>
-          <div class="ba__pane ba__pane--before"><img src="assets/img/results-before-ai.png" alt="AI-generated illustrative before view of a fictional rhinoplasty patient" width="1456" height="1088" loading="lazy" decoding="async"></div>
-          <div class="ba__pane ba__pane--after"><img src="assets/img/results-after-ai-v2.png" alt="AI-generated illustrative after view of the same fictional rhinoplasty patient" width="1448" height="1086" loading="lazy" decoding="async"></div>
+          <div class="ba__pane ba__pane--before"><img src="assets/img/results-before.jpg" alt="AI-generated illustrative before view of a fictional rhinoplasty patient" width="1200" height="900" loading="lazy" decoding="async"></div>
+          <div class="ba__pane ba__pane--after"><img src="assets/img/results-after.jpg" alt="AI-generated illustrative after view of the same fictional rhinoplasty patient" width="1200" height="900" loading="lazy" decoding="async"></div>
           <span class="ba__label ba__label--before">Before</span>
           <span class="ba__label ba__label--after">After</span>
+          <!-- Persistent badge: the caption strip alone is easy to miss, and an
+               undisclosed AI image in a Before/After frame reads as a real result. -->
+          <span class="ba__badge">Illustration &mdash; not a patient</span>
           <span class="ba__handle"></span>
           <span class="ba__note">Drag to compare &middot; AI-generated illustration &mdash; not a patient result</span>
         </div>
@@ -649,7 +740,7 @@ function homePage() {
 <section class="section section--alt" id="contact">
   <div class="container">
     <div class="split">
-      <div class="reveal">
+      <div class="reveal" data-dir="left">
         <p class="eyebrow">Find Us</p>
         <h2 class="h2">In the heart of <em>Koramangala</em></h2>
         <p class="lead" style="margin-top:1.3rem">${esc(CLINIC.addressLine1)}, ${esc(CLINIC.addressLine2)}, ${esc(CLINIC.addressLine3)}</p>
@@ -699,7 +790,9 @@ ${ctaBand(base)}
   return shell({
     // Search engines truncate titles past ~60 chars and descriptions past ~160.
     title: `Plastic Surgery & Aesthetic Clinic in Bengaluru | ${CLINIC.shortName}`,
-    description: `Surgeon-led plastic surgery, laser dermatology and non-surgical aesthetics in Koramangala, Bengaluru. ${totalServices}+ procedures across ${CATEGORIES.length} specialist divisions.`,
+    description: `Surgeon-led plastic surgery, laser dermatology and non-surgical aesthetics in Koramangala, Bengaluru. ${totalServices}+ procedures across ${CATEGORIES.length} divisions. Book a consultation.`,
+    ogImageAlt: 'Skin and aesthetic care at Pearl Aesthetic & Wellness, Koramangala, Bengaluru',
+    preload: 'hero.jpg',
     keywords: 'plastic surgery Bengaluru, cosmetic surgery Koramangala, aesthetic clinic Bangalore, rhinoplasty Bengaluru, liposuction Bangalore, breast augmentation Bengaluru, gynecomastia surgery Bangalore, laser dermatology Koramangala, hair transplant Bengaluru, Fotona laser Bangalore',
     base, canonical: `${SITE_URL}/`, active: '', body,
     jsonld: [clinicSchema, faqSchema, servicesSchema], ogImage: 'hero.jpg'
@@ -724,7 +817,7 @@ function categoryPage(cat, index) {
         </div>
         <div class="svc-grid">
           ${g.services.map(([n, d]) =>
-            `<article class="svc"><h3>${esc(n)}</h3><p>${esc(d)}</p></article>`).join('\n          ')}
+            `<article class="svc" id="${slugify(n)}"><h3>${esc(n)}</h3><p>${esc(d)}</p></article>`).join('\n          ')}
         </div>
       </div>`).join('\n      ');
 
@@ -745,8 +838,10 @@ function categoryPage(cat, index) {
     <div class="page-hero__grid">
       <div>
         <p class="eyebrow">Division ${String(index + 1).padStart(2, '0')} &nbsp;&middot;&nbsp; ${count} procedures</p>
-        <h1 class="display">${esc(cat.name)}</h1>
-        <p class="lead">${esc(cat.tagline)}</p>
+        <!-- Location in the H1 — this is the page that should rank for
+             "<procedure> in Bengaluru" style local searches. -->
+        <h1 class="display">${esc(cat.name)} <em>in Bengaluru</em></h1>
+        <p class="lead">${esc(cat.tagline)} Surgeon-led care at ${esc(CLINIC.shortName)}, Koramangala.</p>
         <div class="page-hero__actions">
           <a class="btn btn--primary" href="${base}appointment.html">${svg(UI.cal)} Book an Appointment</a>
           <a class="btn btn--ghost" href="tel:${CLINIC.phoneRaw}">${svg(UI.phone)} ${esc(CLINIC.phoneDisplay)}</a>
@@ -826,9 +921,11 @@ ${ctaBand(base)}
 
   return shell({
     title: `${cat.name} in Bengaluru | ${CLINIC.shortName}`,
-    description: `${cat.tagline} ${count} procedures at ${CLINIC.shortName}, Koramangala, Bengaluru. Surgeon-led consultations.`,
-    keywords: [cat.name + ' Bengaluru', cat.name + ' Bangalore', ...cat.tags, ...allNames.slice(0, 8)]
-      .join(', ').toLowerCase(),
+    description: `${cat.name} in Bengaluru — ${count} procedures. ${cat.tagline} Surgeon-led care in Koramangala.`,
+    keywords: [cat.name + ' Bengaluru', cat.name + ' Bangalore', cat.name + ' Koramangala',
+      ...cat.tags, ...allNames.slice(0, 10)].join(', ').toLowerCase(),
+    ogImageAlt: `${cat.name} at ${CLINIC.name}, Bengaluru`,
+    preload: `cat-${cat.slug}.jpg`,
     base, canonical: `${SITE_URL}/procedures/${cat.slug}.html`, active: 'treatments', body,
     jsonld: [pageSchema, crumbs([
       ['Home', '/'], ['Treatments', '/#treatments'], [cat.name, `/procedures/${cat.slug}.html`]
@@ -998,6 +1095,14 @@ ${ctaBand(base)}
     description: post.excerpt,
     keywords: post.keywords,
     base, canonical: url, active: 'blog', body,
+    ogImageAlt: post.imageAlt,
+    preload: post.image,
+    article: {
+      author: post.author,
+      date: post.date,
+      section: post.category,
+      tags: post.keywords.split(',').map((t) => t.trim()).slice(0, 6)
+    },
     jsonld: [{
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -1072,8 +1177,8 @@ function appointmentPage() {
     <div class="page-hero__grid">
       <div>
         <p class="eyebrow">Book a Consultation</p>
-        <h1 class="display">Let's start with a <em>conversation</em></h1>
-        <p class="lead">Send your details and we will call you back to arrange a time. Nothing is booked at the first consultation — you leave with a written plan and decide in your own time.</p>
+        <h1 class="display">Book a Plastic Surgery<br>Consultation <em>in Bengaluru</em></h1>
+        <p class="lead">Let's start with a conversation. Send your details and we will call you back to arrange a time at our Koramangala clinic. Nothing is booked at the first consultation — you leave with a written plan and decide in your own time.</p>
         <div class="page-hero__actions">
           <a class="btn btn--primary" href="tel:${CLINIC.phoneRaw}">${svg(UI.phone)} ${esc(CLINIC.phoneDisplay)}</a>
           <a class="btn btn--ghost" href="https://wa.me/${CLINIC.whatsapp}" target="_blank" rel="noopener">${svg(UI.wa)} WhatsApp</a>
@@ -1222,7 +1327,81 @@ function appointmentPage() {
 }
 
 /* ---------------------------------------------------------
-   Sitemap
+   HTML sitemap — a flat crawl path to every division, article
+   and individual procedure, and genuinely useful to visitors.
+   --------------------------------------------------------- */
+function sitemapPage() {
+  const base = '';
+
+  const divisions = CATEGORIES.map((c) => {
+    const svcs = servicesOf(c);
+    return `<div class="svc-group reveal">
+        <div class="svc-group__head">
+          <h2><a href="procedures/${c.slug}.html">${esc(c.name)}</a></h2>
+          <span>${svcs.length} procedures</span>
+        </div>
+        <ul class="sitemap-list">
+          ${svcs.map((s) =>
+            `<li><a href="procedures/${c.slug}.html#${s.id}">${esc(s.name)}</a></li>`).join('\n          ')}
+        </ul>
+      </div>`;
+  }).join('\n      ');
+
+  const body = `
+<section class="page-hero">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="index.html">Home</a><span>/</span><span style="color:var(--text-muted)">Sitemap</span>
+    </nav>
+    <div class="section-head" style="margin-bottom:0;max-width:780px">
+      <p class="eyebrow">Site Index</p>
+      <h1 class="display">Every page,<br><em>every procedure</em></h1>
+      <p class="lead">All ${CATEGORIES.length} specialist divisions and ${totalServices} procedures in one list, plus every article.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="svc-group reveal">
+      <div class="svc-group__head"><h2>Main pages</h2></div>
+      <ul class="sitemap-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="appointment.html">Book an Appointment</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="index.html#about">About the Practice</a></li>
+        <li><a href="index.html#surgeon">Our Surgeon</a></li>
+        <li><a href="index.html#results">Before &amp; After</a></li>
+        <li><a href="index.html#faq">FAQs</a></li>
+        <li><a href="index.html#contact">Contact &amp; Directions</a></li>
+      </ul>
+    </div>
+
+    ${divisions}
+
+    <div class="svc-group reveal">
+      <div class="svc-group__head"><h2><a href="blog.html">Articles</a></h2><span>${BLOG.length} articles</span></div>
+      <ul class="sitemap-list">
+        ${BLOG.map((p) => `<li><a href="blog/${p.slug}.html">${esc(p.title)}</a></li>`).join('\n        ')}
+      </ul>
+    </div>
+  </div>
+</section>
+
+${ctaBand(base)}
+`;
+
+  return shell({
+    title: `Sitemap | All ${totalServices} Procedures | ${CLINIC.shortName}`,
+    description: `Full index of ${CLINIC.name}, Koramangala, Bengaluru — all ${CATEGORIES.length} specialist divisions, ${totalServices} procedures and ${BLOG.length} articles in one list.`,
+    keywords: 'pearl aesthetic sitemap, cosmetic surgery procedures list bengaluru, plastic surgery treatments koramangala',
+    base, canonical: `${SITE_URL}/sitemap.html`, active: '', body,
+    jsonld: crumbs([['Home', '/'], ['Sitemap', '/sitemap.html']])
+  });
+}
+
+/* ---------------------------------------------------------
+   XML sitemap
    --------------------------------------------------------- */
 function sitemap() {
   const today = new Date().toISOString().slice(0, 10);
@@ -1230,6 +1409,7 @@ function sitemap() {
     [`${SITE_URL}/`, '1.0', today],
     [`${SITE_URL}/appointment.html`, '0.9', today],
     [`${SITE_URL}/blog.html`, '0.8', today],
+    [`${SITE_URL}/sitemap.html`, '0.4', today],
     ...CATEGORIES.map((c) => [`${SITE_URL}/procedures/${c.slug}.html`, '0.8', today]),
     ...BLOG.map((p) => [`${SITE_URL}/blog/${p.slug}.html`, '0.7', p.date])
   ];
@@ -1251,7 +1431,8 @@ function build() {
   fs.writeFileSync(path.join(ROOT, 'index.html'), homePage(), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'appointment.html'), appointmentPage(), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'blog.html'), blogIndexPage(), 'utf8');
-  console.log('  index.html, appointment.html, blog.html');
+  fs.writeFileSync(path.join(ROOT, 'sitemap.html'), sitemapPage(), 'utf8');
+  console.log('  index.html, appointment.html, blog.html, sitemap.html');
 
   CATEGORIES.forEach((cat, i) =>
     fs.writeFileSync(path.join(ROOT, 'procedures', `${cat.slug}.html`), categoryPage(cat, i), 'utf8'));
@@ -1266,7 +1447,7 @@ function build() {
     `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`, 'utf8');
   console.log('  sitemap.xml, robots.txt');
 
-  const pages = 3 + CATEGORIES.length + BLOG.length;
+  const pages = 4 + CATEGORIES.length + BLOG.length;
   console.log(`\n✓ Built ${pages} pages · ${totalServices} procedures · ${BLOG.length} articles.`);
 
   if (!fs.existsSync(path.join(ROOT, 'assets/img/logo.png'))) {
@@ -1276,3 +1457,4 @@ function build() {
 }
 
 build();
+

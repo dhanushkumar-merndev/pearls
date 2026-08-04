@@ -57,6 +57,11 @@
 html {
   scroll-padding-top: calc(var(--nav-h) + 20px);
   -webkit-text-size-adjust: 100%;
+  /* `clip`, not `hidden`: it stops sideways drift without creating a scroll
+     container, so position:sticky on the header keeps working. Needed on
+     <html> as well as <body> because Lenis takes over the root element and
+     body's overflow no longer propagates to the viewport. */
+  overflow-x: clip;
 }
 /* Native smooth scrolling is only a fallback — when Lenis is driving,
    both running at once fights for the scroll position. */
@@ -76,7 +81,7 @@ body {
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img, svg, video { max-width: 100%; display: block; }
@@ -289,10 +294,13 @@ p { margin: 0; }
 .nav__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.5rem;
   height: var(--nav-h);
+  /* The mega panel anchors to this, not to the <li>, so it can span the
+     full container width instead of being centred on its trigger. */
+  position: relative;
 }
+.nav__primary { margin-right: auto; }
 
 .logo { display: flex; align-items: center; gap: .8rem; min-width: 0; }
 /* The lockup is ~2.5:1 with a fine subtitle line, so it needs real height
@@ -334,8 +342,15 @@ p { margin: 0; }
   font-weight: 600;
 }
 
-.nav__links { display: flex; align-items: center; gap: 2.05rem; }
-.nav__links > li { position: relative; }
+/* The items stretch to the full bar height so there is no dead strip between
+   the link text and the bottom of the header — otherwise moving down toward
+   the dropdown leaves the trigger before reaching the hover bridge. */
+.nav__primary { align-self: stretch; display: flex; }
+.nav__links { display: flex; align-items: stretch; gap: 1.85rem; }
+.nav__links > li { position: relative; display: flex; align-items: center; }
+.nav__links > li > a { align-self: stretch; }
+/* Static so the mega panel resolves against .nav__inner. */
+.nav__links > li.has-menu { position: static; }
 .nav__links > li > a {
   font-size: .92rem;
   font-weight: 600;
@@ -371,18 +386,15 @@ p { margin: 0; }
 /* Mega dropdown */
 .mega {
   position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translate(-50%, 12px);
-  width: min(88vw, 780px);
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  transform: translateY(12px);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: 1.6rem;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: .35rem 1.4rem;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -392,32 +404,153 @@ p { margin: 0; }
   transition: opacity .28s var(--ease), transform .28s var(--ease), visibility 0s linear .28s;
   will-change: opacity, transform;
 }
-/* `.is-open` is set by JS (tap / click / keyboard). Hover is a progressive
-   enhancement layered on top, and only on devices that actually hover —
-   on touch, :hover sticks after a tap and the menu will not close. */
+/* `.is-open` is the single source of truth — JS sets it on hover, tap and
+   keyboard alike. A CSS :hover rule is deliberately NOT used: the panel sits
+   below a gap, and once :hover is lost it gets pointer-events:none, so the
+   pointer could never land on it to bring the hover back. */
 .has-menu.is-open > .mega,
 .has-menu:focus-within > .mega {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translate(-50%, 0);
+  transform: translateY(0);
   transition-delay: 0s;
 }
-@media (hover: hover) and (pointer: fine) {
-  .has-menu:hover > .mega {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translate(-50%, 0);
-    transition-delay: 0s;
-  }
-}
-.mega::before {
+/* Invisible bridge across the gap between the trigger and the panel.
+   It lives on the <li>, NOT on .mega — .mega has overflow:hidden for its
+   rounded corners, which would clip a bridge placed inside it. Without this
+   the pointer loses :hover mid-gap, .mega instantly gets pointer-events:none,
+   and the panel can never be re-entered. */
+.has-menu::after {
   content: "";
-  position: absolute;
-  inset: -14px 0 auto;
-  height: 14px;
+  position: absolute;      /* .has-menu is static → resolves to .nav__inner */
+  /* Anchored to the header's own bottom edge and made generously tall — the
+     nav items do not reach the very bottom of the bar, so the dead strip is
+     larger than the visual gap between the trigger and the panel. */
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 30px;
+  margin-top: -20px;
+  pointer-events: none;
 }
+.has-menu.is-open::after { pointer-events: auto; }
+
+/* ---- Two-panel layout: divisions on the left, procedures on the right ---- */
+.mega--split {
+  display: grid;
+  grid-template-columns: 272px 1fr;
+}
+
+.mega__rail {
+  background: var(--sand-100);
+  border-right: 1px solid var(--line);
+  padding: .9rem .75rem;
+  max-height: min(74vh, 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mega__cat {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  border-radius: 9px;
+  font-size: .845rem;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.mega__cat > span:first-child { flex: 1; }
+.mega__cat svg { width: 14px; height: 14px; opacity: .45; flex: none; }
+.mega__count {
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--sand-600);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .1rem .45rem;
+  flex: none;
+}
+.mega__cat:hover,
+.mega__cat.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+.mega__cat.is-active svg { opacity: 1; color: var(--gold); }
+.mega__cat.is-active .mega__count { color: var(--gold-deep); border-color: var(--sand-300); }
+
+.mega__all {
+  display: flex !important;
+  align-items: center;
+  gap: .55rem;
+  margin-top: .5rem;
+  padding: .7rem .8rem !important;
+  border-top: 1px solid var(--line);
+  border-radius: 0 !important;
+  font-size: .8rem !important;
+  font-weight: 700 !important;
+  color: var(--gold-deep) !important;
+}
+.mega__all svg { width: 15px; height: 15px; }
+.mega__all:hover { background: transparent !important; padding-left: .8rem !important; }
+
+.mega__panels {
+  padding: 1.4rem 1.6rem 1.5rem;
+  max-height: min(74vh, 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.mega__panel { display: none; }
+.mega__panel.is-active { display: block; }
+.mega__panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding-bottom: .85rem;
+  margin-bottom: .9rem;
+  border-bottom: 1px solid var(--line);
+}
+.mega__panel-head h4 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+/* `.mega a { display:block }` would otherwise beat .link-arrow's inline-flex,
+   and the global `svg { display:block }` then drops the arrow onto its own
+   line. Restated here with matching specificity. */
+.mega .mega__panel-head .link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .8rem;
+  flex: none;
+  white-space: nowrap;
+  padding: 0;
+}
+.mega .mega__panel-head .link-arrow:hover { background: transparent; padding-left: 0; }
+.mega .mega__panel-head .link-arrow svg { display: inline-block; flex: none; }
+.mega__links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .05rem .9rem;
+  align-content: start;
+}
+.mega__links a {
+  padding: .4rem .55rem !important;
+  font-size: .825rem !important;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
 .mega a {
   display: block;
   padding: .58rem .8rem;
@@ -432,20 +565,27 @@ p { margin: 0; }
   color: var(--ink);
   padding-left: 1.05rem;
 }
-.mega__foot {
-  grid-column: 1 / -1;
-  margin-top: .9rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.mega__foot span { font-size: .84rem; color: var(--text-muted); }
+.nav__cta { display: flex; align-items: center; gap: .55rem; }
 
-.nav__cta { display: flex; align-items: center; gap: .75rem; }
+/* Compact contact icons, as on the reference header */
+.nav__icon {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  flex: none;
+  transition: color .25s, border-color .25s, background .25s, transform .3s var(--ease);
+}
+.nav__icon svg { width: 17px; height: 17px; }
+.nav__icon:hover {
+  color: var(--gold-deep);
+  border-color: var(--gold);
+  background: rgba(179, 139, 89, .07);
+  transform: translateY(-2px);
+}
+.nav__icon--wa:hover { color: #128C7E; border-color: #25D366; background: rgba(37, 211, 102, .08); }
 
 .nav__toggle {
   display: none;
@@ -481,13 +621,21 @@ p { margin: 0; }
 /* Mobile drawer */
 .drawer {
   position: fixed;
-  inset: 0 0 0 auto;
+  top: 0;
+  right: 0;
+  left: auto;
+  /* dvh tracks the visible area as mobile browser chrome collapses; inset:0
+     would size against the layout viewport and hide the last links. */
+  height: 100vh;
+  height: 100dvh;
   width: min(88vw, 400px);
   background: var(--surface);
   z-index: 200;
   transform: translateX(100%);
   transition: transform .45s var(--ease);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 1.4rem 1.6rem 3rem;
   box-shadow: var(--shadow-lg);
 }
@@ -507,14 +655,23 @@ p { margin: 0; }
   border-radius: 50%;
   border: 1px solid var(--sand-300);
   background: var(--sand-50);
-  display: grid;
-  place-items: center;
-  font-size: 1.3rem;
-  line-height: 1;
+  /* An SVG cross, not a "×" glyph — the character sits high in its em box,
+     so centring the box still leaves the mark looking off-centre. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 0;
   color: var(--ink);
   flex: none;
   cursor: pointer;
   transition: border-color .25s, color .25s, background .25s, transform .25s var(--ease);
+}
+.drawer__close svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  display: block;
 }
 .drawer__close:hover, .drawer__close:active { border-color: var(--gold); color: var(--gold-deep); background: #fff; transform: scale(1.05); }
 .drawer nav a {
@@ -983,6 +1140,26 @@ p { margin: 0; }
   letter-spacing: 0;
   background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238A6D4B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 7 5 12l5 5'/%3E%3Cpath d='m14 7 5 5-5 5'/%3E%3C/svg%3E");
 }
+/* Always-visible provenance badge on the comparison slider. */
+.ba__badge {
+  position: absolute;
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: .38rem .85rem;
+  border-radius: 999px;
+  background: rgba(23, 17, 10, .82);
+  backdrop-filter: blur(8px);
+  color: var(--sand-100);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .ba__note {
   position: absolute;
   inset: auto 0 0;
@@ -1297,6 +1474,16 @@ p { margin: 0; }
   font-size: .8rem;
 }
 .footer__bar nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer__areas {
+  font-size: .82rem;
+  line-height: 1.75;
+  color: rgba(244, 239, 230, .5);
+  padding: 1.6rem 0 1.2rem;
+  border-top: 1px solid rgba(244, 239, 230, .12);
+  max-width: 95ch;
+}
+.footer__areas strong { color: var(--sand-300); font-weight: 600; }
+
 .footer__disclaimer {
   font-size: .76rem;
   line-height: 1.7;
@@ -1390,7 +1577,13 @@ p { margin: 0; }
   transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s;
   position: relative;
 }
+/* Deep links from the mega menu land here — keep them clear of the sticky nav. */
+.svc { scroll-margin-top: calc(var(--nav-h) + 28px); }
 .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--sand-300); }
+.svc:target {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(179, 139, 89, .16), var(--shadow);
+}
 .svc h3 {
   font-size: 1rem;
   font-weight: 600;
@@ -1410,6 +1603,23 @@ p { margin: 0; }
   transition: background .3s, transform .3s;
 }
 .svc:hover::after { background: var(--gold); transform: scale(1.4); }
+
+/* HTML sitemap listing */
+.sitemap-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: .2rem 1.5rem;
+}
+.sitemap-list a {
+  display: block;
+  padding: .42rem .55rem;
+  border-radius: 6px;
+  font-size: .89rem;
+  color: var(--text-muted);
+  transition: background .2s, color .2s, padding-left .25s var(--ease);
+}
+.sitemap-list a:hover { background: var(--sand-100); color: var(--ink); padding-left: .95rem; }
+.svc-group__head h2 a:hover { color: var(--gold-deep); }
 
 .info-card {
   background: var(--sand-100);
@@ -1684,6 +1894,164 @@ p { margin: 0; }
 .hours-table td:last-child { text-align: right; font-weight: 700; color: var(--ink); }
 .hours-table tr:last-child td { border-bottom: 0; }
 
+/* =========================================================
+   MOTION
+   Everything here animates opacity/transform only, so nothing
+   triggers layout or paint. All of it is disabled wholesale
+   under prefers-reduced-motion, at the end of this file.
+   ========================================================= */
+
+/* ---- Hero entrance choreography ----
+   Runs once on load rather than on scroll — the hero is already
+   in view, so an IntersectionObserver would be the wrong tool. */
+/* No base opacity:0 here on purpose. The hidden state lives in the keyframes
+   with animation-fill-mode: backwards, so if the animation never runs — JS
+   error, animations disabled, an engine that will not tick — the hero is
+   simply visible rather than permanently blank. */
+.js .is-ready .stagger {
+  animation: rise .9s var(--ease) backwards;
+}
+.js .is-ready .stagger:nth-child(1) { animation-delay: .05s; }
+.js .is-ready .stagger:nth-child(2) { animation-delay: .15s; }
+.js .is-ready .stagger:nth-child(3) { animation-delay: .25s; }
+.js .is-ready .stagger:nth-child(4) { animation-delay: .35s; }
+.js .is-ready .stagger:nth-child(5) { animation-delay: .45s; }
+.js .is-ready .hero__visual.stagger { animation: riseScale 1.1s var(--ease) .2s backwards; }
+
+/* The two H1 lines are children of the h1, so they need their own delays. */
+.js .is-ready .hero__title .stagger:nth-child(1) { animation-delay: .18s; }
+.js .is-ready .hero__title .stagger:nth-child(2) { animation-delay: .3s; }
+
+/* Belt and braces: after the entrance window the animation is removed
+   outright, so nothing can be left stranded on its opening frame. */
+.js .hero.is-settled .stagger {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes riseScale {
+  from { opacity: 0; transform: translate3d(0, 28px, 0) scale(.985); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* ---- Hero title ---- */
+.hero__title { display: block; }
+.hero__line { display: block; }
+.hero__tagline {
+  display: block;
+  margin-top: .3rem;
+  font-size: .46em;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -.01em;
+  color: var(--text-muted);
+}
+.hero__tagline em { font-style: italic; color: var(--gold); font-weight: 500; }
+
+/* ---- Scroll progress ---- */
+.scroll-progress {
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: transparent;
+  pointer-events: none;
+  overflow: hidden;
+}
+.scroll-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-deep) 100%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+/* ---- Nav condenses once you start scrolling ---- */
+.nav__inner { transition: height .35s var(--ease); }
+.logo__img { transition: height .35s var(--ease); }
+.nav.is-stuck .nav__inner { height: calc(var(--nav-h) - 16px); }
+.nav.is-stuck .logo__img { height: 56px; }
+/* The CTA and icons condense with the bar — leaving them full size makes the
+   header look like it only half-shrank. */
+.nav__cta .btn { transition: padding .35s var(--ease), font-size .35s var(--ease),
+                             transform .35s var(--ease), box-shadow .35s var(--ease),
+                             background .3s, color .3s; }
+.nav__icon { transition: width .35s var(--ease), height .35s var(--ease),
+                         color .25s, border-color .25s, background .25s, transform .3s var(--ease); }
+.nav.is-stuck .nav__cta .btn { padding: .78rem 1.5rem; font-size: .875rem; }
+.nav.is-stuck .nav__icon { width: 36px; height: 36px; }
+.nav.is-stuck .nav__icon svg { width: 15px; height: 15px; }
+
+/* ---- Button sheen ---- */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -60%;
+  width: 45%;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .28), transparent);
+  transform: translateX(0);
+  transition: transform .75s var(--ease);
+}
+.btn:hover::after { transform: translateX(340%); }
+.btn--ghost::after { background: linear-gradient(100deg, transparent, rgba(179, 139, 89, .16), transparent); }
+
+/* ---- Section heading rule that draws in ---- */
+.section-head .h2 { position: relative; }
+.eyebrow::before { transition: width .7s var(--ease) .1s; }
+.js .reveal:not(.is-in) .eyebrow::before,
+.js .reveal:not(.is-in) .eyebrow.is-center::after { width: 0; }
+
+/* ---- Directional reveals, so the page does not all move one way ---- */
+.js .reveal[data-dir="left"]  { transform: translate3d(-30px, 0, 0); }
+.js .reveal[data-dir="right"] { transform: translate3d(30px, 0, 0); }
+.js .reveal[data-dir="zoom"]  { transform: scale(.96); }
+.js .reveal[data-dir="left"].is-in,
+.js .reveal[data-dir="right"].is-in { transform: translate3d(0, 0, 0); }
+.js .reveal[data-dir="zoom"].is-in  { transform: scale(1); }
+
+/* ---- Parallax on full-bleed band imagery ---- */
+.band__img img { will-change: transform; }
+
+/* ---- Card interaction polish ---- */
+.cat-card { position: relative; }
+.cat-card::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-deep));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .5s var(--ease);
+}
+.cat-card:hover::after { transform: scaleX(1); }
+.cat-card__media img { transition: transform .9s var(--ease); }
+.cat-card:hover .cat-card__media img { transform: scale(1.06); }
+
+/* ---- Floating action buttons get a soft pulse ---- */
+.float-wa::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 211, 102, .55);
+  animation: pulse 2.6s ease-out infinite;
+}
+.floaters a { position: relative; }
+@keyframes pulse {
+  0%   { transform: scale(1); opacity: .8; }
+  70%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
 /* ---------------------------------------------------------
    Responsive
    --------------------------------------------------------- */
@@ -1703,15 +2071,26 @@ p { margin: 0; }
   .post-card--feature .post-card__media { min-height: 260px; }
 }
 
+@media (max-width: 1240px) {
+  .mega--split { grid-template-columns: 240px 1fr; }
+  .mega__links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 1100px) {
-  .nav__links { gap: 1.35rem; }
-  .nav__links > li > a { font-size: .86rem; }
+  .nav__links { gap: 1.15rem; }
+  .nav__links > li > a { font-size: .84rem; }
   .logo__img { height: 58px; max-width: 190px; }
+  .nav__cta { gap: .4rem; }
+  .nav__icon { width: 38px; height: 38px; }
+  .nav__icon--wa { display: none; }
 }
 
 @media (max-width: 980px) {
-  .nav__links, .nav__cta .btn { display: none; }
+  .nav__links, .nav__cta .btn, .nav__icon { display: none; }
   .nav__toggle { display: grid; }
+  /* The global condensed rule is more specific than the mobile logo size, so
+     without these the logo would grow on scroll instead of shrinking. */
+  .nav.is-stuck .logo__img { height: 48px; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .split { grid-template-columns: 1fr; }
@@ -1723,7 +2102,9 @@ p { margin: 0; }
 @media (max-width: 700px) {
   :root { --nav-h: 76px; }
   .container { width: min(100% - 2rem, var(--container)); }
-  .logo__img { height: 48px; max-width: 165px; }
+  .logo__img { height: 44px; max-width: 150px; }
+  .nav.is-stuck .logo__img { height: 36px; }
+  .nav.is-stuck .nav__inner { height: calc(var(--nav-h) - 12px); }
   .hero { padding: 1.2rem 0 2.8rem; }
   .hero__badge { display: none !important; }
   .hero__actions { display: flex; flex-direction: column; width: 100%; gap: .8rem; margin-top: 1.8rem; }
@@ -1781,6 +2162,14 @@ p { margin: 0; }
   .js .reveal { opacity: 1; transform: none; }
   .marquee__track { animation: none; will-change: auto; }
   .btn:hover, .card:hover, .post-card:hover, .quote:hover, .svc:hover { transform: none; }
+  /* Motion layer off: nothing entrance-animates, nothing pulses, nothing sweeps. */
+  .js .stagger { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .js .reveal[data-dir] { transform: none !important; }
+  .btn::after, .float-wa::before, .cat-card::after { display: none; }
+  .cat-card:hover .cat-card__media img { transform: none; }
+  .nav.is-stuck .nav__inner { height: var(--nav-h); }
+  .nav.is-stuck .logo__img { height: 68px; }
+  .scroll-progress { display: none; }
 }
 
 /* Coarse pointers: no hover lift (it just sticks after a tap), and

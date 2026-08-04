@@ -106,7 +106,7 @@ in `build/generate.js` or `build/blog.js`.
 | **Clinic logo (dark variant)** | `assets/img/logo-dark.png` | Optional. The light lockup is in place and working. Supply the gold-on-black version only if you want a dark header — see "The logo" below. |
 | **Surgeon photograph** | Home → "Your Surgeon" | Currently shows a **clinic interior**, deliberately — a stock portrait must never sit under a named doctor. Swap in their own photo. |
 | **Patient testimonials** | Home → "Patient Voices" | Three illustrative placeholders. Replace with genuine consented reviews. Publishing invented reviews is misleading and a legal risk. |
-| **Before/after images** | Home → "Results" | The comparison slider uses gradient placeholders. Only add real images with written patient consent. |
+| **Before/after images** | Home → "Results" | ⚠️ Currently **AI-generated illustrations**, not patients. Disclosed in the alt text, in a persistent on-image badge, and in the caption. Replace with genuine consented patient photographs — see the note below. |
 | **Article authorship** | `build/blog.js` → `AUTHOR` | Attributed to "Pearl Aesthetic Clinical Team". Change to a named clinician once someone has reviewed and signed off the medical content. |
 | **Consultation fee** | `appointment.html` FAQ | Says the fee is quoted at booking. Replace with the actual figure if the clinic prefers to publish it. |
 | **Experience figures** | Home hero | A marked slot for a "years of experience" figure once the clinic confirms a real number. Nothing invented has been published. |
@@ -167,27 +167,169 @@ Things worth knowing if you change this:
 - Lenis is paused while the mobile drawer is open and while dragging the before/after
   slider — `overflow: hidden` alone does not stop it.
 
+**What moves**
+
+| Effect | Where |
+|---|---|
+| Staggered hero entrance | badge → H1 lines → lead → buttons → stats → image, on load |
+| Counting numbers | hero trust row and the stats band, when scrolled into view |
+| Scroll progress bar | 2px gold line along the bottom of the header |
+| Condensing header | nav and logo shrink once you scroll past 10px |
+| Parallax | the full-bleed CTA band image drifts against the scroll |
+| Directional reveals | sections arrive from left / right / zoom, not all upward |
+| Button sheen | a light sweep across the button on hover |
+| Card polish | image zoom, gold rule drawing across the base |
+| WhatsApp pulse | soft expanding ring on the floating button |
+
 **Animation cost** is kept low deliberately: only `opacity` and `transform` are
 animated (both composited — no layout or paint), `will-change` is applied just for
-the duration of each transition rather than held on dozens of elements, cards use
-`contain: layout paint style`, and the scroll listener is `requestAnimationFrame`-throttled.
-On coarse pointers all hover-lift effects are disabled — they stick after a tap.
+the duration of each transition rather than held on dozens of elements, and cards use
+`contain: layout paint style`. Scroll work is split — the class toggle and the progress
+bar (write-only) run synchronously so they never lag, while parallax (which reads
+layout) is deferred to `requestAnimationFrame`. On coarse pointers all hover-lift
+effects are disabled, since they stick after a tap.
+
+**Nothing can get stranded invisible.** The hero's hidden state lives in the keyframes
+(`animation-fill-mode: backwards`) rather than a base `opacity: 0`, so if animations
+never run the hero is simply visible; a timer then adds `.is-settled` which removes the
+animation outright. Counters have a timer backstop that writes the final figure even if
+`requestAnimationFrame` stalls. And `lenis.resize()` is called on `load`, because Lenis
+caches its scroll limit at init — before images change the page height — which
+otherwise leaves the progress bar reading against a stale total.
 
 ---
 
 ## The Treatments dropdown
 
-It opens on **click or tap** as well as hover, because a hover-only menu is unusable
-on touch: `:hover` latches after a tap and the menu can never be dismissed. Hover is
-layered on top behind `@media (hover: hover) and (pointer: fine)`.
+A **two-panel mega menu**, modelled on Centre for Surgery: the 16 divisions sit in a
+left rail (each with its procedure count), and hovering or tapping one swaps the right
+panel to that division's procedures in three columns.
 
-It also closes on Escape, on clicking outside, and on pointer-leave, sets
-`aria-haspopup` / `aria-expanded`, and opens to the first item on `ArrowDown`.
+**All 263 procedures are real links** — each deep-links to its own anchor on the
+category page (`procedures/nose-surgery.html#septoplasty`). Every `.svc` card carries a
+generated `id`, has `scroll-margin-top` so it clears the sticky header, and gets a gold
+outline via `:target` when you arrive. This is the site's main internal-linking asset:
+263 links with keyword-rich anchor text on every page.
+
+It adds ~52 KB to each page (≈13 KB gzipped) — the trade the reference site makes too.
+
+**Open state is the `.is-open` class, set by JS — for hover as well as tap.** There is
+deliberately *no* CSS `:hover` rule, and that is not an oversight:
+
+- The panel sits below a gap. The moment `:hover` is lost mid-gap, the panel gets
+  `pointer-events: none`, so the pointer can never land on it to bring hover back —
+  the menu becomes impossible to enter. A class has no such chicken-and-egg.
+- On touch, `:hover` latches after a tap and the menu can never be dismissed.
+
+Supporting pieces, all of which matter:
+
+- **`.has-menu::after` is an invisible hover bridge** across the dead strip between the
+  trigger and the panel. It lives on the `<li>`, *not* inside `.mega` — `.mega` has
+  `overflow: hidden` for its rounded corners, which would clip a bridge placed inside.
+- **Nav items stretch to the full bar height** (`.nav__primary { align-self: stretch }`
+  down to `.nav__links > li`), so there is no dead strip between the link text and the
+  bottom of the header.
+- **A 180ms grace period** on `mouseleave`, cancelled on re-entry, so clipping a corner
+  does not dismiss it.
+- **Hovering any other top-level nav item closes it immediately**, rather than waiting
+  out that grace period.
+
+Also closes on Escape and outside-click. `aria-haspopup` / `aria-expanded` /
+`aria-selected` are maintained, and ArrowUp/ArrowDown move through the rail.
+
+Two more subtleties worth preserving:
+
+- `visibility` is **not** in the transition list. It is a discrete property and browsers
+  disagree about when it flips mid-transition, which made the panel stay invisible even
+  with the open class applied. It now switches instantly on open, delayed on close.
+- The "Division overview" link restates `display: inline-flex` at matching specificity.
+  `.mega a { display: block }` would otherwise beat it, and the global
+  `svg { display: block }` then drops the arrow onto its own line.
+
+The mega panel is positioned against `.nav__inner` (which is `position: relative`),
+not against its `<li>` — that is why `.has-menu` is `position: static`. It lets the
+panel span the full container width instead of being centred on its trigger.
+
+## Headings and the tagline
+
+The H1 leads with the search term and then carries the brand line:
+
+> **Plastic Surgery in Bengaluru**
+> *where science meets artistry*
+
+Both are inside the single `<h1>`, so the keyword and the location are in the most
+weighted element on the page while the tagline survives visually. The same pattern is
+applied elsewhere — category pages are `"<Division> in Bengaluru"`, the appointment
+page is `"Book a Plastic Surgery Consultation in Bengaluru"`.
+
+The footer carries a service-areas line (Koramangala, Indiranagar, HSR, BTM, Jayanagar,
+JP Nagar, Whitefield, Electronic City, Marathahalli, Sarjapur Road, Hebbal) — a
+legitimate local-search signal, and true: the clinic serves all of Bengaluru.
+
+## Lenis and nested scrolling — read before changing
+
+Lenis calls `preventDefault()` on wheel and touch gestures. While it is **stopped**
+(which is what the mobile drawer does, so the page behind cannot move) it cancels
+*every* `touchmove` — including ones inside the drawer, which makes the panel
+impossible to scroll.
+
+Any scrollable element inside the page therefore needs **`data-lenis-prevent`**.
+Currently carried by:
+
+- `.drawer` — the mobile menu
+- `.mega__rail` and `.mega__panels` — the two scrollable panes of the dropdown
+- `.ba` — the before/after comparison slider
+
+If you add another scrollable panel, give it that attribute or it will not scroll.
+
+The drawer also uses `height: 100dvh` (not `inset: 0`) so the last links are not
+hidden behind mobile browser chrome, and `overscroll-behavior: contain` so reaching
+its end does not start scrolling the page behind it.
+
+**`overflow-x: clip` sits on `<html>` as well as `<body>`.** Body alone is not enough:
+Lenis takes over the root element, so body's overflow no longer propagates to the
+viewport, and the page could be dragged ~14px sideways on mobile. `clip` is used
+rather than `hidden` because `hidden` would create a scroll container and break
+`position: sticky` on the header.
+
+## Header layout
+
+Logo left, primary nav immediately beside it (left-aligned, not centred), then
+phone / email / WhatsApp icon buttons and the Book Appointment CTA hard right — the
+Centre for Surgery arrangement. Below 1100px the WhatsApp icon drops and the icons
+shrink; below 980px the whole row collapses to the hamburger.
+
+**Condensed state** (`.nav.is-stuck`, past 10px of scroll) shrinks the bar, the logo,
+the contact icons *and* the CTA together — 206×59 → 179×49 for the button, 42 → 36px
+for the icons. Note the mobile logo sizes are restated inside their media queries:
+media queries add no specificity, so the global `.nav.is-stuck .logo__img` would
+otherwise win and the logo would *grow* on scroll instead of shrinking.
 
 One subtlety worth preserving: `visibility` is **not** in the transition list. It is a
 discrete property, and browsers disagree about when it flips mid-transition — which
 made the panel stay invisible even with the open class applied. It now switches
 instantly on open and is delayed until after the fade on close.
+
+---
+
+## ⚠️ The AI before/after images
+
+The Results slider on the home page currently shows two **AI-generated portraits** of a
+person who does not exist, presented as a rhinoplasty before/after.
+
+They are disclosed three ways — descriptive `alt` text, a persistent badge on the image
+itself ("Illustration — not a patient"), and the caption strip. That disclosure is
+deliberate and should not be removed: an undisclosed synthetic image inside a
+Before/After frame on a surgery site reads as a real surgical outcome, and India's
+medical advertising rules (NMC code; Drugs & Magic Remedies Act) treat misleading
+outcome claims seriously.
+
+Even disclosed, this is a judgement call the clinic should make consciously. The safest
+options, in order: use **genuine consented patient photographs**; or remove the slider
+and keep the section's text about what a realistic result looks like; or keep the
+illustration with the disclosure as it stands.
+
+The files were re-encoded from ~4 MB of PNG to 87 KB / 95 KB JPEG.
 
 ---
 
@@ -233,7 +375,14 @@ Every page carries:
 | Article | `BlogPosting` (author, dates, word count, section), `BreadcrumbList` |
 | Appointment | `MedicalClinic`, `BreadcrumbList` |
 
-`sitemap.xml` lists all 25 pages with `lastmod` and priorities; `robots.txt` points to it.
+`sitemap.xml` lists all 26 pages with `lastmod` and priorities; `robots.txt` points to it.
+`sitemap.html` is a human-readable index linking every division, every one of the 263
+procedures by anchor, and every article — a flat crawl path and genuinely useful to visitors.
+
+Also in place: `article:published_time` / `modified_time` / `author` / `section` / `tag`
+and `og:type=article` on blog posts; `og:image:alt` and `twitter:image:alt` everywhere;
+`geo.position` / `ICBM` coordinates; `<link rel="preload" fetchpriority="high">` on each
+page's hero image; and `hasOfferCatalog` + `areaServed` on the clinic schema.
 
 **Before deploying:** set the real domain in `SITE_URL` at the top of
 `build/generate.js` (currently `https://www.pearlaesthetic.in`) and rebuild, so
