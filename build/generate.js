@@ -190,13 +190,18 @@ function logo(base) {
  * Two-panel mega menu: divisions in a left rail, that division's procedures
  * in the right panel. Every one of the 263 procedures is a real deep link
  * into its category page, which is also the site's main internal-linking.
+ *
+ * Each division in the rail carries its own photo thumbnail. The alt is empty
+ * on purpose — the name sits right beside it, so a label would be read twice.
  */
 function megaMenu(base) {
   const rail = CATEGORIES.map((c, i) => {
     const n = servicesOf(c).length;
     return `<button class="mega__cat${i === 0 ? ' is-active' : ''}" type="button" role="tab"
           aria-selected="${i === 0}" aria-controls="megapanel-${c.slug}" data-cat="${c.slug}">
-          <span>${esc(c.name)}</span><span class="mega__count">${n}</span>${svg(UI.chevR)}
+          <span class="mega__cat-media"><img src="${base}assets/img/procedures/${c.slug}.jpg" alt=""
+            width="800" height="534" loading="lazy" decoding="async" onerror="this.style.display='none'"></span>
+          <span class="mega__cat-name">${esc(c.name)}</span><span class="mega__count">${n}</span>${svg(UI.chevR)}
         </button>`;
   }).join('\n        ');
 
@@ -205,6 +210,8 @@ function megaMenu(base) {
       `<a href="${base}procedures/${c.slug}.html#${s.id}">${esc(s.name)}</a>`).join('\n            ');
     return `<div class="mega__panel${i === 0 ? ' is-active' : ''}" id="megapanel-${c.slug}" role="tabpanel" data-cat="${c.slug}">
           <div class="mega__panel-head">
+            <span class="mega__panel-media"><img src="${base}assets/img/procedures/${c.slug}.jpg" alt=""
+              width="800" height="534" loading="lazy" decoding="async" onerror="this.style.display='none'"></span>
             <h4>${esc(c.name)}</h4>
             <a class="link-arrow" href="${base}procedures/${c.slug}.html">Division overview ${svg(UI.arrow)}</a>
           </div>

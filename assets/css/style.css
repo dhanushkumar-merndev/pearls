@@ -439,7 +439,7 @@ p { margin: 0; }
 /* ---- Two-panel layout: divisions on the left, procedures on the right ---- */
 .mega--split {
   display: grid;
-  grid-template-columns: 272px 1fr;
+  grid-template-columns: 316px 1fr;
 }
 
 .mega__rail {
@@ -454,9 +454,9 @@ p { margin: 0; }
   width: 100%;
   display: flex;
   align-items: center;
-  gap: .5rem;
-  padding: .5rem .75rem;
-  border-radius: 9px;
+  gap: .6rem;
+  padding: .4rem .6rem .4rem .4rem;
+  border-radius: 10px;
   font-size: .845rem;
   line-height: 1.3;
   font-weight: 600;
@@ -464,7 +464,28 @@ p { margin: 0; }
   text-align: left;
   transition: background .2s, color .2s, box-shadow .2s;
 }
-.mega__cat > span:first-child { flex: 1; }
+.mega__cat-name { flex: 1; }
+
+/* Division thumbnail. Fixed box with a gradient behind it, so the rail rows
+   stay a uniform height even if a photo is ever missing. */
+.mega__cat-media {
+  flex: none;
+  width: 54px;
+  height: 38px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--sand-100), var(--sand-300));
+  box-shadow: inset 0 0 0 1px rgba(44, 26, 14, .1);
+}
+.mega__cat-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s var(--ease);
+}
+.mega__cat:hover .mega__cat-media img,
+.mega__cat.is-active .mega__cat-media img { transform: scale(1.08); }
+
 .mega__cat svg { width: 14px; height: 14px; opacity: .45; flex: none; }
 .mega__count {
   font-size: .7rem;
@@ -510,14 +531,26 @@ p { margin: 0; }
 .mega__panel.is-active { display: block; }
 .mega__panel-head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.2rem;
+  align-items: center;
+  gap: .9rem;
   padding-bottom: .85rem;
   margin-bottom: .9rem;
   border-bottom: 1px solid var(--line);
 }
+/* Larger crop of the same photo, so the active division is confirmed on the
+   side the eye has just moved to. */
+.mega__panel-media {
+  flex: none;
+  width: 76px;
+  height: 52px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--sand-100), var(--sand-300));
+  box-shadow: inset 0 0 0 1px rgba(44, 26, 14, .1);
+}
+.mega__panel-media img { width: 100%; height: 100%; object-fit: cover; }
 .mega__panel-head h4 {
+  flex: 1;
   font-family: var(--font-serif);
   font-size: 1.2rem;
   font-weight: 600;
@@ -2072,8 +2105,10 @@ p { margin: 0; }
 }
 
 @media (max-width: 1240px) {
-  .mega--split { grid-template-columns: 240px 1fr; }
+  .mega--split { grid-template-columns: 280px 1fr; }
   .mega__links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mega__cat-media { width: 46px; height: 32px; }
+  .mega__panel-media { width: 64px; height: 44px; }
 }
 
 @media (max-width: 1100px) {
@@ -2180,6 +2215,7 @@ p { margin: 0; }
   .post-card:hover .post-card__media img { transform: none; }
   .nav__links > li > a, .drawer nav a, .footer__links a { min-height: 44px; display: flex; align-items: center; }
   .mega a { padding-block: .8rem; }
+  .mega__cat:hover .mega__cat-media img { transform: none; }
 }
 
 @media print {
