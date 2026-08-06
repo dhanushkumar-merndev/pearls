@@ -43,7 +43,436 @@ const ICONS = {
 };
 
 const CATEGORIES = [
-  /* ===================== 1 ===================== */
+  /* ==================== 1 ==================== */
+
+  {
+    slug: 'nose-surgery',
+    name: 'Nose Surgery',
+    icon: 'nose',
+    tagline: 'Rhinoplasty and functional nasal surgery, cosmetic and reconstructive.',
+    tags: ['Rhinoplasty', 'Septoplasty', 'Revision'],
+    intro: [
+      'Rhinoplasty is the most technically unforgiving procedure in facial surgery. The nose sits at the centre of the face, millimetres are visible, and the final shape continues to settle for twelve to eighteen months. It is also the operation where surgeon selection matters most — revision rates in unselected hands run high.',
+      'We plan every nose against your facial proportions rather than a reference photograph, and preserve ethnic character by default. Where breathing is affected, functional correction is addressed in the same operation — a nose that looks right but does not work is a failed result.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '2 – 4 hours'],
+      ['Downtime', '7 – 14 days'],
+      ['Final result', '12 – 18 months']
+    ],
+    groups: [
+      {
+        name: 'Cosmetic Rhinoplasty',
+        services: [
+          ['Rhinoplasty (Nose Job)', 'Reshapes the bridge, tip and nostrils to bring the nose into proportion with the face.'],
+          ['Tip Rhinoplasty (Tip Plasty)', 'Refines a bulbous, drooping or poorly defined tip without altering the bridge.'],
+          ['Alar Base Reduction', 'Narrows wide nostrils and reduces flare through concealed base incisions.'],
+          ['Ethnic Rhinoplasty', 'Refinement that respects and preserves the characteristics of your ethnic anatomy.'],
+          ['Ultrasonic Rhinoplasty', 'Piezo instruments reshape bone precisely with less bruising than traditional osteotomy.'],
+          ['Preservation Rhinoplasty', 'Retains rather than removes the natural dorsal structure, lowering it as an intact unit.'],
+          ['Male Rhinoplasty', 'Maintains a stronger dorsum and less tip rotation appropriate to masculine proportions.']
+        ]
+      },
+      {
+        name: 'Functional Nasal Surgery',
+        services: [
+          ['Septoplasty', 'Straightens a deviated septum to restore clear airflow through both nostrils.'],
+          ['Turbinate Reduction', 'Reduces enlarged turbinates that block the airway, often alongside septoplasty.'],
+          ['Septorhinoplasty', 'Combines cosmetic reshaping with functional airway correction in one operation.']
+        ]
+      },
+      {
+        name: 'Revision & Non-Surgical',
+        services: [
+          ['Revision Rhinoplasty', 'Corrective surgery after an unsatisfactory or failed previous rhinoplasty.'],
+          ['Nose Thread Lift', 'Absorbable threads to lift and define the tip and bridge without surgery.'],
+          ['Nose Surgery FAQs', 'Answers on recovery, swelling timelines, splints, cost factors and candidacy.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 2 ==================== */
+
+  {
+    slug: 'breast-surgery',
+    name: 'Breast Surgery',
+    icon: 'breast',
+    tagline: 'Augmentation, lift, reduction, revision and corrective breast surgery.',
+    tags: ['Augmentation', 'Breast Lift', 'Reduction'],
+    intro: [
+      'Breast surgery covers a wider range than most people expect: increasing volume, restoring position, reducing weight, correcting asymmetry or developmental differences, and dealing with implants placed years ago that now need attention. Getting the right operation matters more than the technique used to perform it.',
+      'The most common planning error is treating sagging as a volume problem. An implant in a breast that has descended adds weight without changing position, and often makes the result worse. Where the nipple sits below the inframammary fold, a lift — with or without an implant — is the honest answer.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '1.5 – 4 hours'],
+      ['Downtime', '1 – 2 weeks'],
+      ['Support bra', '6 weeks']
+    ],
+    groups: [
+      {
+        name: 'Breast Augmentation',
+        services: [
+          ['Breast Augmentation with Implants', 'Increases size and improves shape using implants selected to your chest measurements.'],
+          ['Mini Breast Augmentation', 'A modest, deliberately understated increase for a natural result.'],
+          ['Breast Implant Options', 'Round versus anatomical, smooth versus textured, and how projection is chosen.'],
+          ['Fat Transfer Breast Augmentation', 'Uses your own liposuctioned fat for a modest, implant-free increase.'],
+          ['Hybrid Breast Augmentation', 'Combines an implant for volume with fat grafting to soften the upper pole.']
+        ]
+      },
+      {
+        name: 'Implant Revision & Removal',
+        services: [
+          ['Breast Implant Check', 'Clinical and imaging assessment of implant integrity, position and capsule.'],
+          ['Breast Implant Removal (Explant)', 'Removal of implants, with capsulectomy where clinically indicated.'],
+          ['Implant Removal with Breast Lift', 'Explant combined with mastopexy to reshape the breast in one stage.'],
+          ['Breast Implant Replacement', 'Exchange of ageing or ruptured implants for a new size or profile.'],
+          ['Breast Implant Revision', 'Corrects capsular contracture, malposition, rippling or unsatisfactory shape.']
+        ]
+      },
+      {
+        name: 'Breast Lift & Reduction',
+        services: [
+          ['Breast Lift (Mastopexy)', 'Raises and reshapes descended breast tissue and repositions the nipple.'],
+          ['Breast Lift with Implants', 'Combines lift with an implant where both position and volume need addressing.'],
+          ['Breast Lift with Auto-Augmentation', 'Reshapes your own tissue to restore upper pole fullness without an implant.'],
+          ['Mini Breast Lift (Doughnut Mastopexy)', 'Limited peri-areolar lift for mild descent with minimal scarring.'],
+          ['Breast Reduction', 'Removes excess tissue to relieve back, neck and shoulder strain and reshape the breast.'],
+          ['Liposuction Breast Reduction', 'Volume reduction by liposuction alone in selected patients with good skin quality.']
+        ]
+      },
+      {
+        name: 'Nipple, Areola & Corrective',
+        services: [
+          ['Inverted Nipple Correction', 'Releases the tethering ducts to restore normal nipple projection.'],
+          ['Nipple Reduction', 'Reduces nipple length or width under local anaesthetic.'],
+          ['Areola Reduction', 'Reduces enlarged or stretched areolae to a proportionate size.'],
+          ['Breast Asymmetry Correction', 'Balances differences in size, shape or position between the two breasts.'],
+          ['Tuberous Breast Correction', 'Releases the constricting base and reshapes tuberous or constricted breasts.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 3 ==================== */
+
+  {
+    slug: 'mommy-makeover',
+    name: 'Mommy Makeover',
+    icon: 'mommy',
+    tagline: 'Combined restoration of the breast, abdomen and intimate area.',
+    tags: ['Combined Surgery', 'Breast & Tummy', 'Post-Pregnancy'],
+    intro: [
+      'Pregnancy changes several structures at once — breast volume and position, abdominal muscle separation, skin laxity, and often the pelvic floor. Treating them individually means several separate recoveries. A combined procedure addresses them under one anaesthetic, with one recovery period.',
+      'Timing matters more than technique here. We ask that you are finished having children, at a stable weight for at least six months, and no longer breastfeeding for at least three to six months. Operating earlier produces results that a subsequent pregnancy will undo.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '4 – 7 hours'],
+      ['Hospital stay', '1 – 2 nights'],
+      ['Downtime', '3 – 6 weeks']
+    ],
+    groups: [
+      {
+        name: 'The Combination',
+        services: [
+          ['Mommy Makeover', 'A single planned operation combining breast, abdominal and intimate restoration.'],
+          ['Breast Lift or Augmentation', 'Restores position and, where wanted, volume lost after breastfeeding.'],
+          ['Tummy Tuck with Muscle Repair', 'Closes abdominal muscle separation and removes the resulting skin excess.'],
+          ['Liposuction / 360 Lipo', 'Contours the flanks and waist that abdominoplasty alone does not reach.'],
+          ['Labiaplasty or Vaginoplasty', 'Optional intimate correction included in the same anaesthetic where appropriate.'],
+          ['Mommy Makeover FAQs', 'Timing after childbirth, combining safely, recovery with children at home, and cost factors.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 4 ==================== */
+
+  {
+    slug: 'face-surgery',
+    name: 'Face Surgery',
+    icon: 'face',
+    tagline: 'Facelifting, neck contouring and facial feature refinement.',
+    tags: ['Deep Plane Facelift', 'Neck Lift', 'Buccal Fat'],
+    intro: [
+      'A modern facelift is not skin tightening. Pulling skin produces the swept, operated look everyone recognises and fears; it also relapses quickly because skin is not a load-bearing tissue. Contemporary technique works on the SMAS layer beneath — repositioning it so the skin is redraped without tension.',
+      'Face and neck are assessed together. In most patients over forty-five, the neck is the giveaway, and a facelift that ignores it delivers a result that reads as incomplete from every angle except straight on.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '3 – 6 hours'],
+      ['Downtime', '2 – 3 weeks'],
+      ['Results last', '8 – 12 years']
+    ],
+    groups: [
+      {
+        name: 'Facelift Procedures',
+        services: [
+          ['Facelift (Rhytidectomy)', 'Comprehensive lift of the lower face and jawline through the SMAS layer.'],
+          ['SMAS Facelift', 'Repositions the deeper muscular layer for durable lift without skin tension.'],
+          ['Deep Plane Facelift', 'Releases the retaining ligaments to lift the midface as a single composite unit.'],
+          ['Upper Facelift (Forehead Lift)', 'Addresses brow descent and forehead laxity in the upper third.'],
+          ['Mid-Facelift (Cheek Lift)', 'Restores cheek height and softens the nasolabial region.'],
+          ['Lower Facelift (Jowl Lift)', 'Focused correction of jowling and loss of jawline definition.'],
+          ['Mini Facelift', 'Shorter-scar lift for earlier laxity, with a faster return to normal activity.'],
+          ['One-Stitch Facelift', 'Minimal-access lift for very early jawline softening.'],
+          ['Male Facelift', 'Accounts for beard-bearing skin, thicker tissue and masculine hairline placement.']
+        ]
+      },
+      {
+        name: 'Neck & Jawline',
+        services: [
+          ['Neck Lift', 'Tightens platysma banding and removes excess skin to redefine the neckline.'],
+          ['Mini Neck Lift', 'Limited-incision correction for early submental laxity.'],
+          ['Male Neck Lift', 'Neck definition for men, working around beard growth and heavier skin.'],
+          ['Chin & Neck Liposuction', 'Removes the submental fat pad in patients with good skin elasticity.'],
+          ['FaceTite', 'Radiofrequency-assisted contraction under the skin for lift without a long scar.']
+        ]
+      },
+      {
+        name: 'Facial Features',
+        services: [
+          ['Facial Fat Transfer', 'Uses your own purified fat to restore volume in the temples, cheeks and around the mouth.'],
+          ['Lip Lift', 'Shortens a long upper lip to increase pink show and reveal more upper teeth.'],
+          ['Lip Reduction Surgery', 'Reduces excessive lip bulk to rebalance the lower face.'],
+          ['Buccal Fat Removal', 'Removes deep cheek fat pads to sharpen the cheek hollow — used selectively.'],
+          ['Dimple Creation', 'Creates a natural-looking cheek dimple through a small intraoral incision.'],
+          ['Chin Surgery (Genioplasty)', 'Repositions the chin bone to correct projection and facial profile balance.'],
+          ['Chin Augmentation', 'Increases chin projection using an implant or bony advancement.'],
+          ['Chin Reduction', 'Reduces an over-projected or long chin for better proportion.'],
+          ['Male Chin Surgery', 'Builds width and projection appropriate to a masculine lower face.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 5 ==================== */
+
+  {
+    slug: 'body-surgery',
+    name: 'Body Surgery',
+    icon: 'body',
+    tagline: 'Liposuction, abdominoplasty, implants and body contouring.',
+    tags: ['Liposuction', 'Tummy Tuck', '360 Lipo'],
+    intro: [
+      'Liposuction is a contouring operation, not a weight loss operation. It removes localised fat deposits that have not responded to diet and training, and it works best in patients already close to a stable weight with reasonable skin quality. Where skin has lost elasticity, removing the fat beneath it will make laxity more obvious, not less.',
+      'That distinction is why abdominoplasty exists. If the abdominal wall muscles have separated after pregnancy or significant weight change, no amount of liposuction will flatten the abdomen — the repair has to address the muscle layer and the excess skin together.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '1 – 5 hours'],
+      ['Downtime', '1 – 3 weeks'],
+      ['Compression', '6 – 8 weeks']
+    ],
+    groups: [
+      {
+        name: 'Liposuction & Fat Contouring',
+        services: [
+          ['Liposuction', 'Removes stubborn localised fat deposits to reshape the body contour.'],
+          ['Stomach Liposuction', 'Targeted contouring of the upper and lower abdomen and flanks.'],
+          ['360 Liposuction', 'Circumferential contouring of the abdomen, flanks and back in one procedure.'],
+          ['Micro Liposuction (MicroLipo)', 'Fine-cannula technique for small, delicate areas under local anaesthetic.'],
+          ['High Definition Liposuction', 'Selective fat removal that reveals the underlying muscular anatomy.'],
+          ['Abdominal Etching', 'Sculpts definition along the linea alba and tendinous inscriptions.'],
+          ['Male Liposuction', 'Contouring adapted to male fat distribution across the chest, flanks and abdomen.'],
+          ['BodyTite', 'Radiofrequency-assisted liposuction that contracts skin as fat is removed.'],
+          ['Cellulite Treatment', 'Combined release and resurfacing approach to dimpling on the thighs and buttocks.']
+        ]
+      },
+      {
+        name: 'Abdominoplasty',
+        services: [
+          ['Tummy Tuck (Abdominoplasty)', 'Removes excess skin and repairs separated abdominal muscles.'],
+          ['Brazilian Tummy Tuck', 'Combines abdominoplasty with aggressive contouring for a more defined waist.'],
+          ['Mini Tummy Tuck', 'Addresses skin below the navel only, with a shorter scar and faster recovery.'],
+          ['Male Tummy Tuck', 'Abdominal skin and muscle correction contoured to a masculine torso.'],
+          ['Umbilicoplasty', 'Reshapes the belly button, or repairs it after hernia or pregnancy changes.'],
+          ['Mons Lift (Monsplasty)', 'Reduces and lifts a heavy or descended pubic mound.'],
+          ['C-Section Scar Revision', 'Revises a shelved, adherent or poorly positioned caesarean scar.']
+        ]
+      },
+      {
+        name: 'Implants & Grafting',
+        services: [
+          ['Body Contouring Procedures', 'Combination planning across multiple areas in staged or single operations.'],
+          ['Fat Transfer (Fat Grafting)', 'Harvests, purifies and re-injects your own fat to add volume where it is wanted.'],
+          ['Pectoral Implants', 'Silicone implants to build chest projection where training has plateaued.'],
+          ['Chest Wall Implants', 'Custom implants to correct pectus deformity and chest wall asymmetry.'],
+          ['Calf Augmentation with Implants', 'Improves lower leg proportion using implants placed beneath the fascia.'],
+          ['Fat Transfer Calf Augmentation', 'Uses grafted fat for a softer, more natural calf enhancement.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 6 ==================== */
+
+  {
+    slug: 'buttock-contouring',
+    name: 'Buttock Contouring',
+    icon: 'buttock',
+    tagline: 'Brazilian butt lift, implants and non-surgical shaping.',
+    tags: ['BBL', 'Buttock Implants', 'Skinny BBL'],
+    intro: [
+      'The Brazilian butt lift has a safety history that deserves stating plainly. Fat injected into or beneath the gluteal muscle can enter the venous system and cause fatal embolism — historically the highest mortality rate of any cosmetic procedure. That risk is substantially reduced, though not eliminated, by strictly subcutaneous placement and ultrasound guidance.',
+      'We perform BBL only above the muscle, with ultrasound confirmation of cannula position, and we decline patients who do not have adequate donor fat rather than over-harvesting. If your expectations require more volume than your body can safely supply, implants are the honest alternative and we will say so.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '2 – 4 hours'],
+      ['Downtime', '2 – 3 weeks'],
+      ['No sitting', '2 – 3 weeks']
+    ],
+    groups: [
+      {
+        name: 'Brazilian Butt Lift',
+        services: [
+          ['Brazilian Butt Lift (BBL)', 'Transfers your own liposuctioned fat to reshape and project the buttocks.'],
+          ['Ultrasound Guided BBL', 'Real-time ultrasound confirms subcutaneous cannula position throughout injection.'],
+          ['Skinny BBL', 'Maximises contour for slimmer patients with limited donor fat available.'],
+          ['Mini BBL', 'A deliberately subtle increase focused on shape correction rather than volume.'],
+          ['360 Lipo and BBL', 'Circumferential liposuction paired with grafting for a full waist-to-hip change.'],
+          ['Revision BBL', 'Corrects asymmetry, contour irregularity or volume loss after a previous BBL.'],
+          ['Male BBL', 'Gluteal shaping planned around masculine proportions and muscle definition.'],
+          ['BBL Recovery Guide', 'Week-by-week guidance on positioning, compression, sitting and return to activity.'],
+          ['Brazilian Butt Lift FAQs', 'Safety, fat survival rates, donor site requirements, longevity and candidacy.'],
+          ['BBL Before & After', 'Representative results with an explanation of what is realistic for each body type.']
+        ]
+      },
+      {
+        name: 'Implants & Non-Surgical',
+        services: [
+          ['Buttock Implants', 'Silicone implants for patients without sufficient donor fat for grafting.'],
+          ['Butt Implant Removal', 'Removal of existing implants, with fat grafting to restore contour if wanted.'],
+          ['Butt Implants vs BBL', 'A direct comparison of longevity, risk, recovery and the results each can deliver.'],
+          ['Non-Surgical Butt Lift (HyaCorp)', 'Body filler for modest shaping with no surgery and no downtime.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 7 ==================== */
+
+  {
+    slug: 'cosmetic-gynaecology',
+    name: 'Cosmetic Gynaecology',
+    icon: 'venus',
+    tagline: 'Surgical, laser and injectable intimate health treatments.',
+    tags: ['Labiaplasty', 'Vaginoplasty', 'IntimaLase'],
+    intro: [
+      'Intimate concerns are consistently under-discussed and over-suffered. Discomfort during exercise or intercourse, stress incontinence after childbirth, laxity, dryness after menopause — these are common, treatable, and rarely raised in a general consultation because patients assume they have to live with them.',
+      'Consultations are private, unhurried and led by clinical need rather than appearance. A significant proportion of women who come in expecting to need surgery are better served by laser or conservative treatment, and we will tell you that.'
+    ],
+    meta: [
+      ['Anaesthetic', 'Local or general'],
+      ['Procedure time', '30 – 120 minutes'],
+      ['Downtime', '2 days – 2 weeks'],
+      ['Full recovery', '4 – 6 weeks']
+    ],
+    groups: [
+      {
+        name: 'Labial Surgery',
+        services: [
+          ['Labiaplasty (Labia Reduction)', 'Reduces and reshapes enlarged labia minora causing discomfort or self-consciousness.'],
+          ['Clitoral Hood Reduction', 'Reduces excess hood tissue, often performed alongside labiaplasty for balance.'],
+          ['Labiaplasty Revision', 'Corrects over-resection, asymmetry or scarring from previous labial surgery.'],
+          ['Labia Puffing (Labial Puff)', 'Filler or fat grafting to restore fullness to deflated labia majora.'],
+          ['Labiaplasty FAQs', 'Techniques, healing, sensation, scarring and return to exercise and intimacy.']
+        ]
+      },
+      {
+        name: 'Vaginal & Pelvic Surgery',
+        services: [
+          ['Vaginoplasty (Vaginal Tightening)', 'Surgically tightens the vaginal canal and repairs the supporting muscle layer.'],
+          ['Perineoplasty', 'Repairs and reconstructs the perineal body after childbirth injury or scarring.'],
+          ['Pelvic Floor Repair', 'Surgical correction of pelvic floor weakness and associated prolapse.'],
+          ['Vaginal Rejuvenation', 'Combined approach to laxity, tone and tissue quality, surgical or non-surgical.']
+        ]
+      },
+      {
+        name: 'Fotona Laser Treatments',
+        services: [
+          ['IntimaLase Vaginal Tightening', 'Non-surgical laser tightening of the vaginal canal over two to three sessions.'],
+          ['IncontiLase Urinary Incontinence', 'Laser treatment for mild to moderate stress incontinence without surgery.'],
+          ['ProlapLase Pelvic Prolapse', 'Non-surgical laser support for early-stage vaginal wall prolapse.'],
+          ['RenovaLase Vaginal Dryness', 'Restores mucosal thickness and lubrication, particularly after menopause.'],
+          ['Non-Surgical Vaginal Tightening', 'Energy-based tightening for women who prefer to avoid an operation.']
+        ]
+      },
+      {
+        name: 'Injectable Treatments',
+        services: [
+          ['O-Shot Injection', 'Platelet-rich plasma injection intended to improve sensitivity and mild incontinence.'],
+          ['G-Spot Injection (G-Shot)', 'Filler placement to temporarily augment the anterior vaginal wall.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 8 ==================== */
+
+  {
+    slug: 'male-surgery',
+    name: 'Male Surgery',
+    icon: 'mars',
+    tagline: 'Procedures planned specifically around masculine anatomy.',
+    tags: ['Gynecomastia', 'HD Lipo', 'Male Rhinoplasty'],
+    intro: [
+      'Men now make up a substantial and growing share of aesthetic surgery, and they are not simply smaller or larger versions of female patients. Skin is thicker and more vascular, fat distributes differently, beard-bearing skin changes where incisions can sit, and the aesthetic target is almost always definition and angularity rather than softening.',
+      'Gynecomastia is the most requested male procedure here and the most commonly mismanaged elsewhere. It is glandular tissue as well as fat — liposuction alone leaves the firm disc behind the nipple untouched, which is why so many men present having had a procedure that did not resolve the problem.'
+    ],
+    meta: [
+      ['Anaesthetic', 'General'],
+      ['Procedure time', '1 – 4 hours'],
+      ['Downtime', '1 – 2 weeks'],
+      ['Compression vest', '4 – 6 weeks']
+    ],
+    groups: [
+      {
+        name: 'Chest & Torso',
+        services: [
+          ['Gynecomastia Surgery', 'Removes glandular tissue and fat to restore a flat, masculine chest contour.'],
+          ['Male Breast Reduction', 'Reduction and skin tightening where enlargement is more substantial.'],
+          ['Pectoral Implants', 'Adds chest projection where training alone has not produced the wanted shape.'],
+          ['Male Liposuction', 'Contouring of the flanks, chest and abdomen adapted to male fat distribution.'],
+          ['High Definition Liposuction', 'Reveals underlying musculature through selective, layered fat removal.'],
+          ['Abdominal Etching', 'Sculpts visible abdominal definition in already-lean patients.'],
+          ['Male Tummy Tuck', 'Skin and muscle correction planned around a masculine waistline.']
+        ]
+      },
+      {
+        name: 'Face & Head',
+        services: [
+          ['Male Rhinoplasty', 'Maintains a stronger dorsal line and less tip rotation than female rhinoplasty.'],
+          ['Male Eyelid Surgery', 'Conservative upper lid correction that avoids raising or feminising the brow.'],
+          ['Male Facelift', 'Accounts for thicker skin, beard growth and masculine hairline placement.'],
+          ['Male Neck Lift', 'Restores jaw and neck definition without disturbing beard-bearing skin.'],
+          ['Male Chin Surgery', 'Builds chin width and projection for a stronger lower facial third.']
+        ]
+      },
+      {
+        name: 'Body & Contouring',
+        services: [
+          ['Male BBL', 'Gluteal shaping proportioned to a masculine frame rather than an hourglass.'],
+          ['Male Body Lift', 'Post-weight-loss skin removal planned for male torso proportions.']
+        ]
+      }
+    ]
+  },
+
+
+  /* ==================== 9 ==================== */
+
   {
     slug: 'laser-dermatology',
     name: 'Laser Dermatology',
@@ -128,7 +557,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 2 ===================== */
+
+  /* =================== 10 =================== */
+
   {
     slug: 'non-surgical-aesthetics',
     name: 'Non-Surgical Aesthetics',
@@ -193,7 +624,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 3 ===================== */
+
+  /* =================== 11 =================== */
+
   {
     slug: 'skin-surgery',
     name: 'Skin Surgery',
@@ -251,56 +684,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 4 ===================== */
-  {
-    slug: 'nose-surgery',
-    name: 'Nose Surgery',
-    icon: 'nose',
-    tagline: 'Rhinoplasty and functional nasal surgery, cosmetic and reconstructive.',
-    tags: ['Rhinoplasty', 'Septoplasty', 'Revision'],
-    intro: [
-      'Rhinoplasty is the most technically unforgiving procedure in facial surgery. The nose sits at the centre of the face, millimetres are visible, and the final shape continues to settle for twelve to eighteen months. It is also the operation where surgeon selection matters most — revision rates in unselected hands run high.',
-      'We plan every nose against your facial proportions rather than a reference photograph, and preserve ethnic character by default. Where breathing is affected, functional correction is addressed in the same operation — a nose that looks right but does not work is a failed result.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '2 – 4 hours'],
-      ['Downtime', '7 – 14 days'],
-      ['Final result', '12 – 18 months']
-    ],
-    groups: [
-      {
-        name: 'Cosmetic Rhinoplasty',
-        services: [
-          ['Rhinoplasty (Nose Job)', 'Reshapes the bridge, tip and nostrils to bring the nose into proportion with the face.'],
-          ['Tip Rhinoplasty (Tip Plasty)', 'Refines a bulbous, drooping or poorly defined tip without altering the bridge.'],
-          ['Alar Base Reduction', 'Narrows wide nostrils and reduces flare through concealed base incisions.'],
-          ['Ethnic Rhinoplasty', 'Refinement that respects and preserves the characteristics of your ethnic anatomy.'],
-          ['Ultrasonic Rhinoplasty', 'Piezo instruments reshape bone precisely with less bruising than traditional osteotomy.'],
-          ['Preservation Rhinoplasty', 'Retains rather than removes the natural dorsal structure, lowering it as an intact unit.'],
-          ['Male Rhinoplasty', 'Maintains a stronger dorsum and less tip rotation appropriate to masculine proportions.']
-        ]
-      },
-      {
-        name: 'Functional Nasal Surgery',
-        services: [
-          ['Septoplasty', 'Straightens a deviated septum to restore clear airflow through both nostrils.'],
-          ['Turbinate Reduction', 'Reduces enlarged turbinates that block the airway, often alongside septoplasty.'],
-          ['Septorhinoplasty', 'Combines cosmetic reshaping with functional airway correction in one operation.']
-        ]
-      },
-      {
-        name: 'Revision & Non-Surgical',
-        services: [
-          ['Revision Rhinoplasty', 'Corrective surgery after an unsatisfactory or failed previous rhinoplasty.'],
-          ['Nose Thread Lift', 'Absorbable threads to lift and define the tip and bridge without surgery.'],
-          ['Nose Surgery FAQs', 'Answers on recovery, swelling timelines, splints, cost factors and candidacy.']
-        ]
-      }
-    ]
-  },
 
-  /* ===================== 5 ===================== */
+  /* =================== 12 =================== */
+
   {
     slug: 'eyelids-upper-face',
     name: 'Eyelids & Upper Face',
@@ -345,66 +731,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 6 ===================== */
-  {
-    slug: 'face-surgery',
-    name: 'Face Surgery',
-    icon: 'face',
-    tagline: 'Facelifting, neck contouring and facial feature refinement.',
-    tags: ['Deep Plane Facelift', 'Neck Lift', 'Buccal Fat'],
-    intro: [
-      'A modern facelift is not skin tightening. Pulling skin produces the swept, operated look everyone recognises and fears; it also relapses quickly because skin is not a load-bearing tissue. Contemporary technique works on the SMAS layer beneath — repositioning it so the skin is redraped without tension.',
-      'Face and neck are assessed together. In most patients over forty-five, the neck is the giveaway, and a facelift that ignores it delivers a result that reads as incomplete from every angle except straight on.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '3 – 6 hours'],
-      ['Downtime', '2 – 3 weeks'],
-      ['Results last', '8 – 12 years']
-    ],
-    groups: [
-      {
-        name: 'Facelift Procedures',
-        services: [
-          ['Facelift (Rhytidectomy)', 'Comprehensive lift of the lower face and jawline through the SMAS layer.'],
-          ['SMAS Facelift', 'Repositions the deeper muscular layer for durable lift without skin tension.'],
-          ['Deep Plane Facelift', 'Releases the retaining ligaments to lift the midface as a single composite unit.'],
-          ['Upper Facelift (Forehead Lift)', 'Addresses brow descent and forehead laxity in the upper third.'],
-          ['Mid-Facelift (Cheek Lift)', 'Restores cheek height and softens the nasolabial region.'],
-          ['Lower Facelift (Jowl Lift)', 'Focused correction of jowling and loss of jawline definition.'],
-          ['Mini Facelift', 'Shorter-scar lift for earlier laxity, with a faster return to normal activity.'],
-          ['One-Stitch Facelift', 'Minimal-access lift for very early jawline softening.'],
-          ['Male Facelift', 'Accounts for beard-bearing skin, thicker tissue and masculine hairline placement.']
-        ]
-      },
-      {
-        name: 'Neck & Jawline',
-        services: [
-          ['Neck Lift', 'Tightens platysma banding and removes excess skin to redefine the neckline.'],
-          ['Mini Neck Lift', 'Limited-incision correction for early submental laxity.'],
-          ['Male Neck Lift', 'Neck definition for men, working around beard growth and heavier skin.'],
-          ['Chin & Neck Liposuction', 'Removes the submental fat pad in patients with good skin elasticity.'],
-          ['FaceTite', 'Radiofrequency-assisted contraction under the skin for lift without a long scar.']
-        ]
-      },
-      {
-        name: 'Facial Features',
-        services: [
-          ['Facial Fat Transfer', 'Uses your own purified fat to restore volume in the temples, cheeks and around the mouth.'],
-          ['Lip Lift', 'Shortens a long upper lip to increase pink show and reveal more upper teeth.'],
-          ['Lip Reduction Surgery', 'Reduces excessive lip bulk to rebalance the lower face.'],
-          ['Buccal Fat Removal', 'Removes deep cheek fat pads to sharpen the cheek hollow — used selectively.'],
-          ['Dimple Creation', 'Creates a natural-looking cheek dimple through a small intraoral incision.'],
-          ['Chin Surgery (Genioplasty)', 'Repositions the chin bone to correct projection and facial profile balance.'],
-          ['Chin Augmentation', 'Increases chin projection using an implant or bony advancement.'],
-          ['Chin Reduction', 'Reduces an over-projected or long chin for better proportion.'],
-          ['Male Chin Surgery', 'Builds width and projection appropriate to a masculine lower face.']
-        ]
-      }
-    ]
-  },
 
-  /* ===================== 7 ===================== */
+  /* =================== 13 =================== */
+
   {
     slug: 'ear-surgery',
     name: 'Ear Surgery',
@@ -434,261 +763,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 8 ===================== */
-  {
-    slug: 'breast-surgery',
-    name: 'Breast Surgery',
-    icon: 'breast',
-    tagline: 'Augmentation, lift, reduction, revision and corrective breast surgery.',
-    tags: ['Augmentation', 'Breast Lift', 'Reduction'],
-    intro: [
-      'Breast surgery covers a wider range than most people expect: increasing volume, restoring position, reducing weight, correcting asymmetry or developmental differences, and dealing with implants placed years ago that now need attention. Getting the right operation matters more than the technique used to perform it.',
-      'The most common planning error is treating sagging as a volume problem. An implant in a breast that has descended adds weight without changing position, and often makes the result worse. Where the nipple sits below the inframammary fold, a lift — with or without an implant — is the honest answer.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '1.5 – 4 hours'],
-      ['Downtime', '1 – 2 weeks'],
-      ['Support bra', '6 weeks']
-    ],
-    groups: [
-      {
-        name: 'Breast Augmentation',
-        services: [
-          ['Breast Augmentation with Implants', 'Increases size and improves shape using implants selected to your chest measurements.'],
-          ['Mini Breast Augmentation', 'A modest, deliberately understated increase for a natural result.'],
-          ['Breast Implant Options', 'Round versus anatomical, smooth versus textured, and how projection is chosen.'],
-          ['Fat Transfer Breast Augmentation', 'Uses your own liposuctioned fat for a modest, implant-free increase.'],
-          ['Hybrid Breast Augmentation', 'Combines an implant for volume with fat grafting to soften the upper pole.']
-        ]
-      },
-      {
-        name: 'Implant Revision & Removal',
-        services: [
-          ['Breast Implant Check', 'Clinical and imaging assessment of implant integrity, position and capsule.'],
-          ['Breast Implant Removal (Explant)', 'Removal of implants, with capsulectomy where clinically indicated.'],
-          ['Implant Removal with Breast Lift', 'Explant combined with mastopexy to reshape the breast in one stage.'],
-          ['Breast Implant Replacement', 'Exchange of ageing or ruptured implants for a new size or profile.'],
-          ['Breast Implant Revision', 'Corrects capsular contracture, malposition, rippling or unsatisfactory shape.']
-        ]
-      },
-      {
-        name: 'Breast Lift & Reduction',
-        services: [
-          ['Breast Lift (Mastopexy)', 'Raises and reshapes descended breast tissue and repositions the nipple.'],
-          ['Breast Lift with Implants', 'Combines lift with an implant where both position and volume need addressing.'],
-          ['Breast Lift with Auto-Augmentation', 'Reshapes your own tissue to restore upper pole fullness without an implant.'],
-          ['Mini Breast Lift (Doughnut Mastopexy)', 'Limited peri-areolar lift for mild descent with minimal scarring.'],
-          ['Breast Reduction', 'Removes excess tissue to relieve back, neck and shoulder strain and reshape the breast.'],
-          ['Liposuction Breast Reduction', 'Volume reduction by liposuction alone in selected patients with good skin quality.']
-        ]
-      },
-      {
-        name: 'Nipple, Areola & Corrective',
-        services: [
-          ['Inverted Nipple Correction', 'Releases the tethering ducts to restore normal nipple projection.'],
-          ['Nipple Reduction', 'Reduces nipple length or width under local anaesthetic.'],
-          ['Areola Reduction', 'Reduces enlarged or stretched areolae to a proportionate size.'],
-          ['Breast Asymmetry Correction', 'Balances differences in size, shape or position between the two breasts.'],
-          ['Tuberous Breast Correction', 'Releases the constricting base and reshapes tuberous or constricted breasts.']
-        ]
-      }
-    ]
-  },
 
-  /* ===================== 9 ===================== */
-  {
-    slug: 'body-surgery',
-    name: 'Body Surgery',
-    icon: 'body',
-    tagline: 'Liposuction, abdominoplasty, implants and body contouring.',
-    tags: ['Liposuction', 'Tummy Tuck', '360 Lipo'],
-    intro: [
-      'Liposuction is a contouring operation, not a weight loss operation. It removes localised fat deposits that have not responded to diet and training, and it works best in patients already close to a stable weight with reasonable skin quality. Where skin has lost elasticity, removing the fat beneath it will make laxity more obvious, not less.',
-      'That distinction is why abdominoplasty exists. If the abdominal wall muscles have separated after pregnancy or significant weight change, no amount of liposuction will flatten the abdomen — the repair has to address the muscle layer and the excess skin together.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '1 – 5 hours'],
-      ['Downtime', '1 – 3 weeks'],
-      ['Compression', '6 – 8 weeks']
-    ],
-    groups: [
-      {
-        name: 'Liposuction & Fat Contouring',
-        services: [
-          ['Liposuction', 'Removes stubborn localised fat deposits to reshape the body contour.'],
-          ['Stomach Liposuction', 'Targeted contouring of the upper and lower abdomen and flanks.'],
-          ['360 Liposuction', 'Circumferential contouring of the abdomen, flanks and back in one procedure.'],
-          ['Micro Liposuction (MicroLipo)', 'Fine-cannula technique for small, delicate areas under local anaesthetic.'],
-          ['High Definition Liposuction', 'Selective fat removal that reveals the underlying muscular anatomy.'],
-          ['Abdominal Etching', 'Sculpts definition along the linea alba and tendinous inscriptions.'],
-          ['Male Liposuction', 'Contouring adapted to male fat distribution across the chest, flanks and abdomen.'],
-          ['BodyTite', 'Radiofrequency-assisted liposuction that contracts skin as fat is removed.'],
-          ['Cellulite Treatment', 'Combined release and resurfacing approach to dimpling on the thighs and buttocks.']
-        ]
-      },
-      {
-        name: 'Abdominoplasty',
-        services: [
-          ['Tummy Tuck (Abdominoplasty)', 'Removes excess skin and repairs separated abdominal muscles.'],
-          ['Brazilian Tummy Tuck', 'Combines abdominoplasty with aggressive contouring for a more defined waist.'],
-          ['Mini Tummy Tuck', 'Addresses skin below the navel only, with a shorter scar and faster recovery.'],
-          ['Male Tummy Tuck', 'Abdominal skin and muscle correction contoured to a masculine torso.'],
-          ['Umbilicoplasty', 'Reshapes the belly button, or repairs it after hernia or pregnancy changes.'],
-          ['Mons Lift (Monsplasty)', 'Reduces and lifts a heavy or descended pubic mound.'],
-          ['C-Section Scar Revision', 'Revises a shelved, adherent or poorly positioned caesarean scar.']
-        ]
-      },
-      {
-        name: 'Implants & Grafting',
-        services: [
-          ['Body Contouring Procedures', 'Combination planning across multiple areas in staged or single operations.'],
-          ['Fat Transfer (Fat Grafting)', 'Harvests, purifies and re-injects your own fat to add volume where it is wanted.'],
-          ['Pectoral Implants', 'Silicone implants to build chest projection where training has plateaued.'],
-          ['Chest Wall Implants', 'Custom implants to correct pectus deformity and chest wall asymmetry.'],
-          ['Calf Augmentation with Implants', 'Improves lower leg proportion using implants placed beneath the fascia.'],
-          ['Fat Transfer Calf Augmentation', 'Uses grafted fat for a softer, more natural calf enhancement.']
-        ]
-      }
-    ]
-  },
+  /* =================== 14 =================== */
 
-  /* ===================== 10 ===================== */
-  {
-    slug: 'buttock-contouring',
-    name: 'Buttock Contouring',
-    icon: 'buttock',
-    tagline: 'Brazilian butt lift, implants and non-surgical shaping.',
-    tags: ['BBL', 'Buttock Implants', 'Skinny BBL'],
-    intro: [
-      'The Brazilian butt lift has a safety history that deserves stating plainly. Fat injected into or beneath the gluteal muscle can enter the venous system and cause fatal embolism — historically the highest mortality rate of any cosmetic procedure. That risk is substantially reduced, though not eliminated, by strictly subcutaneous placement and ultrasound guidance.',
-      'We perform BBL only above the muscle, with ultrasound confirmation of cannula position, and we decline patients who do not have adequate donor fat rather than over-harvesting. If your expectations require more volume than your body can safely supply, implants are the honest alternative and we will say so.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '2 – 4 hours'],
-      ['Downtime', '2 – 3 weeks'],
-      ['No sitting', '2 – 3 weeks']
-    ],
-    groups: [
-      {
-        name: 'Brazilian Butt Lift',
-        services: [
-          ['Brazilian Butt Lift (BBL)', 'Transfers your own liposuctioned fat to reshape and project the buttocks.'],
-          ['Ultrasound Guided BBL', 'Real-time ultrasound confirms subcutaneous cannula position throughout injection.'],
-          ['Skinny BBL', 'Maximises contour for slimmer patients with limited donor fat available.'],
-          ['Mini BBL', 'A deliberately subtle increase focused on shape correction rather than volume.'],
-          ['360 Lipo and BBL', 'Circumferential liposuction paired with grafting for a full waist-to-hip change.'],
-          ['Revision BBL', 'Corrects asymmetry, contour irregularity or volume loss after a previous BBL.'],
-          ['Male BBL', 'Gluteal shaping planned around masculine proportions and muscle definition.'],
-          ['BBL Recovery Guide', 'Week-by-week guidance on positioning, compression, sitting and return to activity.'],
-          ['Brazilian Butt Lift FAQs', 'Safety, fat survival rates, donor site requirements, longevity and candidacy.'],
-          ['BBL Before & After', 'Representative results with an explanation of what is realistic for each body type.']
-        ]
-      },
-      {
-        name: 'Implants & Non-Surgical',
-        services: [
-          ['Buttock Implants', 'Silicone implants for patients without sufficient donor fat for grafting.'],
-          ['Butt Implant Removal', 'Removal of existing implants, with fat grafting to restore contour if wanted.'],
-          ['Butt Implants vs BBL', 'A direct comparison of longevity, risk, recovery and the results each can deliver.'],
-          ['Non-Surgical Butt Lift (HyaCorp)', 'Body filler for modest shaping with no surgery and no downtime.']
-        ]
-      }
-    ]
-  },
-
-  /* ===================== 11 ===================== */
-  {
-    slug: 'cosmetic-gynaecology',
-    name: 'Cosmetic Gynaecology',
-    icon: 'venus',
-    tagline: 'Surgical, laser and injectable intimate health treatments.',
-    tags: ['Labiaplasty', 'Vaginoplasty', 'IntimaLase'],
-    intro: [
-      'Intimate concerns are consistently under-discussed and over-suffered. Discomfort during exercise or intercourse, stress incontinence after childbirth, laxity, dryness after menopause — these are common, treatable, and rarely raised in a general consultation because patients assume they have to live with them.',
-      'Consultations are private, unhurried and led by clinical need rather than appearance. A significant proportion of women who come in expecting to need surgery are better served by laser or conservative treatment, and we will tell you that.'
-    ],
-    meta: [
-      ['Anaesthetic', 'Local or general'],
-      ['Procedure time', '30 – 120 minutes'],
-      ['Downtime', '2 days – 2 weeks'],
-      ['Full recovery', '4 – 6 weeks']
-    ],
-    groups: [
-      {
-        name: 'Labial Surgery',
-        services: [
-          ['Labiaplasty (Labia Reduction)', 'Reduces and reshapes enlarged labia minora causing discomfort or self-consciousness.'],
-          ['Clitoral Hood Reduction', 'Reduces excess hood tissue, often performed alongside labiaplasty for balance.'],
-          ['Labiaplasty Revision', 'Corrects over-resection, asymmetry or scarring from previous labial surgery.'],
-          ['Labia Puffing (Labial Puff)', 'Filler or fat grafting to restore fullness to deflated labia majora.'],
-          ['Labiaplasty FAQs', 'Techniques, healing, sensation, scarring and return to exercise and intimacy.']
-        ]
-      },
-      {
-        name: 'Vaginal & Pelvic Surgery',
-        services: [
-          ['Vaginoplasty (Vaginal Tightening)', 'Surgically tightens the vaginal canal and repairs the supporting muscle layer.'],
-          ['Perineoplasty', 'Repairs and reconstructs the perineal body after childbirth injury or scarring.'],
-          ['Pelvic Floor Repair', 'Surgical correction of pelvic floor weakness and associated prolapse.'],
-          ['Vaginal Rejuvenation', 'Combined approach to laxity, tone and tissue quality, surgical or non-surgical.']
-        ]
-      },
-      {
-        name: 'Fotona Laser Treatments',
-        services: [
-          ['IntimaLase Vaginal Tightening', 'Non-surgical laser tightening of the vaginal canal over two to three sessions.'],
-          ['IncontiLase Urinary Incontinence', 'Laser treatment for mild to moderate stress incontinence without surgery.'],
-          ['ProlapLase Pelvic Prolapse', 'Non-surgical laser support for early-stage vaginal wall prolapse.'],
-          ['RenovaLase Vaginal Dryness', 'Restores mucosal thickness and lubrication, particularly after menopause.'],
-          ['Non-Surgical Vaginal Tightening', 'Energy-based tightening for women who prefer to avoid an operation.']
-        ]
-      },
-      {
-        name: 'Injectable Treatments',
-        services: [
-          ['O-Shot Injection', 'Platelet-rich plasma injection intended to improve sensitivity and mild incontinence.'],
-          ['G-Spot Injection (G-Shot)', 'Filler placement to temporarily augment the anterior vaginal wall.']
-        ]
-      }
-    ]
-  },
-
-  /* ===================== 12 ===================== */
-  {
-    slug: 'mommy-makeover',
-    name: 'Mommy Makeover',
-    icon: 'mommy',
-    tagline: 'Combined restoration of the breast, abdomen and intimate area.',
-    tags: ['Combined Surgery', 'Breast & Tummy', 'Post-Pregnancy'],
-    intro: [
-      'Pregnancy changes several structures at once — breast volume and position, abdominal muscle separation, skin laxity, and often the pelvic floor. Treating them individually means several separate recoveries. A combined procedure addresses them under one anaesthetic, with one recovery period.',
-      'Timing matters more than technique here. We ask that you are finished having children, at a stable weight for at least six months, and no longer breastfeeding for at least three to six months. Operating earlier produces results that a subsequent pregnancy will undo.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '4 – 7 hours'],
-      ['Hospital stay', '1 – 2 nights'],
-      ['Downtime', '3 – 6 weeks']
-    ],
-    groups: [
-      {
-        name: 'The Combination',
-        services: [
-          ['Mommy Makeover', 'A single planned operation combining breast, abdominal and intimate restoration.'],
-          ['Breast Lift or Augmentation', 'Restores position and, where wanted, volume lost after breastfeeding.'],
-          ['Tummy Tuck with Muscle Repair', 'Closes abdominal muscle separation and removes the resulting skin excess.'],
-          ['Liposuction / 360 Lipo', 'Contours the flanks and waist that abdominoplasty alone does not reach.'],
-          ['Labiaplasty or Vaginoplasty', 'Optional intimate correction included in the same anaesthetic where appropriate.'],
-          ['Mommy Makeover FAQs', 'Timing after childbirth, combining safely, recovery with children at home, and cost factors.']
-        ]
-      }
-    ]
-  },
-
-  /* ===================== 13 ===================== */
   {
     slug: 'post-weight-loss',
     name: 'Post Weight Loss',
@@ -738,57 +815,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 14 ===================== */
-  {
-    slug: 'male-surgery',
-    name: 'Male Surgery',
-    icon: 'mars',
-    tagline: 'Procedures planned specifically around masculine anatomy.',
-    tags: ['Gynecomastia', 'HD Lipo', 'Male Rhinoplasty'],
-    intro: [
-      'Men now make up a substantial and growing share of aesthetic surgery, and they are not simply smaller or larger versions of female patients. Skin is thicker and more vascular, fat distributes differently, beard-bearing skin changes where incisions can sit, and the aesthetic target is almost always definition and angularity rather than softening.',
-      'Gynecomastia is the most requested male procedure here and the most commonly mismanaged elsewhere. It is glandular tissue as well as fat — liposuction alone leaves the firm disc behind the nipple untouched, which is why so many men present having had a procedure that did not resolve the problem.'
-    ],
-    meta: [
-      ['Anaesthetic', 'General'],
-      ['Procedure time', '1 – 4 hours'],
-      ['Downtime', '1 – 2 weeks'],
-      ['Compression vest', '4 – 6 weeks']
-    ],
-    groups: [
-      {
-        name: 'Chest & Torso',
-        services: [
-          ['Gynecomastia Surgery', 'Removes glandular tissue and fat to restore a flat, masculine chest contour.'],
-          ['Male Breast Reduction', 'Reduction and skin tightening where enlargement is more substantial.'],
-          ['Pectoral Implants', 'Adds chest projection where training alone has not produced the wanted shape.'],
-          ['Male Liposuction', 'Contouring of the flanks, chest and abdomen adapted to male fat distribution.'],
-          ['High Definition Liposuction', 'Reveals underlying musculature through selective, layered fat removal.'],
-          ['Abdominal Etching', 'Sculpts visible abdominal definition in already-lean patients.'],
-          ['Male Tummy Tuck', 'Skin and muscle correction planned around a masculine waistline.']
-        ]
-      },
-      {
-        name: 'Face & Head',
-        services: [
-          ['Male Rhinoplasty', 'Maintains a stronger dorsal line and less tip rotation than female rhinoplasty.'],
-          ['Male Eyelid Surgery', 'Conservative upper lid correction that avoids raising or feminising the brow.'],
-          ['Male Facelift', 'Accounts for thicker skin, beard growth and masculine hairline placement.'],
-          ['Male Neck Lift', 'Restores jaw and neck definition without disturbing beard-bearing skin.'],
-          ['Male Chin Surgery', 'Builds chin width and projection for a stronger lower facial third.']
-        ]
-      },
-      {
-        name: 'Body & Contouring',
-        services: [
-          ['Male BBL', 'Gluteal shaping proportioned to a masculine frame rather than an hourglass.'],
-          ['Male Body Lift', 'Post-weight-loss skin removal planned for male torso proportions.']
-        ]
-      }
-    ]
-  },
 
-  /* ===================== 15 ===================== */
+  /* =================== 15 =================== */
+
   {
     slug: 'gender-surgery',
     name: 'Gender Surgery',
@@ -835,7 +864,9 @@ const CATEGORIES = [
     ]
   },
 
-  /* ===================== 16 ===================== */
+
+  /* =================== 16 =================== */
+
   {
     slug: 'hair-transplant',
     name: 'Hair Transplant',
