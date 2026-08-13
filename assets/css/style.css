@@ -294,13 +294,14 @@ p { margin: 0; }
 .nav__inner {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: flex-start;
+  gap: 1rem;
   height: var(--nav-h);
   /* The mega panel anchors to this, not to the <li>, so it can span the
      full container width instead of being centred on its trigger. */
   position: relative;
 }
-.nav__primary { margin-right: auto; }
+.nav__primary { margin-left: auto; margin-right: 0; justify-content: flex-end; }
 
 .logo { display: flex; align-items: center; gap: .8rem; min-width: 0; }
 /* The lockup is ~2.5:1 with a fine subtitle line, so it needs real height
@@ -346,7 +347,7 @@ p { margin: 0; }
    the link text and the bottom of the header — otherwise moving down toward
    the dropdown leaves the trigger before reaching the hover bridge. */
 .nav__primary { align-self: stretch; display: flex; }
-.nav__links { display: flex; align-items: stretch; gap: 1.85rem; }
+.nav__links { display: flex; align-items: stretch; justify-content: flex-end; gap: clamp(1.1rem, 1.8vw, 1.85rem); }
 .nav__links > li { position: relative; display: flex; align-items: center; }
 .nav__links > li > a { align-self: stretch; }
 /* Static so the mega panel resolves against .nav__inner. */
@@ -574,7 +575,7 @@ p { margin: 0; }
 .mega__links {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .05rem .9rem;
+  gap: .1rem .9rem;
   align-content: start;
 }
 .mega__links a {
@@ -598,7 +599,8 @@ p { margin: 0; }
   color: var(--ink);
   padding-left: 1.05rem;
 }
-.nav__cta { display: flex; align-items: center; gap: .55rem; }
+.nav__cta { display: flex; align-items: center; margin-left: .35rem; }
+.nav__cta .btn { min-width: 178px; justify-content: center; }
 
 /* Compact contact icons, as on the reference header */
 .nav__icon {
@@ -917,6 +919,40 @@ p { margin: 0; }
 }
 .card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--line-strong); }
 
+/* Pillar card — the home page's routes into About / Surgeon / Results.
+   Deliberately NOT built on .feature: that card is styled light-on-dark for
+   .section--ink, and its heading colour vanishes on a light background. */
+.pillar { text-align: left; }
+.pillar__tag {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 1.1rem;
+}
+.pillar h3 {
+  font-family: var(--font-serif);
+  font-size: 1.24rem;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-bottom: .6rem;
+}
+.pillar p {
+  font-size: .9rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+/* Pushed to the card's foot so the arrow row aligns across all three tiles
+   even when the headings wrap to different line counts. */
+.pillar__cta { margin-top: auto; padding-top: 1.2rem; }
+.pillar:hover .cat-card__icon {
+  background: linear-gradient(140deg, var(--gold), var(--gold-deep));
+}
+.pillar:hover .cat-card__icon svg { color: var(--sand-50); }
+
 /* Category card */
 .cat-card { text-align: left; }
 .cat-card__icon {
@@ -976,6 +1012,7 @@ p { margin: 0; }
   pointer-events: none;
 }
 .cat-card:hover .cat-card__num { color: var(--sand-200); }
+.treatments__more-wrap { display: none; text-align: center; }
 
 /* Feature card (ink section) */
 .feature {
@@ -1108,12 +1145,29 @@ p { margin: 0; }
   overflow: hidden;
   box-shadow: var(--shadow);
   user-select: none;
-  touch-action: none;
+  /* pan-y, not none: the browser keeps vertical scrolling so the page still
+     moves under a finger on the card, while horizontal drags reach the
+     compare handle. `none` blocked scroll entirely on touch. */
+  touch-action: pan-y;
   cursor: ew-resize;
   background: var(--sand-200);
 }
 .ba__pane { position: absolute; inset: 0; }
 .ba__pane img { width: 100%; height: 100%; object-fit: cover; }
+/* AI artwork is created as a matched two-up frame. Each pane enlarges its
+   own side of that source, so the comparison control still reveals a true
+   before / after view rather than a compressed full diptych. */
+.ba__pane .ba__source--before,
+.ba__pane .ba__source--after {
+  position: absolute;
+  top: -24%;
+  width: auto;
+  max-width: none;
+  height: 148%;
+  object-fit: initial;
+}
+.ba__pane .ba__source--before { left: 0; }
+.ba__pane .ba__source--after { right: 0; }
 .ba__pane--before { background: linear-gradient(150deg, var(--sand-300), var(--sand-500)); }
 .ba__pane--after  { background: linear-gradient(150deg, var(--sand-100), var(--sand-300)); clip-path: inset(0 0 0 var(--compare-pos)); }
 .ba__label {
@@ -1203,6 +1257,91 @@ p { margin: 0; }
   z-index: 4;
   pointer-events: none;
 }
+
+/* ---------------------------------------------------------
+   Before / After case gallery
+   --------------------------------------------------------- */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.4rem);
+}
+.case {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.case:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+/* The slider is already rounded by .ba; squaring it here lets the card's own
+   border-radius own the corners instead of doubling up. */
+.case .ba { border-radius: 0; box-shadow: none; aspect-ratio: 4 / 3; }
+
+.case__body { padding: 1.3rem 1.4rem 1.5rem; }
+.case__meta {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .75rem;
+  font-weight: 600;
+  margin-bottom: .5rem;
+}
+.case__num {
+  padding: .16rem .5rem;
+  border-radius: 999px;
+  background: var(--sand-100);
+  border: 1px solid var(--line);
+  color: var(--sand-600);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.case__meta a { color: var(--gold-deep); font-weight: 700; }
+.case__meta a:hover { color: var(--ink); }
+.case__body h3 {
+  font-family: var(--font-serif);
+  font-size: 1.14rem;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  color: var(--ink);
+}
+.case__look {
+  margin-top: .6rem;
+  font-size: .855rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.case__look b { color: var(--ink); font-weight: 700; }
+
+/* Reserved frame: no photograph on file. Deliberately reads as an empty slot
+   rather than a broken image, and the drag handle still demonstrates the
+   control so the frame is understandable before any photo lands. */
+.ba--empty { cursor: default; background: var(--sand-100); }
+.ba--empty .ba__pane--before {
+  background:
+    repeating-linear-gradient(45deg, rgba(166, 143, 102, .07) 0 10px, transparent 10px 20px),
+    linear-gradient(150deg, var(--sand-300), var(--sand-500));
+}
+.ba--empty .ba__pane--after {
+  background:
+    repeating-linear-gradient(45deg, rgba(166, 143, 102, .07) 0 10px, transparent 10px 20px),
+    linear-gradient(150deg, var(--sand-100), var(--sand-300));
+}
+.ba--empty .ba__note { font-size: .78rem; }
+.ba__badge--empty {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(23, 17, 10, .62);
+}
+.ba__badge--empty svg { width: 12px; height: 12px; flex: none; }
+/* An illustration must stay distinguishable from a patient result at a glance,
+   not just on reading the words — so it carries its own colour, not the
+   neutral dark pill a real case uses. */
+.ba__badge--illus { background: rgba(138, 109, 75, .92); }
 
 /* ---------------------------------------------------------
    Journey steps
@@ -1507,13 +1646,54 @@ p { margin: 0; }
   font-size: .8rem;
 }
 .footer__bar nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+/* Site pages, centred on one line. Sits between the link columns and the
+   service-areas paragraph, so it separates the two without another rule. */
+.footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem 1.9rem;
+  margin-top: clamp(2rem, 4vw, 2.8rem);
+  padding: 1.15rem 0;
+  border-top: 1px solid rgba(244, 239, 230, .12);
+}
+.footer__nav a {
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--sand-200);
+  white-space: nowrap;
+  transition: color .25s;
+}
+.footer__nav a:hover { color: var(--sand-50); }
+/* Hairline separators, only at widths where the row is guaranteed to stay on
+   one line. `a + a::before` cannot know about wrapping, so once the list wraps
+   the first item of each new line would draw a divider floating to its left.
+   Below this breakpoint the gap alone separates the items. */
+@media (min-width: 761px) {
+  .footer__nav a + a { position: relative; }
+  .footer__nav a + a::before {
+    content: "";
+    position: absolute;
+    left: -.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: .78em;
+    background: rgba(244, 239, 230, .22);
+  }
+}
+
+/* Both of these run the full container width on purpose. A `max-width` in ch
+   here reads as a bug rather than a measure: `.footer__areas` carries a
+   border-top, so capping it stops the rule short of the footer's right edge
+   and leaves it visibly out of line with the one above `.footer__bar`. */
 .footer__areas {
   font-size: .82rem;
   line-height: 1.75;
   color: rgba(244, 239, 230, .5);
   padding: 1.6rem 0 1.2rem;
   border-top: 1px solid rgba(244, 239, 230, .12);
-  max-width: 95ch;
 }
 .footer__areas strong { color: var(--sand-300); font-weight: 600; }
 
@@ -1522,7 +1702,6 @@ p { margin: 0; }
   line-height: 1.7;
   color: rgba(244, 239, 230, .42);
   padding-bottom: 2rem;
-  max-width: 90ch;
 }
 
 /* ---------------------------------------------------------
@@ -1563,7 +1742,12 @@ p { margin: 0; }
 .crumbs { display: flex; align-items: center; gap: .55rem; font-size: .82rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-wrap: wrap; }
 .crumbs a:hover { color: var(--gold-deep); }
 .crumbs span { color: var(--sand-400); }
+.crumbs { display: none; }
 .page-hero__grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: clamp(2rem, 4vw, 3.5rem); align-items: end; }
+/* Safety net for a hero built without a side panel — without this the fixed
+   second column would leave a third of the row empty. */
+.page-hero__grid--solo { grid-template-columns: 1fr; }
+.page-hero__grid--solo .lead { max-width: 62ch; }
 .page-hero .display { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
 .page-hero .lead { margin-top: 1.3rem; max-width: 54ch; }
 .page-hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
@@ -1587,6 +1771,11 @@ p { margin: 0; }
 .page-hero__panel div:last-child { border-bottom: 0; padding-bottom: 0; }
 .page-hero__panel dt { color: var(--text-muted); }
 .page-hero__panel dd { margin: 0; font-weight: 600; color: var(--ink); text-align: right; }
+
+/* Image-led, clearly labelled introduction for the Before & After gallery. */
+.results-hero__visual { position: relative; width: 100%; aspect-ratio: 1.818 / 1; margin: 0; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow); background: var(--sand-200); }
+.results-hero__visual img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+.results-hero__visual figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: .8rem; padding: 1.05rem 1.2rem; color: var(--sand-100); background: linear-gradient(0deg, rgba(23, 17, 10, .75), transparent); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
 .svc-group { margin-bottom: clamp(2.8rem, 5vw, 4.2rem); }
 .svc-group__head {
@@ -1745,8 +1934,22 @@ p { margin: 0; }
   overflow: hidden;
   background: var(--ink);
 }
-.band__img { position: absolute; inset: 0; }
-.band__img img { width: 100%; height: 100%; object-fit: cover; opacity: .42; }
+.band__img {
+  position: absolute;
+  inset: 0;
+  opacity: .42;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+/* Page-specific visual direction for the shared consultation banner. */
+.page-results .band__img { background-image: url("../img/banner-results-ai.png") !important; }
+.page-about .band__img { background-image: url("../img/banner-consultation-ai.png") !important; }
+.page-surgeon .band__img { background-image: url("../img/banner-face-ai.png") !important; }
+.page-sitemap .band__img { background-image: url("../img/banner-skin-ai.png") !important; }
+.page-contact .band__img,
+.page-appointment .band__img { background-image: url("../img/banner-consultation-ai.png") !important; }
+.page-blog .band__img { background-image: url("../img/banner-journal-ai.png") !important; }
 .band::after {
   content: "";
   position: absolute;
@@ -1759,6 +1962,7 @@ p { margin: 0; }
 .band .eyebrow { color: var(--sand-400); }
 .band .eyebrow::before { background: var(--gold); }
 .band__actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 2.2rem; }
+
 
 /* =========================================================
    BLOG
@@ -2007,7 +2211,8 @@ p { margin: 0; }
 
 /* ---- Nav condenses once you start scrolling ---- */
 .nav__inner { transition: height .35s var(--ease); }
-.logo__img { transition: height .35s var(--ease); }
+.logo__img { transition: height .35s var(--ease), transform .35s var(--ease); }
+.logo:hover .logo__img { transform: scale(1.025); }
 .nav.is-stuck .nav__inner { height: calc(var(--nav-h) - 16px); }
 .nav.is-stuck .logo__img { height: 56px; }
 /* The CTA and icons condense with the bar — leaving them full size makes the
@@ -2020,6 +2225,12 @@ p { margin: 0; }
 .nav.is-stuck .nav__cta .btn { padding: .78rem 1.5rem; font-size: .875rem; }
 .nav.is-stuck .nav__icon { width: 36px; height: 36px; }
 .nav.is-stuck .nav__icon svg { width: 15px; height: 15px; }
+
+/* Refined micro-interactions: all use composited transforms only. */
+.fig img { transition: transform .8s var(--ease); }
+@media (hover: hover) and (pointer: fine) {
+  .fig:hover img { transform: scale(1.035); }
+}
 
 /* ---- Button sheen ---- */
 .btn { position: relative; overflow: hidden; isolation: isolate; }
@@ -2051,7 +2262,6 @@ p { margin: 0; }
 .js .reveal[data-dir="zoom"].is-in  { transform: scale(1); }
 
 /* ---- Parallax on full-bleed band imagery ---- */
-.band__img img { will-change: transform; }
 
 /* ---- Card interaction polish ---- */
 .cat-card { position: relative; }
@@ -2127,6 +2337,7 @@ p { margin: 0; }
      without these the logo would grow on scroll instead of shrinking. */
   .nav.is-stuck .logo__img { height: 48px; }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .split { grid-template-columns: 1fr; }
   .split--reverse .split__visual { order: 0; }
@@ -2135,7 +2346,33 @@ p { margin: 0; }
 }
 
 @media (max-width: 700px) {
+  .band__img { background-attachment: scroll; }
   :root { --nav-h: 76px; }
+  .case-grid { grid-template-columns: 1fr; }
+  /* Two comfortable columns rather than a ragged centred wrap, and taps get a
+     44px target. Book Appointment is given its own full-width row at the end. */
+  .footer__nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .2rem .8rem;
+    justify-items: center;
+    padding: 1rem 0 .6rem;
+  }
+  .footer__nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+    font-size: .82rem;
+  }
+  .footer__nav a:last-child {
+    grid-column: 1 / -1;
+    margin-top: .5rem;
+    border: 1px solid rgba(244, 239, 230, .22);
+    border-radius: 999px;
+    color: var(--sand-50);
+  }
   .container { width: min(100% - 2rem, var(--container)); }
   .logo__img { height: 44px; max-width: 150px; }
   .nav.is-stuck .logo__img { height: 36px; }
@@ -2167,6 +2404,11 @@ p { margin: 0; }
   .drawer nav a { padding: .95rem 0; }
   .related a { padding: .7rem 1.2rem; }
   .grid-2, .grid-3, .grid-4, .svc-grid { grid-template-columns: 1fr; }
+  /* Keep the home page scannable on phones; the rest is available on demand. */
+  .treatments__grid .treatments__card:nth-child(n + 4) { display: none; }
+  .treatments__grid.is-expanded .treatments__card:nth-child(n + 4) { display: flex; }
+  .treatments__more-wrap { display: block; margin-top: 1.5rem; }
+  .treatments__grid.is-expanded + .treatments__more-wrap { display: none; }
   .journey { grid-template-columns: 1fr; }
   .journey__item::after { display: none; }
   .stats { grid-template-columns: 1fr 1fr; }
@@ -2204,6 +2446,7 @@ p { margin: 0; }
   .cat-card:hover .cat-card__media img { transform: none; }
   .nav.is-stuck .nav__inner { height: var(--nav-h); }
   .nav.is-stuck .logo__img { height: 68px; }
+  .band__img { background-attachment: scroll; }
   .scroll-progress { display: none; }
 }
 

@@ -134,7 +134,7 @@ const BLOG = [
   {
     slug: 'rhinoplasty-recovery-timeline',
     title: 'Rhinoplasty Recovery: An Honest Week-by-Week Timeline',
-    seoTitle: 'Rhinoplasty Recovery: Week-by-Week Timeline',
+    seoTitle: 'Rhinoplasty Recovery: Week-by-Week',
     excerpt: 'The splint comes off in a week. The nose takes a year. Here is what actually happens in between, without the marketing gloss.',
     category: 'Recovery',
     image: 'blog-2.jpg',

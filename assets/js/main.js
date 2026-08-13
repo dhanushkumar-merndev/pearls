@@ -273,6 +273,24 @@
   on(document, 'keydown', function (e) { if (e.key === 'Escape') setDrawer(false); });
 
   /* =========================================================
+     4b. Mobile treatment cards
+     Keep the home page concise on small screens, while allowing the
+     full treatment list to be revealed without a new page load.
+     ========================================================= */
+  $$('[data-show-more]').forEach(function (button) {
+    on(button, 'click', function () {
+      var grid = document.getElementById(button.getAttribute('data-show-more'));
+      if (!grid) return;
+      grid.classList.add('is-expanded');
+      button.setAttribute('aria-expanded', 'true');
+      $$('.treatments__card', grid).slice(3).forEach(function (card) {
+        card.classList.add('is-in');
+      });
+      if (lenis) lenis.resize();
+    });
+  });
+
+  /* =========================================================
      5. Scroll reveal
      will-change is set only for the duration of each transition, so we
      never hold dozens of composited layers alive at once.

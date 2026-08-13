@@ -18,6 +18,15 @@ const CLINIC = {
   addressLine3: 'Bengaluru, Karnataka 560034',
   hours: 'Mon – Sun · 10:00 am – 8:00 pm',
   mapsUrl: 'https://maps.app.goo.gl/dRnyZZ2ZxAvV4HAy7',
+  /* Google Business Profile listing name. The embedded map is queried by this,
+     not by the street address — the address alone geocodes the building and
+     pins "K.P.Aspire" instead of the clinic. */
+  mapsQuery: 'Pearl Aesthetic & Wellness clinic, 80 Feet Road, 4th Block, Koramangala, Bengaluru 560034',
+  /* Taken from the Business Profile listing that mapsUrl resolves to. These
+     must match the GBP pin — a schema geo that disagrees with the profile
+     undercuts the local signal it is meant to reinforce. */
+  lat: 12.9324785,
+  lng: 77.6314766,
   facebook: 'https://facebook.com/PearlAestheticBengaluru',
   instagram: 'https://instagram.com/pearl_aesthetic_clinic/'
 };

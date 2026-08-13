@@ -1,0 +1,7 @@
+# Build-time only: react, react-dom and react-icons are used by
+# build/icons.js to render icons to static SVG. Nothing from here is served.
+node_modules/
+
+# OS / editor noise
+Thumbs.db
+.DS_Store
