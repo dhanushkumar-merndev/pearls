@@ -92,6 +92,16 @@
   var nav = $('.nav');
   var ticking = false;
 
+  // Hysteresis, not a single trip point: a bare "y > 10" flips back and
+  // forth on the smallest scroll wobble (trackpad rubber-banding, Lenis
+  // inertia settling, one stray wheel tick), and since .is-stuck changes
+  // the header's height, that reads as the header jittering/resizing in
+  // place. A gap between the on- and off-thresholds gives it a dead zone
+  // to settle in instead.
+  var STICK_ON = 48;
+  var STICK_OFF = 16;
+  var navStuck = nav ? nav.classList.contains('is-stuck') : false;
+
   function onFrame() {
     // Only the layout-reading work (parallax) is deferred to a frame.
     if (typeof paintParallax === 'function') paintParallax();
@@ -103,7 +113,11 @@
     // transform. Deferring these to rAF means they visibly lag whenever the
     // frame loop is throttled.
     var y = window.scrollY;
-    if (nav) nav.classList.toggle('is-stuck', y > 10);
+    if (nav) {
+      if (!navStuck && y > STICK_ON) navStuck = true;
+      else if (navStuck && y < STICK_OFF) navStuck = false;
+      nav.classList.toggle('is-stuck', navStuck);
+    }
     if (typeof paintProgress === 'function') paintProgress(y, known);
 
     if (ticking) return;
