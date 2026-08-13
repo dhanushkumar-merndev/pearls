@@ -6,7 +6,7 @@ Plain HTML, CSS and JavaScript — no framework, no build step required to host 
 Design direction follows the Makam Multi Speciality reference: warm sand/gold palette,
 Playfair Display + Plus Jakarta Sans, bold editorial typography.
 
-**25 pages · 263 procedures · 6 articles · 30 images**
+**31 pages · 263 procedures · 6 articles · 30 images**
 
 ---
 
@@ -16,6 +16,7 @@ Playfair Display + Plus Jakarta Sans, bold editorial typography.
 index.html              Landing page
 appointment.html        Booking page — form, what to expect, what to bring, FAQs
 blog.html               Article index
+privacy-terms.html      Privacy Policy & Terms of Use
 procedures/             16 category pages, one per specialist division
 blog/                   6 long-form articles
 assets/css/style.css    The whole design system
@@ -64,7 +65,7 @@ Then run:
 node build/generate.js
 ```
 
-That rewrites all 25 pages and the sitemap.
+That rewrites all 31 pages and the sitemap.
 
 ### Adding a blog post
 
@@ -375,7 +376,7 @@ Every page carries:
 | Article | `BlogPosting` (author, dates, word count, section), `BreadcrumbList` |
 | Appointment | `MedicalClinic`, `BreadcrumbList` |
 
-`sitemap.xml` lists all 26 pages with `lastmod` and priorities; `robots.txt` points to it.
+`sitemap.xml` lists all 31 pages with `lastmod` and priorities; `robots.txt` points to it.
 `sitemap.html` is a human-readable index linking every division, every one of the 263
 procedures by anchor, and every article — a flat crawl path and genuinely useful to visitors.
 

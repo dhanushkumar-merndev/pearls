@@ -291,6 +291,7 @@ function nav(base, active) {
         <li><a href="${base}results.html"${is('results')}>Before &amp; After</a></li>
         <li><a href="${base}blog.html"${is('blog')}>Blog</a></li>
         <li><a href="${base}contact.html"${is('contact')}>Contact</a></li>
+        <li><a href="${base}privacy-terms.html"${is('privacy')}>Privacy</a></li>
       </ul>
     </nav>
     <div class="nav__cta">
@@ -319,6 +320,7 @@ function drawer(base) {
     <a href="${base}blog.html">Blog</a>
     <a href="${base}appointment.html">Book an Appointment</a>
     <a href="${base}contact.html">Contact</a>
+    <a href="${base}privacy-terms.html">Privacy &amp; Terms</a>
     <p class="drawer__group">Treatments</p>
     ${CATEGORIES.map((c) => `<a class="drawer__sub" href="${base}procedures/${c.slug}.html">${esc(c.name)}</a>`).join('\n    ')}
   </nav>
@@ -401,6 +403,7 @@ function footer(base) {
       <a href="${base}blog.html">Blog</a>
       <a href="${base}contact.html">Contact</a>
       <a href="${base}appointment.html">Book Appointment</a>
+      <a href="${base}privacy-terms.html">Privacy &amp; Terms</a>
     </nav>
 
     <p class="footer__areas">
@@ -1707,6 +1710,183 @@ function appointmentPage() {
 }
 
 /* ---------------------------------------------------------
+   PRIVACY POLICY & TERMS OF USE
+   --------------------------------------------------------- */
+function legalPage() {
+  const base = '';
+  const effectiveDate = '13 August 2026';
+
+  const body = `
+<section class="page-hero">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="index.html">Home</a><span>/</span><span style="color:var(--text-muted)">Privacy Policy &amp; Terms of Use</span>
+    </nav>
+    <div class="section-head" style="margin-bottom:0;max-width:780px">
+      <p class="eyebrow">Legal</p>
+      <h1 class="display">Privacy Policy &amp;<br><em>Terms of Use</em></h1>
+      <p class="lead">How ${esc(CLINIC.name)} collects, uses and protects your information, and the terms that apply when you use this website or book a consultation with us.</p>
+    </div>
+    <p style="margin-top:1.2rem;font-size:.85rem;color:var(--text-muted)">Effective date: ${effectiveDate}. Last reviewed: ${effectiveDate}.</p>
+    <div class="band__actions" style="margin-top:1.6rem">
+      <a class="btn btn--ghost" href="#privacy-policy">Jump to Privacy Policy ${svg(UI.arrow)}</a>
+      <a class="btn btn--ghost" href="#terms-of-use">Jump to Terms of Use ${svg(UI.arrow)}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="prose">
+
+      <div class="callout">
+        <p>This page is written in plain language so it is actually useful to read. It does not cover every conceivable situation, and nothing here overrides the specific consent forms you sign in person before any procedure. If anything below is unclear, contact us using the details at the end of this page.</p>
+      </div>
+
+      <div id="privacy-policy">
+      <p class="eyebrow">Part One</p>
+      <h2 style="margin-top:.6rem">Privacy Policy</h2>
+      <p>${esc(CLINIC.name)} ("we", "us", "our", "the clinic") respects your privacy and is committed to protecting the personal information of everyone who visits this website or enquires about, books or receives care with us ("you", "your"). This Privacy Policy explains what information we collect, why we collect it, how we use and protect it, and the choices and rights available to you.</p>
+      <p>By using this website, submitting an enquiry or appointment request, or otherwise communicating with us through the channels listed on this site, you agree to the practices described in this Privacy Policy.</p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We collect information in three broad ways:</p>
+      <ul>
+        <li><strong>Information you give us directly</strong> — your name, phone number, email address, city, and any message, question or medical concern you choose to share when you fill in an enquiry or appointment form, email us, call, or message us on WhatsApp.</li>
+        <li><strong>Health-related information you choose to share</strong> — details of the procedure you are interested in, relevant medical history, current medications, prior surgeries or conditions, and photographs you may voluntarily send ahead of a consultation. You control how much you share before your first visit; nothing is collected without your action.</li>
+        <li><strong>Information collected automatically</strong> — when you browse this website, your browser or device may share standard technical details such as approximate location (city-level, from IP address), pages viewed, time spent, referring site and general device/browser type. This helps us understand how the site is used and keep it working correctly.</li>
+      </ul>
+      <p>We do not ask for or knowingly collect financial information such as card numbers through this website — any payment for a procedure or consultation is handled in person or through a payment channel that has its own separate terms.</p>
+
+      <h2>2. How We Use Your Information</h2>
+      <ul>
+        <li>To respond to your enquiry and to schedule, confirm, reschedule or follow up on appointments.</li>
+        <li>To allow the treating clinician(s) to prepare for your consultation.</li>
+        <li>To send appointment reminders, follow-up instructions or post-procedure care information, by phone, SMS, WhatsApp or email.</li>
+        <li>To answer questions you send us and to improve the quality of the care and information we provide.</li>
+        <li>To maintain accurate clinical and administrative records, as required of any healthcare provider.</li>
+        <li>To understand, in aggregate, how visitors use this website, so we can keep it accurate, fast and easy to use.</li>
+        <li>To meet legal, regulatory and accreditation obligations.</li>
+      </ul>
+      <p>We do not use anything you share for automated decision-making about your care, and we do not sell your personal information to anyone, for any reason.</p>
+
+      <h2>3. Confidentiality of Medical Information</h2>
+      <p>Any health-related information you share with us is treated with the same confidentiality as your in-clinic medical records. It is accessible only to the clinicians and support staff directly involved in assessing or treating you, and to administrative staff who need it to manage your appointment. It is never used for marketing without your specific, separate consent, and it is never shared publicly — testimonials, before/after images or case studies are published only with your explicit written consent and are de-identified unless you agree otherwise.</p>
+
+      <h2>4. Cookies and Similar Technologies</h2>
+      <p>This website may use cookies and similar small files stored in your browser to remember basic preferences, keep the site functioning correctly (for example, showing you the menu you have open) and to understand overall visitor traffic in an aggregated, non-identifying way. You can control or delete cookies through your browser settings at any time; doing so may affect how some parts of the site behave but will not prevent you from browsing or contacting us.</p>
+
+      <h2>5. How We Share Information</h2>
+      <p>We do not sell, rent or trade your personal information. We only share it in the following limited circumstances:</p>
+      <ul>
+        <li><strong>Within the clinical team</strong> — with clinicians, nurses and support staff directly involved in your care or appointment administration.</li>
+        <li><strong>Service providers acting on our behalf</strong> — for example, a diagnostics or anaesthesia partner directly involved in a procedure you have consented to, bound to the same standard of confidentiality.</li>
+        <li><strong>Legal and safety requirements</strong> — where disclosure is required by law, by a court or regulatory authority, or is necessary to protect the safety of you or others.</li>
+        <li><strong>With your explicit consent</strong> — for any purpose not covered above, we will ask first.</li>
+      </ul>
+
+      <h2>6. Data Storage and Security</h2>
+      <p>We take reasonable administrative, technical and physical measures to protect the information we hold against unauthorised access, alteration, disclosure or loss. Access to clinical and contact records is restricted to authorised staff. No method of storage or transmission is completely infallible, and while we work to protect your information, we cannot guarantee absolute security — you should also take care when sharing sensitive information over any channel, including email and WhatsApp.</p>
+
+      <h2>7. Data Retention</h2>
+      <p>We retain personal and medical information for as long as needed to provide your care, to meet our legal, medical record-keeping and accreditation obligations, and to resolve any dispute. Where information is kept only for general website enquiries that never proceed to a consultation, it is retained only as long as reasonably useful before being deleted.</p>
+
+      <h2>8. Your Rights</h2>
+      <p>Subject to applicable Indian law, including the Digital Personal Data Protection Act, 2023, you may:</p>
+      <ul>
+        <li>Ask us what personal information we hold about you and how it is used.</li>
+        <li>Ask us to correct information that is inaccurate or incomplete.</li>
+        <li>Ask us to delete information we hold about you, except where we are required to retain it (for example, clinical records mandated by medical regulation).</li>
+        <li>Withdraw consent for non-essential uses, such as marketing communications, at any time.</li>
+        <li>Raise a complaint about how your information has been handled.</li>
+      </ul>
+      <p>To exercise any of these rights, contact us using the details in the "Contact Us" section at the end of this page. We will respond within a reasonable time.</p>
+
+      <h2>9. Children's Privacy</h2>
+      <p>This website is not directed at children. Where care is sought for a minor, it is provided only with the involvement, consent and presence of a parent or legal guardian, and information is handled with the same confidentiality described above.</p>
+
+      <h2>10. Third-Party Links and Platforms</h2>
+      <p>This site may link out to or embed third-party platforms — for instance, messaging, social media or map/direction services you choose to use to contact us or find our location. Any information you share on those platforms is governed by their own privacy terms, not this one. We encourage you to review those before using them.</p>
+
+      <h2>11. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time to reflect changes in our practices or in applicable law. The "Effective date" at the top of this page will always show when it was last revised. Continued use of the website after an update constitutes acceptance of the revised policy.</p>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--line);margin:3.2rem 0">
+
+      <div id="terms-of-use">
+      <p class="eyebrow">Part Two</p>
+      <h2 style="margin-top:.6rem">Terms of Use</h2>
+      <p>These Terms of Use govern your access to and use of this website. By browsing this site, submitting an enquiry, or booking an appointment through it, you agree to be bound by these terms. If you do not agree, please do not use this website.</p>
+
+      <h2>1. About This Website</h2>
+      <p>This website is published by ${esc(CLINIC.name)} to provide general information about our practice, our specialists, the procedures we offer, and to allow prospective and existing patients to make enquiries and request appointments.</p>
+
+      <h2>2. Not Medical Advice</h2>
+      <p>All content on this website — including procedure descriptions, articles, FAQs and any illustrative photography — is provided for general education only. It is not medical advice, is not tailored to any individual's anatomy, medical history or circumstances, and must never be used as a substitute for an in-person consultation with a qualified practitioner. Do not delay seeking medical advice, or disregard it, because of something you have read here.</p>
+
+      <h2>3. No Doctor-Patient Relationship</h2>
+      <p>Browsing this website, submitting a form, or exchanging general messages with us does not, by itself, create a doctor-patient relationship. That relationship begins only once you have had a formal consultation with a treating clinician and both parties have agreed to proceed.</p>
+
+      <h2>4. Appointments and Enquiries</h2>
+      <p>Submitting an appointment or enquiry form is a request, not a confirmed booking — we will contact you to confirm date, time and any preparation required. We reserve the right to decline, postpone or reschedule an appointment, including where a case requires further assessment before a date can safely be confirmed. Please give us as much notice as possible if you need to cancel or reschedule, so the slot can be offered to another patient.</p>
+
+      <h2>5. Fees, Quotations and Payment</h2>
+      <p>Costs for consultations and procedures are confirmed only after an in-person or video assessment, in writing, and are specific to your case. Nothing on this website should be read as a fixed price quotation. Payment terms for any confirmed procedure are set out separately at the time of booking.</p>
+
+      <h2>6. Medical Disclaimer and No Guaranteed Outcomes</h2>
+      <p>All surgical and non-surgical procedures carry inherent risk. Individual results vary, and no specific outcome, timeline or result shown on this website is guaranteed for any individual. Suitability for any procedure can only be established through a proper consultation and clinical assessment. Photography used for illustration on this site is illustrative only and does not depict patients of this clinic unless explicitly labelled as a genuine patient result with their consent.</p>
+
+      <h2>7. Testimonials and Reviews</h2>
+      <p>Any testimonials, reviews or patient accounts published on this website reflect individual experiences and opinions. They are not a guarantee, warranty or prediction of the outcome any other patient will experience, as outcomes depend on individual anatomy, health and circumstances.</p>
+
+      <h2>8. Intellectual Property</h2>
+      <p>Unless otherwise stated, the text, layout, graphics, photography and overall design of this website are the property of ${esc(CLINIC.name)} or are used under licence, and are protected by applicable intellectual property law. You may view and print pages for your own personal, non-commercial reference. You may not reproduce, republish, distribute or otherwise use any content from this site for commercial purposes without our prior written permission.</p>
+
+      <h2>9. Acceptable Use</h2>
+      <p>When using this website, you agree not to: submit false or misleading information; attempt to gain unauthorised access to any part of the site or its underlying systems; interfere with the site's normal operation; or use the site for any unlawful purpose.</p>
+
+      <h2>10. Third-Party Links</h2>
+      <p>This website may contain links to third-party websites and platforms (for example, social media, messaging or map services) for your convenience. We do not control and are not responsible for the content, accuracy or practices of those third-party sites. Visiting them is at your own discretion and subject to their own terms.</p>
+
+      <h2>11. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by applicable law, ${esc(CLINIC.name)} shall not be liable for any indirect, incidental or consequential loss arising from your use of, or inability to use, this website, or reliance on any information published on it. This does not limit or exclude any liability that cannot lawfully be limited or excluded, including liability arising from clinical negligence in the course of actual treatment, which is governed separately by the consent and treatment documentation you sign in person.</p>
+
+      <h2>12. Indemnity</h2>
+      <p>You agree to indemnify and hold ${esc(CLINIC.name)} harmless from any claim, loss or demand arising out of your misuse of this website or your breach of these Terms of Use.</p>
+
+      <h2>13. Governing Law and Jurisdiction</h2>
+      <p>These Terms of Use are governed by the laws of India. Any dispute arising out of or in connection with this website shall be subject to the exclusive jurisdiction of the competent courts in Bengaluru, Karnataka.</p>
+
+      <h2>14. Changes to These Terms</h2>
+      <p>We may revise these Terms of Use at any time by updating this page. The "Effective date" at the top reflects the latest revision. Continued use of the website after a change constitutes your acceptance of the updated terms.</p>
+
+      <h2>15. Contact Us</h2>
+      <p>For any question about this Privacy Policy or these Terms of Use, or to exercise any of the rights described above, please reach us at:</p>
+      <ul>
+        <li><strong>${esc(CLINIC.name)}</strong><br>${esc(CLINIC.addressLine1)}, ${esc(CLINIC.addressLine2)}<br>${esc(CLINIC.addressLine3)}</li>
+        <li>Phone: <a href="tel:${CLINIC.phoneRaw}">${esc(CLINIC.phoneDisplay)}</a></li>
+        <li>Email: <a href="mailto:${CLINIC.email}">${esc(CLINIC.email)}</a></li>
+      </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+${ctaBand(base)}
+`;
+
+  return shell({
+    title: `Privacy Policy & Terms of Use | ${CLINIC.shortName}`,
+    description: `How ${CLINIC.name} collects, uses and protects your personal information, and the terms that apply when you use this website or book a consultation.`,
+    keywords: 'privacy policy, terms of use, terms and conditions, pearl aesthetic legal',
+    base, canonical: `${SITE_URL}/privacy-terms.html`, active: 'privacy', body,
+    jsonld: crumbs([['Home', '/'], ['Privacy Policy & Terms of Use', '/privacy-terms.html']])
+  });
+}
+
+/* ---------------------------------------------------------
    HTML sitemap — a flat crawl path to every division, article
    and individual procedure, and genuinely useful to visitors.
    --------------------------------------------------------- */
@@ -1754,6 +1934,7 @@ function sitemapPage() {
         <li><a href="results.html">Before &amp; After</a></li>
         <li><a href="contact.html#faq">FAQs</a></li>
         <li><a href="contact.html">Contact &amp; Directions</a></li>
+        <li><a href="privacy-terms.html">Privacy Policy &amp; Terms of Use</a></li>
       </ul>
     </div>
 
@@ -1794,6 +1975,7 @@ function sitemap() {
     [`${SITE_URL}/contact.html`, '0.8', today],
     [`${SITE_URL}/blog.html`, '0.8', today],
     [`${SITE_URL}/sitemap.html`, '0.4', today],
+    [`${SITE_URL}/privacy-terms.html`, '0.3', today],
     ...CATEGORIES.map((c) => [`${SITE_URL}/procedures/${c.slug}.html`, '0.8', today]),
     ...BLOG.map((p) => [`${SITE_URL}/blog/${p.slug}.html`, '0.7', p.date])
   ];
@@ -1820,7 +2002,8 @@ function build() {
   fs.writeFileSync(path.join(ROOT, 'appointment.html'), appointmentPage(), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'blog.html'), blogIndexPage(), 'utf8');
   fs.writeFileSync(path.join(ROOT, 'sitemap.html'), sitemapPage(), 'utf8');
-  console.log('  index, about, surgeon, results, contact, appointment, blog, sitemap');
+  fs.writeFileSync(path.join(ROOT, 'privacy-terms.html'), legalPage(), 'utf8');
+  console.log('  index, about, surgeon, results, contact, appointment, blog, sitemap, privacy-terms');
 
   CATEGORIES.forEach((cat, i) =>
     fs.writeFileSync(path.join(ROOT, 'procedures', `${cat.slug}.html`), categoryPage(cat, i), 'utf8'));
@@ -1855,7 +2038,7 @@ function build() {
     '\n</IfModule>\n', 'utf8');
   console.log(`  _redirects, .htaccess — ${redirects.length} legacy URLs mapped`);
 
-  const pages = 8 + CATEGORIES.length + BLOG.length;
+  const pages = 9 + CATEGORIES.length + BLOG.length;
   const byTier = (t) => CASES.filter(([id]) => caseTier(id) === t);
   const empty = CASES.filter(([id]) => !caseTier(id));
   console.log(`\n✓ Built ${pages} pages · ${totalServices} procedures · ${BLOG.length} articles.`);
