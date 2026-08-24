@@ -48,6 +48,9 @@ const slugify = (s) => String(s)
 const servicesOf = (cat) => cat.groups.flatMap((g) =>
   g.services.map(([n]) => ({ name: n, id: slugify(n) })));
 
+/** A category-qualified file name keeps repeated procedure names unambiguous. */
+const serviceFile = (cat, name) => `${cat.slug}-${slugify(name)}.html`;
+
 const catBySlug = Object.fromEntries(CATEGORIES.map((c) => [c.slug, c]));
 
 const fmtDate = (iso) => new Date(iso + 'T00:00:00Z').toLocaleDateString('en-GB', {
@@ -524,7 +527,7 @@ function homePage() {
   const catCards = CATEGORIES.map((c, i) => {
     const count = c.groups.reduce((m, g) => m + g.services.length, 0);
     return `<a class="card cat-card treatments__card reveal" data-dir="zoom" href="procedures/${c.slug}.html" style="padding:0">
-        <div class="post-card__media cat-card__media" style="aspect-ratio:16/10">${img(base, 'cat-' + c.slug + '.jpg', c.name + ' treatments at Pearl Aesthetic, Koramangala, Bengaluru', { w: 1000, h: 625 })}</div>
+        <div class="post-card__media cat-card__media" style="aspect-ratio:16/10">${img(base, 'procedures/' + c.slug + '.jpg', c.name + ' treatments at Pearl Aesthetic, Koramangala, Bengaluru', { w: 800, h: 534 })}</div>
         <div style="padding:1.7rem 1.8rem 1.9rem;display:flex;flex-direction:column;flex:1">
           <span class="cat-card__icon">${svg(ICONS[c.icon])}</span>
           <h3>${esc(c.name)}</h3>
@@ -772,6 +775,50 @@ function aboutPage() {
     ['Recovery', 'Structured aftercare with direct contact to the clinical team, scheduled reviews and clear written instructions.']
   ].map(([h, p]) => `<div class="journey__item reveal"><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join('\n      ');
 
+  const team = [
+    {
+      name: 'Dr. Praveen Chandra K',
+      role: 'Plastic, Reconstructive & Cosmetic Surgeon',
+      qualifications: 'MBBS, MS, MCh (Plastic Surgery), Fellow in Advanced Cosmetic Surgery, MIBIS (Belgium)',
+      bio: 'Founder & Director of Pearl Aesthetic Clinic, with more than two decades of experience in aesthetic surgery, rhinoplasty, breast surgery, body contouring and hair restoration.',
+      image: 'team/praveen.jpg',
+      href: 'surgeon.html'
+    },
+    {
+      name: 'Dr. Shilpa Sharath Kumar',
+      role: 'Aesthetic & Laser Medicine',
+      qualifications: 'MBBS (Rajiv Gandhi University of Health Sciences), Masters in Dermatology (Cardiff University, UK)',
+      bio: 'Specialises in pigmentary disorders, anti-aging procedures, liquid facelifts and glow therapies, with an evidence-based approach to personalised skin health.',
+      image: 'team/shilpa.jpg'
+    },
+    {
+      name: 'Dr. Prashanth R. Reddy',
+      role: 'ENT & Rhinoplasty Specialist',
+      qualifications: 'MBBS, MS (ENT), Fellowship in Rhinoplasty (Seoul, South Korea), MBA (IIM-B)',
+      bio: 'Provides advanced care in nasal, skull-base and metabolic ENT surgery, with expertise in endoscopic and minimally invasive procedures.',
+      image: 'team/prashanth.jpg'
+    },
+    {
+      name: 'Rajeshwari R. Hanchinal',
+      role: 'Clinical Nutritionist',
+      qualifications: 'M.H.Sc (Food Science and Nutrition)',
+      bio: 'Brings over 15 years of clinical nutrition experience, specialising in weight management, therapeutic nutrition and sustainable, personalised diet plans.',
+      image: 'team/rajeshwari.jpg'
+    }
+  ].map(({ name, role, qualifications, bio, image, href }) => {
+    const tag = href ? 'a' : 'article';
+    const open = href ? `<a class="team-card reveal" href="${base}${href}" aria-label="View full profile for ${esc(name)}">` : '<article class="team-card reveal">';
+    return `${open}
+        <div class="team-card__media">${img(base, image, name, { w: 640, h: 800 })}</div>
+        <div class="team-card__body">
+          <p class="team-card__role">${esc(role)}</p>
+          <h3>${esc(name)}</h3>
+          <p class="team-card__qualifications">${esc(qualifications)}</p>
+          <p class="team-card__bio">${esc(bio)}</p>
+${href ? '          <span class="link-arrow">View full profile ' + svg(UI.arrow) + '</span>\n' : ''}        </div>
+      </${tag}>`;
+  }).join('\n      ');
+
   const body = `
 ${pageHero({
     crumb: 'About Us',
@@ -811,6 +858,19 @@ ${pageHero({
           <div><strong data-count="100" data-suffix="%">100%</strong><span>Confidential</span></div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head is-center">
+      <p class="eyebrow is-center" style="justify-content:center">Our Team</p>
+      <h2 class="h2">Specialists working <em>together</em></h2>
+      <p class="lead">A multidisciplinary team for surgical, skin, ENT and nutrition care — so your plan can be shaped around the full picture.</p>
+    </div>
+    <div class="team-grid">
+      ${team}
     </div>
   </div>
 </section>
@@ -860,21 +920,52 @@ function surgeonPage() {
         <p>${esc(desc)}</p>
       </div>`).join('\n      ');
 
+  const specialties = [
+    ['Facial Aesthetic Surgery', 'Primary and revision rhinoplasty, nasal bridge and tip refinement, facelift, blepharoplasty, facial fat transfer, jawline and neck contouring.'],
+    ['Breast Surgery', 'Breast augmentation, minimally invasive implant surgery, breast lift, breast reduction, reshaping and fat transfer.'],
+    ['Body Contouring', 'High-definition and VASER-assisted liposuction, 360° contouring, tummy tuck, mommy makeover, body lift and fat transfer.'],
+    ['Male Aesthetic Surgery', 'Gynecomastia correction, chest contouring, and abdominal and body sculpting.'],
+    ['Hair Restoration', 'FUE hair transplantation, body-hair transplantation, natural hairline design and advanced hair restoration.'],
+    ['Reconstructive Surgery', 'Female genital rejuvenation, scar revision, post-traumatic and oncoplastic reconstruction, and microsurgical reconstruction.']
+  ].map(([title, description]) => `<article class="card reveal">
+        <p class="eyebrow">Specialisation</p>
+        <h3 class="h3">${esc(title)}</h3>
+        <p style="margin-top:.9rem;color:var(--text-muted);line-height:1.7">${esc(description)}</p>
+      </article>`).join('\n      ');
+
+  const physicianSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Physician',
+    '@id': `${SITE_URL}/surgeon.html#dr-praveen-chandra-k`,
+    name: 'Dr. Praveen Chandra K',
+    honorificPrefix: 'Dr.',
+    jobTitle: 'Plastic, Reconstructive & Cosmetic Surgeon',
+    description: 'Senior Plastic, Reconstructive and Cosmetic Surgeon in Bengaluru with more than two decades of experience in plastic and aesthetic surgery.',
+    medicalSpecialty: ['PlasticSurgery', 'CosmeticSurgery'],
+    worksFor: { '@id': `${SITE_URL}/#clinic` },
+    alumniOf: [
+      { '@type': 'CollegeOrUniversity', name: "St. John's Medical College, Bengaluru" },
+      { '@type': 'CollegeOrUniversity', name: "BLDEA's Medical College, Bijapur" },
+      { '@type': 'CollegeOrUniversity', name: 'Vijayanagara Institute of Medical Sciences, Bellary' }
+    ],
+    knowsAbout: ['Rhinoplasty', 'Breast Surgery', 'Body Contouring', 'High-definition Liposuction', 'Hair Restoration', 'Reconstructive Surgery']
+  };
+
   const body = `
 ${pageHero({
     crumb: 'Our Surgeon',
     eyebrow: 'Your Surgeon',
     title: `${esc(CLINIC.surgeon)}`,
-    lead: 'Every consultation is conducted by the surgeon who will perform your procedure. The person assessing your anatomy, setting expectations and quoting your case is the same person operating and reviewing you afterwards.',
+    lead: 'Senior Plastic, Reconstructive and Cosmetic Surgeon with more than two decades of experience in aesthetic surgery, facial aesthetics, breast surgery, body contouring and hair restoration.',
     actions: `<a class="btn btn--primary" href="appointment.html">${svg(UI.cal)} Book a consultation</a>
           <a class="btn btn--ghost" href="results.html">See the case gallery ${svg(UI.arrow)}</a>`,
     figure: `<aside class="page-hero__panel">
         <h4>At a glance</h4>
         <dl>
-          <div><dt>Specialisation</dt><dd>Plastic &amp; Aesthetic Surgery</dd></div>
-          <div><dt>Consultations</dt><dd>Surgeon-led, 1:1</dd></div>
-          <div><dt>Anaesthesia</dt><dd>Consultant anaesthetist</dd></div>
-          <div><dt>Practice</dt><dd>Koramangala, Bengaluru</dd></div>
+          <div><dt>Qualifications</dt><dd>MBBS, MS, MCh</dd></div>
+          <div><dt>Fellowship</dt><dd>Wellness Kliniek, Belgium</dd></div>
+          <div><dt>Founder &amp; Director</dt><dd>Pearl Aesthetic Clinic</dd></div>
+          <div><dt>Co-Founder</dt><dd>Dr Sculpt Aesthetic Clinic</dd></div>
         </dl>
       </aside>`
   })}
@@ -883,24 +974,53 @@ ${pageHero({
   <div class="container">
     <div class="split split--reverse">
       <div class="split__visual reveal">
-        <!-- ⚠️ This is a photograph of the clinic environment, NOT of the surgeon.
-             Replace with the surgeon's own portrait once supplied — do not present
-             a stock image as a named doctor. -->
-        <div class="fig fig--square">${img(base, 'clinic.jpg', 'Treatment room at Pearl Aesthetic & Wellness, Koramangala', { w: 960, h: 960 })}</div>
+        <div class="fig fig--portrait fig--surgeon">${img(base, 'team/praveen.jpg', 'Dr. Praveen Chandra K, Plastic, Reconstructive and Cosmetic Surgeon', { w: 640, h: 800 })}</div>
       </div>
       <div class="reveal">
-        <p class="eyebrow">Credentials</p>
-        <h2 class="h2">Continuity of <em>care</em></h2>
-        <p class="lead" style="margin-top:1.3rem">Continuity matters more than any single technique. Being assessed, operated on and reviewed by one surgeon is what makes an honest expectation possible in the first place.</p>
-        <!-- ⚠️ VERIFY AND COMPLETE: replace with the surgeon's actual qualifications and registration number. -->
+        <p class="eyebrow">Professional Profile</p>
+        <h2 class="h2">Experience shaped by <em>precision</em></h2>
+        <p class="lead" style="margin-top:1.3rem">Dr. Praveen Chandra K is the Founder &amp; Director of Pearl Aesthetic Clinic, Bengaluru, and Co-Founder of Dr Sculpt Aesthetic Clinic, Bengaluru. His practice focuses on refined, individualised aesthetic surgery and reconstruction.</p>
+        <p style="margin-top:1rem;color:var(--text-muted);line-height:1.75">His approach is to enhance existing features while maintaining natural proportions, facial harmony and individuality — with meticulous technique, thoughtfully planned scars, clear communication and patient safety at every stage.</p>
         <dl class="credential-grid">
-          <div><dt>Qualifications</dt><dd>MBBS, MS, MCh &mdash; <em>to confirm</em></dd></div>
-          <div><dt>Specialisation</dt><dd>Plastic &amp; Aesthetic Surgery</dd></div>
-          <div><dt>Registration</dt><dd><em>To confirm</em></dd></div>
-          <div><dt>Practice</dt><dd>Koramangala, Bengaluru</dd></div>
+          <div><dt>MBBS</dt><dd>Vijayanagara Institute of Medical Sciences, Bellary</dd></div>
+          <div><dt>MS, General Surgery</dt><dd>BLDEA's Medical College, Bijapur</dd></div>
+          <div><dt>MCh, Plastic Surgery</dt><dd>St. John's Medical College, Bengaluru</dd></div>
+          <div><dt>International Fellowship</dt><dd>Advanced Cosmetic &amp; Minimally Invasive Breast Implant Surgery</dd></div>
         </dl>
         <div style="margin-top:2rem">
           <a class="btn btn--primary" href="appointment.html">Book a consultation</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section-head is-center">
+      <p class="eyebrow is-center" style="justify-content:center">Clinical Focus</p>
+      <h2 class="h2">A comprehensive aesthetic<br><em>practice</em></h2>
+      <p class="lead">A focused practice across face, breast, body, hair and reconstructive surgery — built around an individual treatment plan rather than a one-size-fits-all outcome.</p>
+    </div>
+    <div class="grid grid-3">
+      ${specialties}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="split">
+      <div class="reveal">
+        <p class="eyebrow">International Training</p>
+        <h2 class="h2">Advanced training in<br><em>Belgium</em></h2>
+        <p class="lead" style="margin-top:1.3rem">Fellow in Advanced Cosmetic Surgery &amp; Minimally Invasive Breast Implant Surgery at Wellness Kliniek, Belgium (2017–2018).</p>
+      </div>
+      <div class="reveal">
+        <p style="color:var(--text-muted);line-height:1.75">The fellowship included advanced hands-on training in minimally invasive breast implant surgery, breast augmentation, liposculpture, facelift and eyelid surgery, breast lift and reduction, fillers, Botox and hair transplantation.</p>
+        <div class="credential-grid">
+          <div><dt>Professional Memberships</dt><dd>Association of Plastic Surgeons of India; Indian Medical Association</dd></div>
+          <div><dt>Academic Contributions</dt><dd>Scientific presentations at APSICON and NABICON, with published academic literature in plastic surgery.</dd></div>
         </div>
       </div>
     </div>
@@ -925,11 +1045,11 @@ ${ctaBand(base)}
 
   return shell({
     title: `Our Surgeon | ${CLINIC.shortName}, Bengaluru`,
-    description: `Meet the surgeon at ${CLINIC.shortName}, Koramangala. Surgeon-led consultations, qualifications and the laser and contouring platforms behind each treatment plan.`,
-    keywords: 'plastic surgeon Bengaluru, cosmetic surgeon Koramangala, MCh plastic surgery Bangalore, Fotona laser Bengaluru, Morpheus8 Bangalore',
+    description: `Meet Dr. Praveen Chandra K, MBBS, MS, MCh — Founder & Director of ${CLINIC.shortName}, Bengaluru, with more than two decades of experience in plastic, reconstructive and cosmetic surgery.`,
+    keywords: 'Dr Praveen Chandra K, plastic surgeon Bengaluru, cosmetic surgeon Koramangala, MCh plastic surgery Bangalore, rhinoplasty surgeon Bengaluru, body contouring Bangalore',
     base, canonical: `${SITE_URL}/surgeon.html`, active: 'surgeon', body,
-    jsonld: [clinicSchema, crumbs([['Home', '/'], ['Our Surgeon', '/surgeon.html']])],
-    ogImage: 'clinic.jpg', ogImageAlt: 'Treatment room at Pearl Aesthetic & Wellness, Koramangala'
+    jsonld: [clinicSchema, physicianSchema, crumbs([['Home', '/'], ['Our Surgeon', '/surgeon.html']])],
+    ogImage: 'team/praveen.jpg', ogImageAlt: 'Dr. Praveen Chandra K, Plastic, Reconstructive and Cosmetic Surgeon'
   });
 }
 
@@ -1183,11 +1303,38 @@ ${ctaBand(base)}
 /* ---------------------------------------------------------
    CATEGORY PAGE
    --------------------------------------------------------- */
+/* These reviews appear in the shared testimonial carousel on each official
+   division page. They are therefore displayed as general clinic-care feedback,
+   never as proof of a result for the procedure being viewed. */
+const CLINIC_FEEDBACK = Object.freeze([
+  ['Satveer', 'I was very pleased with my experience at his place. I really appreciate the way he make patients comfortable.'],
+  ['Satendra Kumar', 'The appointment scheduling system is amazing. I am delighted with the medical care.']
+]);
+
+function clinicFeedback(cat) {
+  return `<section class="section section--alt">
+  <div class="container">
+    <div class="section-head is-center" style="margin-bottom:1.8rem">
+      <p class="eyebrow is-center" style="justify-content:center">Patient Feedback</p>
+      <h2 class="h2">What people say about <em>their care</em></h2>
+    </div>
+    <div class="grid grid-2" style="max-width:940px;margin-inline:auto">
+      ${CLINIC_FEEDBACK.map(([name, quote]) => `<div class="quote reveal">
+        <div class="quote__stars">${svg(UI.star).repeat(5)}</div>
+        <p>&ldquo;${esc(quote)}&rdquo;</p>
+        <div class="quote__by"><span class="quote__avatar">${esc(name.charAt(0))}</span><span><strong>${esc(name)}</strong><span>Published patient feedback</span></span></div>
+      </div>`).join('\n      ')}
+    </div>
+    <p class="feedback-note">Feedback published on <a href="https://www.pearlaesthetic.in/procedure/${cat.slug}" target="_blank" rel="noopener">Pearl Aesthetic&rsquo;s official website</a>. It is general clinic feedback, may relate to a different treatment, and is not a guarantee of any outcome.</p>
+  </div>
+</section>`;
+}
+
 function categoryPage(cat, index) {
   const base = '../';
   const count = cat.groups.reduce((m, g) => m + g.services.length, 0);
   const allNames = cat.groups.flatMap((g) => g.services.map(([n]) => n));
-
+  const categoryImage = `procedures/${cat.slug}.jpg`;
   const meta = cat.meta.map(([k, v]) =>
     `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('\n          ');
 
@@ -1198,7 +1345,7 @@ function categoryPage(cat, index) {
         </div>
         <div class="svc-grid">
           ${g.services.map(([n, d]) =>
-            `<article class="svc" id="${slugify(n)}"><h3>${esc(n)}</h3><p>${esc(d)}</p></article>`).join('\n          ')}
+            `<a class="svc" href="../services/${serviceFile(cat, n)}"><h3>${esc(n)}</h3><p>${esc(d)}</p><span class="svc__link">View treatment details ${svg(UI.arrow)}</span></a>`).join('\n          ')}
         </div>
       </div>`).join('\n      ');
 
@@ -1236,7 +1383,7 @@ function categoryPage(cat, index) {
       </aside>
     </div>
     <div class="fig fig--wide reveal" style="margin-top:clamp(2rem,4vw,3rem)">
-      ${img(base, 'cat-' + cat.slug + '.jpg', cat.name + ' treatments at Pearl Aesthetic, Bengaluru', { w: 1000, h: 625, lazy: false })}
+      ${img(base, categoryImage, cat.name + ' treatments at Pearl Aesthetic, Bengaluru', { w: 800, h: 534, lazy: false })}
     </div>
   </div>
 </section>
@@ -1270,6 +1417,8 @@ function categoryPage(cat, index) {
   </div>
 </section>
 
+${clinicFeedback(cat)}
+
 <section class="section section--alt">
   <div class="container">
     <div class="section-head" style="margin-bottom:1.8rem">
@@ -1280,8 +1429,8 @@ function categoryPage(cat, index) {
       ${related}
     </div>
     <div class="related reveal" style="margin-top:2.5rem;justify-content:space-between">
-      <a href="${prev.slug}.html">&larr; ${esc(prev.name)}</a>
-      <a href="${next.slug}.html">${esc(next.name)} &rarr;</a>
+      <a class="related__nav related__nav--prev" href="${prev.slug}.html">${svg(UI.arrow)} ${esc(prev.name)}</a>
+      <a class="related__nav" href="${next.slug}.html">${esc(next.name)} ${svg(UI.arrow)}</a>
     </div>
   </div>
 </section>
@@ -1295,7 +1444,7 @@ ${ctaBand(base, bannerForCategory(cat.slug))}
     name: `${cat.name} — ${CLINIC.name}`,
     url: `${SITE_URL}/procedures/${cat.slug}.html`,
     description: cat.tagline,
-    primaryImageOfPage: `${SITE_URL}/assets/img/cat-${cat.slug}.jpg`,
+    primaryImageOfPage: `${SITE_URL}/assets/img/${categoryImage}`,
     about: allNames.map((n) => ({ '@type': 'MedicalProcedure', name: n })),
     provider: { '@id': SITE_URL + '/#clinic' }
   };
@@ -1306,12 +1455,68 @@ ${ctaBand(base, bannerForCategory(cat.slug))}
     keywords: [cat.name + ' Bengaluru', cat.name + ' Bangalore', cat.name + ' Koramangala',
       ...cat.tags, ...allNames.slice(0, 10)].join(', ').toLowerCase(),
     ogImageAlt: `${cat.name} at ${CLINIC.name}, Bengaluru`,
-    preload: `cat-${cat.slug}.jpg`,
+    preload: categoryImage,
     base, canonical: `${SITE_URL}/procedures/${cat.slug}.html`, active: 'treatments', body,
     jsonld: [pageSchema, crumbs([
       ['Home', '/'], ['Treatments', '/#treatments'], [cat.name, `/procedures/${cat.slug}.html`]
     ])],
-    ogImage: `cat-${cat.slug}.jpg`
+    ogImage: categoryImage
+  });
+}
+
+/* A separate page for each service, generated from the procedure inventory.
+   The official site supplies division imagery, rather than photos for every
+   individual technique, so the image is explicitly described as a category
+   image and never presented as a patient result. */
+function servicePage(cat, group, service) {
+  const [name, description] = service;
+  const base = '../';
+  const file = serviceFile(cat, name);
+  const categoryImage = `procedures/${cat.slug}.jpg`;
+  const related = group.services.filter(([other]) => other !== name).slice(0, 5);
+  const relatedCards = related.map(([other, copy]) =>
+    `<a class="svc" href="${serviceFile(cat, other)}"><h3>${esc(other)}</h3><p>${esc(copy)}</p><span class="svc__link">View details ${svg(UI.arrow)}</span></a>`).join('\n        ');
+  const procedureSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalProcedure',
+    name: `${name} in Bengaluru`,
+    description,
+    url: `${SITE_URL}/services/${file}`,
+    image: `${SITE_URL}/assets/img/${categoryImage}`,
+    provider: { '@id': SITE_URL + '/#clinic' },
+    isPartOf: { '@type': 'MedicalWebPage', name: cat.name, url: `${SITE_URL}/procedures/${cat.slug}.html` }
+  };
+  const body = `
+<section class="page-hero">
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="${base}index.html">Home</a><span>/</span><a href="${base}procedures/${cat.slug}.html">${esc(cat.name)}</a><span>/</span><span style="color:var(--text-muted)">${esc(name)}</span></nav>
+    <div class="page-hero__grid">
+      <div>
+        <p class="eyebrow">${esc(cat.name)} &nbsp;&middot;&nbsp; ${esc(group.name)}</p>
+        <h1 class="display">${esc(name)} <em>in Bengaluru</em></h1>
+        <p class="lead">${esc(description)}</p>
+        <div class="page-hero__actions"><a class="btn btn--primary" href="${base}appointment.html">${svg(UI.cal)} Book an Assessment</a><a class="btn btn--ghost" href="tel:${CLINIC.phoneRaw}">${svg(UI.phone)} ${esc(CLINIC.phoneDisplay)}</a></div>
+      </div>
+      <aside class="page-hero__panel"><h4>At a glance</h4><dl><div><dt>Division</dt><dd>${esc(cat.name)}</dd></div><div><dt>Focus</dt><dd>${esc(group.name)}</dd></div><div><dt>Location</dt><dd>Koramangala, Bengaluru</dd></div></dl></aside>
+    </div>
+    <figure class="fig fig--wide reveal" style="margin-top:clamp(2rem,4vw,3rem)">${img(base, categoryImage, `${cat.name} at Pearl Aesthetic, Bengaluru`, { w: 800, h: 534, lazy: false })}<figcaption>Official ${esc(cat.name.toLowerCase())} category image &mdash; illustrative, not a patient result.</figcaption></figure>
+  </div>
+</section>
+
+<section class="section"><div class="container"><div class="split" style="align-items:start"><div class="reveal"><p class="eyebrow">About this treatment</p><h2 class="h2">Understanding <em>${esc(name)}</em></h2><p class="lead">${esc(description)}</p><p>Every treatment plan is individual. Your consultation considers your concerns, anatomy, health history and the alternatives that may suit you before any recommendation is made.</p></div><div class="split__visual reveal"><div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="${base}appointment.html">Book an assessment ${svg(UI.arrow)}</a></p></div><div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div></div></div></div></section>
+
+${clinicFeedback(cat)}
+
+<section class="section"><div class="container"><div class="section-head" style="margin-bottom:1.8rem"><p class="eyebrow">Explore more</p><h2 class="h2">Related <em>${esc(group.name.toLowerCase())}</em></h2></div><div class="svc-grid">${relatedCards || `<a class="svc" href="../procedures/${cat.slug}.html"><h3>All ${esc(cat.name)} treatments</h3><p>Explore the full range of treatments in this division.</p><span class="svc__link">View division ${svg(UI.arrow)}</span></a>`}</div><p style="margin-top:2rem"><a class="link-arrow" href="../procedures/${cat.slug}.html">Back to all ${esc(cat.name)} procedures ${svg(UI.arrow)}</a></p></div></section>
+
+${ctaBand(base, bannerForCategory(cat.slug))}`;
+  return shell({
+    title: `${name} in Bengaluru | ${CLINIC.shortName}`,
+    description: `${name} in Bengaluru. ${description} Consultation-led care at ${CLINIC.shortName}, Koramangala.`,
+    keywords: [name, `${name} Bengaluru`, `${name} Bangalore`, cat.name, ...cat.tags].join(', ').toLowerCase(),
+    base, canonical: `${SITE_URL}/services/${file}`, active: 'treatments', body,
+    ogImage: categoryImage, ogImageAlt: `${cat.name} at ${CLINIC.name}, Bengaluru`, preload: categoryImage,
+    jsonld: [procedureSchema, crumbs([['Home', '/'], ['Treatments', '/#treatments'], [cat.name, `/procedures/${cat.slug}.html`], [name, `/services/${file}`]])]
   });
 }
 
@@ -1903,7 +2108,7 @@ function sitemapPage() {
         </div>
         <ul class="sitemap-list">
           ${svcs.map((s) =>
-            `<li><a href="procedures/${c.slug}.html#${s.id}">${esc(s.name)}</a></li>`).join('\n          ')}
+            `<li><a href="services/${serviceFile(c, s.name)}">${esc(s.name)}</a></li>`).join('\n          ')}
         </ul>
       </div>`;
   }).join('\n      ');
@@ -1978,6 +2183,8 @@ function sitemap() {
     [`${SITE_URL}/sitemap.html`, '0.4', today],
     [`${SITE_URL}/privacy-terms.html`, '0.3', today],
     ...CATEGORIES.map((c) => [`${SITE_URL}/procedures/${c.slug}.html`, '0.8', today]),
+    ...CATEGORIES.flatMap((c) => servicesOf(c).map((s) =>
+      [`${SITE_URL}/services/${serviceFile(c, s.name)}`, '0.6', today])),
     ...BLOG.map((p) => [`${SITE_URL}/blog/${p.slug}.html`, '0.7', p.date])
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1993,6 +2200,7 @@ ${rows.map(([u, pr, lm]) =>
    --------------------------------------------------------- */
 function build() {
   fs.mkdirSync(path.join(ROOT, 'procedures'), { recursive: true });
+  fs.mkdirSync(path.join(ROOT, 'services'), { recursive: true });
   fs.mkdirSync(path.join(ROOT, 'blog'), { recursive: true });
 
   fs.writeFileSync(path.join(ROOT, 'index.html'), homePage(), 'utf8');
@@ -2009,6 +2217,10 @@ function build() {
   CATEGORIES.forEach((cat, i) =>
     fs.writeFileSync(path.join(ROOT, 'procedures', `${cat.slug}.html`), categoryPage(cat, i), 'utf8'));
   console.log(`  procedures/ — ${CATEGORIES.length} pages`);
+
+  CATEGORIES.forEach((cat) => cat.groups.forEach((group) => group.services.forEach((service) =>
+    fs.writeFileSync(path.join(ROOT, 'services', serviceFile(cat, service[0])), servicePage(cat, group, service), 'utf8'))));
+  console.log(`  services/ — ${totalServices} treatment-detail pages`);
 
   BLOG.forEach((post, i) =>
     fs.writeFileSync(path.join(ROOT, 'blog', `${post.slug}.html`), blogPostPage(post, i), 'utf8'));
@@ -2039,7 +2251,7 @@ function build() {
     '\n</IfModule>\n', 'utf8');
   console.log(`  _redirects, .htaccess — ${redirects.length} legacy URLs mapped`);
 
-  const pages = 9 + CATEGORIES.length + BLOG.length;
+  const pages = 9 + CATEGORIES.length + totalServices + BLOG.length;
   const byTier = (t) => CASES.filter(([id]) => caseTier(id) === t);
   const empty = CASES.filter(([id]) => !caseTier(id));
   console.log(`\n✓ Built ${pages} pages · ${totalServices} procedures · ${BLOG.length} articles.`);

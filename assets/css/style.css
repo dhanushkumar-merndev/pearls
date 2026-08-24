@@ -919,6 +919,35 @@ p { margin: 0; }
 }
 .card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--line-strong); }
 
+/* Team cards: portrait-led profiles on the About page. */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+.team-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: transform .45s var(--ease), box-shadow .45s, border-color .35s;
+}
+a.team-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: var(--line-strong); }
+.team-card__media { aspect-ratio: 4 / 5; overflow: hidden; background: var(--sand-200); }
+.team-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+a.team-card:hover .team-card__media img { transform: scale(1.04); }
+.team-card__body { display: flex; flex: 1; flex-direction: column; padding: 1.35rem; }
+.team-card__role { color: var(--gold-deep); font-size: .68rem; font-weight: 700; letter-spacing: .1em; line-height: 1.45; text-transform: uppercase; }
+.team-card h3 { margin-top: .55rem; font-family: var(--font-serif); font-size: 1.34rem; font-weight: 500; line-height: 1.18; }
+.team-card__qualifications { margin-top: .7rem; color: var(--ink); font-size: .78rem; font-weight: 600; line-height: 1.55; }
+.team-card__bio { margin-top: .75rem; color: var(--text-muted); font-size: .86rem; line-height: 1.65; }
+.team-card .link-arrow { margin-top: auto; padding-top: 1.1rem; }
+
 /* Pillar card — the home page's routes into About / Surgeon / Results.
    Deliberately NOT built on .feature: that card is styled light-on-dark for
    .section--ink, and its heading colour vanishes on a light background. */
@@ -1803,10 +1832,13 @@ p { margin: 0; }
 
 .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
 .svc {
+  display: block;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.4rem 1.5rem;
+  color: inherit;
+  text-decoration: none;
   transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s;
   position: relative;
 }
@@ -1826,6 +1858,19 @@ p { margin: 0; }
   padding-right: 1.2rem;
 }
 .svc p { font-size: .855rem; color: var(--text-muted); line-height: 1.62; }
+.svc__link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .9rem;
+  color: var(--gold-deep);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.svc__link svg { width: 14px; height: 14px; transition: transform .25s var(--ease); }
+.svc:hover .svc__link svg { transform: translateX(4px); }
 .svc::after {
   content: "";
   position: absolute;
@@ -1836,6 +1881,7 @@ p { margin: 0; }
   transition: background .3s, transform .3s;
 }
 .svc:hover::after { background: var(--gold); transform: scale(1.4); }
+.feedback-note { max-width: 760px; margin: 1.2rem auto 0; text-align: center; font-size: .8rem; line-height: 1.6; color: var(--text-muted); }
 
 /* HTML sitemap listing */
 .sitemap-list {
@@ -1875,6 +1921,9 @@ p { margin: 0; }
   transition: background .3s, color .3s, border-color .3s, transform .3s var(--ease);
 }
 .related a:hover { background: var(--ink); color: var(--sand-50); border-color: var(--ink); transform: translateY(-2px); }
+.related__nav { display: inline-flex; align-items: center; gap: .4rem; }
+.related__nav svg { width: 15px; height: 15px; }
+.related__nav--prev svg { transform: rotate(180deg); }
 
 /* ---------------------------------------------------------
    Scroll reveal
@@ -1917,7 +1966,10 @@ p { margin: 0; }
 .fig--tall  { aspect-ratio: 4 / 5; }
 .fig--wide  { aspect-ratio: 16 / 10; }
 .fig--square{ aspect-ratio: 1 / 1; }
+.fig--portrait { aspect-ratio: 4 / 5; }
 .fig--arch  { border-radius: 280px 280px var(--radius-lg) var(--radius-lg); }
+.fig--surgeon img { object-position: center top; }
+.fig figcaption { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem 1.2rem; color: var(--sand-100); background: linear-gradient(0deg, rgba(23, 17, 10, .76), transparent); font-size: .76rem; }
 
 .fig__cap {
   position: absolute;
@@ -2241,6 +2293,7 @@ p { margin: 0; }
 .fig img { transition: transform .8s var(--ease); }
 @media (hover: hover) and (pointer: fine) {
   .fig:hover img { transform: scale(1.035); }
+  .fig--surgeon:hover img { transform: none; }
 }
 
 /* ---- Button sheen ---- */
@@ -2315,6 +2368,7 @@ p { margin: 0; }
   .hero__chip--tl { left: -1rem; }
   .hero__chip--br { right: -1rem; }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .journey { grid-template-columns: repeat(2, 1fr); gap: 2.2rem 1.5rem; }
   .journey__item:nth-child(2)::after { display: none; }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 2.5rem 2rem; }
@@ -2414,7 +2468,7 @@ p { margin: 0; }
   /* Comfortable tap targets throughout. */
   .drawer nav a { padding: .95rem 0; }
   .related a { padding: .7rem 1.2rem; }
-  .grid-2, .grid-3, .grid-4, .svc-grid { grid-template-columns: 1fr; }
+  .grid-2, .grid-3, .grid-4, .svc-grid, .team-grid { grid-template-columns: 1fr; }
   /* Keep the home page scannable on phones; the rest is available on demand. */
   .treatments__grid .treatments__card:nth-child(n + 4) { display: none; }
   .treatments__grid.is-expanded .treatments__card:nth-child(n + 4) { display: flex; }

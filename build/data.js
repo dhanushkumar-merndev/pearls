@@ -96,6 +96,9 @@ const CATEGORIES = [
         services: [
           ['Revision Rhinoplasty', 'Corrective surgery after an unsatisfactory or failed previous rhinoplasty.'],
           ['Nose Thread Lift', 'Absorbable threads to lift and define the tip and bridge without surgery.'],
+          ['Non-Surgical Rhinoplasty', 'Uses injectable filler to make limited contour adjustments without an operation.'],
+          ['Laser Snoring Treatment (NightLase)', 'Non-surgical laser treatment intended to tighten selected throat tissues for snoring concerns.'],
+          ['Rhinophyma Surgery', 'Reshapes thickened nasal tissue caused by advanced rhinophyma.'],
           ['Nose Surgery FAQs', 'Answers on recovery, swelling timelines, splints, cost factors and candidacy.']
         ]
       }
@@ -160,7 +163,9 @@ const CATEGORIES = [
           ['Nipple Reduction', 'Reduces nipple length or width under local anaesthetic.'],
           ['Areola Reduction', 'Reduces enlarged or stretched areolae to a proportionate size.'],
           ['Breast Asymmetry Correction', 'Balances differences in size, shape or position between the two breasts.'],
-          ['Tuberous Breast Correction', 'Releases the constricting base and reshapes tuberous or constricted breasts.']
+          ['Tuberous Breast Correction', 'Releases the constricting base and reshapes tuberous or constricted breasts.'],
+          ['Male Breast Reduction', 'Reduces excess chest tissue and skin to create a flatter masculine contour.'],
+          ['Gynecomastia Surgery', 'Removes glandular breast tissue and fat in male chest enlargement.']
         ]
       }
     ]
@@ -191,9 +196,23 @@ const CATEGORIES = [
         services: [
           ['Mommy Makeover', 'A single planned operation combining breast, abdominal and intimate restoration.'],
           ['Breast Lift or Augmentation', 'Restores position and, where wanted, volume lost after breastfeeding.'],
+          ['Breast Augmentation with Implants', 'Restores breast volume with implants selected for the patient’s measurements and goals.'],
+          ['Breast Lift (Mastopexy)', 'Reshapes and lifts descended breast tissue after pregnancy or weight change.'],
+          ['Breast Lift with Implants', 'Combines breast lifting with added volume where both position and fullness need attention.'],
           ['Tummy Tuck with Muscle Repair', 'Closes abdominal muscle separation and removes the resulting skin excess.'],
-          ['Liposuction / 360 Lipo', 'Contours the flanks and waist that abdominoplasty alone does not reach.'],
-          ['Labiaplasty or Vaginoplasty', 'Optional intimate correction included in the same anaesthetic where appropriate.'],
+          ['Tummy Tuck (Abdominoplasty)', 'Removes loose abdominal skin and can repair muscle separation.'],
+          ['Brazilian Tummy Tuck (Lipoabdominoplasty)', 'Pairs abdominal contouring with tummy tuck surgery in selected patients.'],
+          ['Mini Tummy Tuck', 'Treats lower-abdominal skin laxity below the navel with a shorter scar.'],
+          ['Liposuction', 'Contours localised fat deposits that do not respond to diet and exercise.'],
+          ['Stomach Liposuction (Tummy Lipo)', 'Targets the upper and lower abdomen and flanks.'],
+          ['360 Liposuction', 'Contours the abdomen, waist and back circumferentially.'],
+          ['C-Section Scar Revision', 'Improves a tethered, uneven or uncomfortable caesarean scar.'],
+          ['Labiaplasty (Labia Reduction)', 'Reshapes enlarged labia where there is discomfort or a functional concern.'],
+          ['Vaginoplasty (Vaginal Tightening Surgery)', 'Surgically repairs and tightens selected vaginal support structures.'],
+          ['Non-Surgical Vaginal Tightening', 'Energy-based treatment option for appropriate concerns without an operation.'],
+          ['Vaginal Laser Treatment', 'Laser-based intimate treatment assessed according to individual symptoms and suitability.'],
+          ['Brazilian Butt Lift (BBL Surgery)', 'Transfers the patient’s own fat to improve buttock shape in selected candidates.'],
+          ['Mons Lift (Monsplasty)', 'Reduces and lifts excess tissue over the pubic mound.'],
           ['Mommy Makeover FAQs', 'Timing after childbirth, combining safely, recovery with children at home, and cost factors.']
         ]
       }
@@ -248,6 +267,8 @@ const CATEGORIES = [
         name: 'Facial Features',
         services: [
           ['Facial Fat Transfer', 'Uses your own purified fat to restore volume in the temples, cheeks and around the mouth.'],
+          ['Micro & Nano Fat Grafting', 'Uses refined fat grafts for small-volume facial contour and skin-quality concerns.'],
+          ['AccuTite', 'Radiofrequency-assisted contouring for small facial areas in suitable patients.'],
           ['Lip Lift', 'Shortens a long upper lip to increase pink show and reveal more upper teeth.'],
           ['Lip Reduction Surgery', 'Reduces excessive lip bulk to rebalance the lower face.'],
           ['Buccal Fat Removal', 'Removes deep cheek fat pads to sharpen the cheek hollow — used selectively.'],
@@ -311,6 +332,7 @@ const CATEGORIES = [
         name: 'Implants & Grafting',
         services: [
           ['Body Contouring Procedures', 'Combination planning across multiple areas in staged or single operations.'],
+          ['Mommy Makeover', 'Combines selected breast, abdominal and body-contouring procedures after pregnancy.'],
           ['Fat Transfer (Fat Grafting)', 'Harvests, purifies and re-injects your own fat to add volume where it is wanted.'],
           ['Pectoral Implants', 'Silicone implants to build chest projection where training has plateaued.'],
           ['Chest Wall Implants', 'Custom implants to correct pectus deformity and chest wall asymmetry.'],
@@ -414,14 +436,17 @@ const CATEGORIES = [
           ['IncontiLase Urinary Incontinence', 'Laser treatment for mild to moderate stress incontinence without surgery.'],
           ['ProlapLase Pelvic Prolapse', 'Non-surgical laser support for early-stage vaginal wall prolapse.'],
           ['RenovaLase Vaginal Dryness', 'Restores mucosal thickness and lubrication, particularly after menopause.'],
-          ['Non-Surgical Vaginal Tightening', 'Energy-based tightening for women who prefer to avoid an operation.']
+          ['Non-Surgical Vaginal Tightening', 'Energy-based tightening for women who prefer to avoid an operation.'],
+          ['Vaginal Laser Treatment', 'Laser treatment option assessed for individual intimate-health concerns.'],
+          ['Laser Intimate Whitening', 'Laser treatment for external intimate-area pigmentation, after suitability assessment.']
         ]
       },
       {
         name: 'Injectable Treatments',
         services: [
           ['O-Shot Injection', 'Platelet-rich plasma injection intended to improve sensitivity and mild incontinence.'],
-          ['G-Spot Injection (G-Shot)', 'Filler placement to temporarily augment the anterior vaginal wall.']
+          ['G-Spot Injection (G-Shot)', 'Filler placement to temporarily augment the anterior vaginal wall.'],
+          ['Mons Lift (Monsplasty)', 'Reduces or lifts excess tissue over the pubic mound.']
         ]
       }
     ]
@@ -453,6 +478,9 @@ const CATEGORIES = [
           ['Gynecomastia Surgery', 'Removes glandular tissue and fat to restore a flat, masculine chest contour.'],
           ['Male Breast Reduction', 'Reduction and skin tightening where enlargement is more substantial.'],
           ['Pectoral Implants', 'Adds chest projection where training alone has not produced the wanted shape.'],
+          ['Chest Wall Implants', 'Customised implant options for selected chest-wall contour concerns.'],
+          ['Calf Augmentation with Implants', 'Adds lower-leg volume and definition using implants in selected patients.'],
+          ['Fat Transfer Calf Augmentation', 'Uses the patient’s own fat to add lower-leg volume in suitable candidates.'],
           ['Male Liposuction', 'Contouring of the flanks, chest and abdomen adapted to male fat distribution.'],
           ['High Definition Liposuction', 'Reveals underlying musculature through selective, layered fat removal.'],
           ['Abdominal Etching', 'Sculpts visible abdominal definition in already-lean patients.'],
@@ -466,7 +494,9 @@ const CATEGORIES = [
           ['Male Eyelid Surgery', 'Conservative upper lid correction that avoids raising or feminising the brow.'],
           ['Male Facelift', 'Accounts for thicker skin, beard growth and masculine hairline placement.'],
           ['Male Neck Lift', 'Restores jaw and neck definition without disturbing beard-bearing skin.'],
-          ['Male Chin Surgery', 'Builds chin width and projection for a stronger lower facial third.']
+          ['Male Chin Surgery', 'Builds chin width and projection for a stronger lower facial third.'],
+          ['Laser Snoring Treatment (NightLase)', 'Non-surgical laser treatment intended to tighten selected throat tissues for snoring concerns.'],
+          ['Rhinophyma Surgery', 'Reshapes thickened nasal tissue caused by rhinophyma.']
         ]
       },
       {
@@ -687,7 +717,8 @@ const CATEGORIES = [
         name: 'Specialist Procedures',
         services: [
           ['Subcision for Cellulite', 'Releases the fibrous bands that tether skin and create visible dimpling.'],
-          ['Suction Curettage for Hyperhidrosis', 'Removes underarm sweat glands for a lasting reduction in excessive sweating.']
+          ['Suction Curettage for Hyperhidrosis', 'Removes underarm sweat glands for a lasting reduction in excessive sweating.'],
+          ['Laser Stretch Mark Removal (LineLase)', 'Laser treatment option for stretch-mark texture and colour, planned over a series of sessions.']
         ]
       }
     ]
@@ -734,7 +765,11 @@ const CATEGORIES = [
           ['Temporal Brow Lift', 'Targeted lift of the outer brow tail — the area that drops first.'],
           ['Brow Lift vs Blepharoplasty', 'How we decide which procedure — or which combination — actually solves the problem.'],
           ['Hairline Lowering', 'Reduces a high forehead by advancing the hairline forward in one operation.'],
-          ['AccuTite', 'Miniaturised radiofrequency contraction for very small, delicate areas around the eyes and brow.']
+          ['AccuTite', 'Miniaturised radiofrequency contraction for very small, delicate areas around the eyes and brow.'],
+          ['Osteoma Removal', 'Removes small benign bony growths around the forehead or upper face.'],
+          ['Micro & Nano Fat Grafting', 'Uses refined fat grafts for small-volume upper-face contour and skin-quality concerns.'],
+          ['Tear Trough Filler (Under Eye Filler)', 'Injectable treatment for suitable under-eye hollowing after assessment.'],
+          ['SmoothEye Laser Treatment', 'Laser treatment intended to support collagen around the eye area.']
         ]
       }
     ]
@@ -799,7 +834,9 @@ const CATEGORIES = [
           ['Excess Skin Removal Surgery', 'Targeted removal of redundant skin causing hygiene or mobility problems.'],
           ['Extended Tummy Tuck', 'Abdominoplasty extended around the flanks for wider skin excess.'],
           ['Fleur-de-Lis Tummy Tuck', 'Adds a vertical excision for patients with significant horizontal laxity.'],
-          ['Apronectomy (Panniculectomy)', 'Removes the overhanging abdominal apron, often for functional reasons.']
+          ['Apronectomy (Panniculectomy)', 'Removes the overhanging abdominal apron, often for functional reasons.'],
+          ['Tummy Tuck (Abdominoplasty)', 'Removes loose abdominal skin and can repair abdominal muscle separation.'],
+          ['Mons Lift (Monsplasty)', 'Reduces and lifts excess tissue over the pubic mound.']
         ]
       },
       {
@@ -815,6 +852,8 @@ const CATEGORIES = [
         name: 'Body Lifts',
         services: [
           ['Buttock Lift (Gluteal Lift)', 'Lifts descended buttock tissue, sometimes with auto-augmentation for shape.'],
+          ['Breast Lift (Mastopexy)', 'Reshapes and lifts breast tissue after significant weight change.'],
+          ['Mommy Makeover', 'Combines selected breast, abdomen and body-contouring procedures in an individualised plan.'],
           ['Upper Body Lift', 'Combines back, chest and arm correction in one staged operation.'],
           ['Lower Body Lift', 'Circumferential lift of the abdomen, flanks, buttocks and outer thighs.'],
           ['Belt Lipectomy', 'A complete circumferential excision at the waistline for major skin excess.'],
@@ -880,8 +919,8 @@ const CATEGORIES = [
     slug: 'hair-transplant',
     name: 'Hair Transplant',
     icon: 'hair',
-    tagline: 'FUE restoration for the scalp, hairline, beard and eyebrows.',
-    tags: ['FUE', 'Hairline Design', 'Beard Transplant'],
+    tagline: 'FUE and FUT restoration for the scalp, hairline, beard and eyebrows.',
+    tags: ['FUE', 'FUT', 'Hairline Design', 'Beard Transplant'],
     intro: [
       'A hair transplant redistributes hair rather than creating it. Follicles are taken from the permanent donor zone at the back and sides of the scalp — genetically resistant to the hormone that drives pattern loss — and placed where density has been lost. Those transplanted follicles keep that resistance for life.',
       'The single most important decision is not graft count but hairline design. A hairline placed too low or too straight looks convincing at thirty and wrong at fifty, once the surrounding native hair has continued to recede behind it. We design conservatively, for the face you will have in twenty years.'
@@ -897,6 +936,9 @@ const CATEGORIES = [
         name: 'Restoration Procedures',
         services: [
           ['FUE Hair Transplant', 'Individual follicular units extracted and placed without a linear donor scar.'],
+          ['FUT Hair Transplant', 'Follicular units are harvested as a carefully planned donor strip when this technique is the right fit for the scalp and coverage goals.'],
+          ['Body Hair Transplant', 'Uses selected body-hair follicles as an additional donor source in carefully assessed cases.'],
+          ['Beard-to-Head Hair Transplant', 'Uses suitable beard follicles to supplement scalp density where appropriate.'],
           ['Hairline Design & Lowering', 'Restores a receded hairline at a height and shape that will age naturally.'],
           ['Crown & Vertex Restoration', 'Density restoration at the crown, planned against likely future recession.'],
           ['Beard Transplant', 'Fills patchy or absent beard growth along the jaw, cheeks and moustache.'],
