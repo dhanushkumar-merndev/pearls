@@ -964,7 +964,7 @@ ${pageHero({
         <h4>At a glance</h4>
         <dl>
           <div><dt>Qualifications</dt><dd>MBBS, MS, MCh</dd></div>
-          <div><dt>Registration</dt><dd><a href="https://karnatakamedicalcouncil.com/" target="_blank" rel="noopener">KMC Reg. No. 74573</a></dd></div>
+          <div><dt>Registration</dt><dd>KMC Reg. No. 74573</dd></div>
           <div><dt>Fellowship</dt><dd>Wellness Kliniek, Belgium</dd></div>
           <div><dt>Founder &amp; Director</dt><dd>Pearl Aesthetic Clinic</dd></div>
           <div><dt>Co-Founder</dt><dd>Dr Sculpt Aesthetic Clinic</dd></div>
@@ -984,7 +984,7 @@ ${pageHero({
         <p class="lead" style="margin-top:1.3rem">Dr. Praveen Chandra K is the Founder &amp; Director of Pearl Aesthetic Clinic, Bengaluru, and Co-Founder of Dr Sculpt Aesthetic Clinic, Bengaluru. His practice focuses on refined, individualised aesthetic surgery and reconstruction.</p>
         <p style="margin-top:1rem;color:var(--text-muted);line-height:1.75">His approach is to enhance existing features while maintaining natural proportions, facial harmony and individuality — with meticulous technique, thoughtfully planned scars, clear communication and patient safety at every stage.</p>
         <dl class="credential-grid">
-          <div><dt>Registration</dt><dd><a href="https://karnatakamedicalcouncil.com/" target="_blank" rel="noopener">Karnataka Medical Council (KMC No. 74573)</a></dd></div>
+          <div><dt>Registration</dt><dd>Karnataka Medical Council (KMC No. 74573)</dd></div>
           <div><dt>Experience</dt><dd>20+ Years in Aesthetic &amp; Plastic Surgery</dd></div>
           <div><dt>MBBS</dt><dd>Vijayanagara Institute of Medical Sciences, Bellary</dd></div>
           <div><dt>MS, General Surgery</dt><dd>BLDEA's Medical College, Bijapur</dd></div>
