@@ -103,7 +103,7 @@ in `build/generate.js` or `build/blog.js`.
 
 | Item | Where | What's needed |
 |---|---|---|
-| **Surgeon credentials** | Home → "Your Surgeon" | Dr. Praveen Chandra K's real qualifications and registration number. Currently reads *"to confirm"*. |
+| **Surgeon credentials** | Home → "Your Surgeon" & Surgeon page | Dr. Praveen Chandra K: MBBS, MS, MCh (Plastic Surgery), KMC Reg. No. 74573. |
 | **Clinic logo (dark variant)** | `assets/img/logo-dark.png` | Optional. The light lockup is in place and working. Supply the gold-on-black version only if you want a dark header — see "The logo" below. |
 | **Surgeon photograph** | Home → "Your Surgeon" | Currently shows a **clinic interior**, deliberately — a stock portrait must never sit under a named doctor. Swap in their own photo. |
 | **Patient testimonials** | Home → "Patient Voices" | Three illustrative placeholders. Replace with genuine consented reviews. Publishing invented reviews is misleading and a legal risk. |

@@ -63,6 +63,7 @@ const UI = {
   cal:    render(Lu, 'LuCalendar'),
   caret:  render(Lu, 'LuChevronDown'),
   chevR:  render(Lu, 'LuChevronRight'),
+  menu:   render(Lu, 'LuMenu'),
   close:  render(Lu, 'LuX'),
   grid:   render(Lu, 'LuLayoutGrid')
 };

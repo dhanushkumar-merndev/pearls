@@ -299,7 +299,7 @@ function nav(base, active) {
     </nav>
     <div class="nav__cta">
       <a class="btn btn--primary" href="${base}appointment.html">Book Appointment</a>
-      <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span></button>
+      <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">${svg(UI.menu)}</button>
     </div>
   </div>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
@@ -546,7 +546,7 @@ function homePage() {
     [UI.shield, 'The Practice', 'A clinic built around judgement, not volume',
       'How the practice is run, what the pathway looks like, and the cases we turn down.', 'about.html', 'About the practice'],
     [UI.user, 'Your Surgeon', esc(CLINIC.surgeon),
-      'Qualifications, specialisation and the technology platforms behind each treatment plan.', 'surgeon.html', 'Meet your surgeon'],
+      'MBBS, MS, MCh · KMC Reg. No. 74573 · International Fellowship at Wellness Kliniek, Belgium.', 'surgeon.html', 'Meet your surgeon'],
     [UI.spark, 'Before &amp; After', 'What a realistic result looks like',
       'A case gallery organised by division, with the starting point shown as plainly as the outcome.', 'results.html', 'View the gallery']
     // .pillar, not .feature — .feature is styled light-on-dark for the ink
@@ -779,7 +779,7 @@ function aboutPage() {
     {
       name: 'Dr. Praveen Chandra K',
       role: 'Plastic, Reconstructive & Cosmetic Surgeon',
-      qualifications: 'MBBS, MS, MCh (Plastic Surgery), Fellow in Advanced Cosmetic Surgery, MIBIS (Belgium)',
+      qualifications: 'MBBS, MS, MCh (Plastic Surgery) · KMC Reg. No. 74573 · Fellow in Advanced Cosmetic Surgery, MIBIS (Belgium)',
       bio: 'Founder & Director of Pearl Aesthetic Clinic, with more than two decades of experience in aesthetic surgery, rhinoplasty, breast surgery, body contouring and hair restoration.',
       image: 'team/praveen.jpg',
       href: 'surgeon.html'
@@ -940,6 +940,7 @@ function surgeonPage() {
     name: 'Dr. Praveen Chandra K',
     honorificPrefix: 'Dr.',
     jobTitle: 'Plastic, Reconstructive & Cosmetic Surgeon',
+    identifier: 'KMC Reg. No. 74573',
     description: 'Senior Plastic, Reconstructive and Cosmetic Surgeon in Bengaluru with more than two decades of experience in plastic and aesthetic surgery.',
     medicalSpecialty: ['PlasticSurgery', 'CosmeticSurgery'],
     worksFor: { '@id': `${SITE_URL}/#clinic` },
@@ -963,6 +964,7 @@ ${pageHero({
         <h4>At a glance</h4>
         <dl>
           <div><dt>Qualifications</dt><dd>MBBS, MS, MCh</dd></div>
+          <div><dt>Registration</dt><dd><a href="https://karnatakamedicalcouncil.com/" target="_blank" rel="noopener">KMC Reg. No. 74573</a></dd></div>
           <div><dt>Fellowship</dt><dd>Wellness Kliniek, Belgium</dd></div>
           <div><dt>Founder &amp; Director</dt><dd>Pearl Aesthetic Clinic</dd></div>
           <div><dt>Co-Founder</dt><dd>Dr Sculpt Aesthetic Clinic</dd></div>
@@ -982,10 +984,12 @@ ${pageHero({
         <p class="lead" style="margin-top:1.3rem">Dr. Praveen Chandra K is the Founder &amp; Director of Pearl Aesthetic Clinic, Bengaluru, and Co-Founder of Dr Sculpt Aesthetic Clinic, Bengaluru. His practice focuses on refined, individualised aesthetic surgery and reconstruction.</p>
         <p style="margin-top:1rem;color:var(--text-muted);line-height:1.75">His approach is to enhance existing features while maintaining natural proportions, facial harmony and individuality — with meticulous technique, thoughtfully planned scars, clear communication and patient safety at every stage.</p>
         <dl class="credential-grid">
+          <div><dt>Registration</dt><dd><a href="https://karnatakamedicalcouncil.com/" target="_blank" rel="noopener">Karnataka Medical Council (KMC No. 74573)</a></dd></div>
+          <div><dt>Experience</dt><dd>20+ Years in Aesthetic &amp; Plastic Surgery</dd></div>
           <div><dt>MBBS</dt><dd>Vijayanagara Institute of Medical Sciences, Bellary</dd></div>
           <div><dt>MS, General Surgery</dt><dd>BLDEA's Medical College, Bijapur</dd></div>
           <div><dt>MCh, Plastic Surgery</dt><dd>St. John's Medical College, Bengaluru</dd></div>
-          <div><dt>International Fellowship</dt><dd>Advanced Cosmetic &amp; Minimally Invasive Breast Implant Surgery</dd></div>
+          <div><dt>International Fellowship</dt><dd>Wellness Kliniek, Belgium (Cosmetic Surgery)</dd></div>
         </dl>
         <div style="margin-top:2rem">
           <a class="btn btn--primary" href="appointment.html">Book a consultation</a>

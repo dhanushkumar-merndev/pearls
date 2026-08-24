@@ -9,6 +9,7 @@ const CLINIC = {
   shortName: 'Pearl Aesthetic',
   tagline: 'Where Science Meets Artistry',
   surgeon: 'Dr. Praveen Chandra K',
+  surgeonReg: 'KMC Reg. No. 74573',
   phoneDisplay: '+91 79008 02060',
   phoneRaw: '+917900802060',
   whatsapp: '917900802060',
