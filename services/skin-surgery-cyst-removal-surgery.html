@@ -727,18 +727,41 @@
   </div>
 </section>
 
-<section class="section"><div class="container"><div class="split" style="align-items:start">
+<section class="section"><div class="container"><div class="split" style="align-items:stretch">
   <div class="reveal">
     <p class="eyebrow">About this treatment</p>
     <h2 class="h2" style="margin-bottom:1.5rem;">Understanding <em>Cyst Removal Surgery</em></h2>
-    <div class="prose" style="margin-bottom: 2rem;"><p>Cyst removal surgery is a common and effective procedure used to treat various types of cysts that may develop on different parts of the body. Cysts are fluid-filled sacs that can form in tissues or organs, and while they are usually benign, they can cause discomfort, pain, or cosmetic concerns. The decision to undergo cyst removal surgery often depends on factors such as the size of the cyst, its location, whether it's causing symptoms, and the potential for complications.</p><p>The surgery typically involves a small incision where the cyst is located, allowing the surgeon to carefully remove the entire cyst and its contents. This procedure can often be performed on an outpatient basis, meaning you can return home the same day. In some cases, a local anesthetic is used to numb the area, while in other cases, general anesthesia may be administered, especially if the cyst is large or located in a sensitive area.</p><p>Before the surgery, your healthcare provider will discuss the procedure with you, including the preparation required and what to expect during recovery. It is crucial to follow preoperative instructions, such as avoiding certain medications or fasting before the surgery. During the procedure, the surgeon will make a precise incision to minimize scarring and ensure the cyst is completely removed.</p><p>Post-surgery, you may experience some swelling, bruising, or discomfort, which can usually be managed with prescribed pain medications and over-the-counter remedies. Proper wound care and following your surgeon's aftercare instructions are essential for optimal healing and to reduce the risk of infection.</p><p>In most cases, cyst removal surgery provides immediate relief from symptoms and a cosmetic improvement if the cyst was visible. If you have concerns about a cyst or are considering removal surgery, consult with a board-certified surgeon who can evaluate your condition and recommend the best treatment plan tailored to your needs.</p><p><br></p></div>
+    
+      <div class="read-more-container" style="position: relative; max-height: 400px; overflow: hidden; transition: max-height 0.5s ease-in-out; margin-bottom: 1.5rem;">
+        <div class="prose"><p>Cyst removal surgery is a common and effective procedure used to treat various types of cysts that may develop on different parts of the body. Cysts are fluid-filled sacs that can form in tissues or organs, and while they are usually benign, they can cause discomfort, pain, or cosmetic concerns. The decision to undergo cyst removal surgery often depends on factors such as the size of the cyst, its location, whether it's causing symptoms, and the potential for complications.</p><p>The surgery typically involves a small incision where the cyst is located, allowing the surgeon to carefully remove the entire cyst and its contents. This procedure can often be performed on an outpatient basis, meaning you can return home the same day. In some cases, a local anesthetic is used to numb the area, while in other cases, general anesthesia may be administered, especially if the cyst is large or located in a sensitive area.</p><p>Before the surgery, your healthcare provider will discuss the procedure with you, including the preparation required and what to expect during recovery. It is crucial to follow preoperative instructions, such as avoiding certain medications or fasting before the surgery. During the procedure, the surgeon will make a precise incision to minimize scarring and ensure the cyst is completely removed.</p><p>Post-surgery, you may experience some swelling, bruising, or discomfort, which can usually be managed with prescribed pain medications and over-the-counter remedies. Proper wound care and following your surgeon's aftercare instructions are essential for optimal healing and to reduce the risk of infection.</p><p>In most cases, cyst removal surgery provides immediate relief from symptoms and a cosmetic improvement if the cyst was visible. If you have concerns about a cyst or are considering removal surgery, consult with a board-certified surgeon who can evaluate your condition and recommend the best treatment plan tailored to your needs.</p><p><br></p></div>
+        <div class="read-more-fade" style="position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; transition: opacity 0.3s;"></div>
+      </div>
+      <button class="btn btn--ghost read-more-btn" style="margin-bottom: 2.5rem;" onclick="
+        const c = this.previousElementSibling;
+        c.style.maxHeight = '8000px';
+        c.querySelector('.read-more-fade').style.opacity = '0';
+        this.style.display = 'none';
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
+      ">Read full overview</button>
+      <script>
+        (function(){
+          const b = document.currentScript.previousElementSibling;
+          const c = b.previousElementSibling;
+          if (c.scrollHeight <= 400) {
+            c.style.maxHeight = 'none';
+            c.querySelector('.read-more-fade').style.display = 'none';
+            b.style.display = 'none';
+          }
+        })();
+      </script>
+    
   </div>
-  <div class="split__visual reveal">
+  <div class="split__visual reveal" style="height: 0; min-height: 100%; display: flex; flex-direction: column;">
     <div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="../appointment.html">Book an assessment <svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></p></div>
     <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div>
-    <div class="reviews-sidebar" style="margin-top:2rem;">
+    <div class="reviews-sidebar" style="margin-top:2rem; display: flex; flex-direction: column; flex: 1; min-height: 0;">
       <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Real Results, Real Stories</h4>
-      <div style="max-height: calc(100vh - 300px); overflow-y: auto; overscroll-behavior: contain; padding-right: .5rem; padding-bottom: 1rem;">
+      <div style="flex: 1; overflow-y: auto; overscroll-behavior: contain; padding-right: 15px; min-height: 0;" data-lenis-prevent>
         
       <div class="card" style="margin-top:1.2rem;padding:1.4rem;">
         <div style="color:var(--gold);margin-bottom:.5rem;">★★★★★</div>

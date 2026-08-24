@@ -727,18 +727,41 @@
   </div>
 </section>
 
-<section class="section"><div class="container"><div class="split" style="align-items:start">
+<section class="section"><div class="container"><div class="split" style="align-items:stretch">
   <div class="reveal">
     <p class="eyebrow">About this treatment</p>
     <h2 class="h2" style="margin-bottom:1.5rem;">Understanding <em>Cellulite Treatment</em></h2>
-    <div class="prose" style="margin-bottom: 2rem;"><p>Cellulite is a common condition that affects up to 90% of women at some point in their lives, leading to dimpled, uneven skin, most often on the thighs, buttocks, and abdomen. While it's a completely normal and harmless condition, many people seek treatment to reduce its appearance for a smoother, more even skin texture. Advances in cellulite treatment offer a range of options, from non-invasive therapies to minimally invasive procedures, all designed to target the underlying causes of cellulite and deliver noticeable, long-lasting results.</p><p>What Causes Cellulite?<br>Cellulite forms when fat deposits push through the connective tissues beneath the skin, creating a bumpy or dimpled appearance. This can be influenced by a variety of factors, including genetics, hormonal changes, lifestyle, and age. While cellulite is more common in women, men can also develop it, particularly in the abdominal area.</p><p>Non-Invasive Cellulite Treatments<br>For those looking to improve the appearance of cellulite without surgery, there are several non-invasive treatments available that target the problem areas effectively:</p><ol><li><p>Laser Therapy – Laser treatments, such as Cellulaze, use heat energy to break down the fibrous bands under the skin that contribute to cellulite while also stimulating collagen production. This helps smooth the skin and improve elasticity.</p></li><li><p>Radiofrequency (RF) Therapy – RF treatments, like VelaShape or ThermiSmooth, use radiofrequency energy to heat the deeper layers of skin, encouraging fat reduction and tightening the skin. This can reduce the appearance of cellulite over time.</p></li><li><p>Acoustic Wave Therapy (AWT) – AWT uses sound waves to break down fat and improve blood circulation. This treatment promotes skin tightening and helps improve the skin’s overall appearance, reducing cellulite gradually.</p></li><li><p>Topical Creams and Lotions – While not as effective as medical treatments, some creams containing retinol, caffeine, or other active ingredients can temporarily reduce the appearance of cellulite by tightening the skin’s surface and increasing circulation.</p></li></ol><p><br></p></div>
+    
+      <div class="read-more-container" style="position: relative; max-height: 400px; overflow: hidden; transition: max-height 0.5s ease-in-out; margin-bottom: 1.5rem;">
+        <div class="prose"><p>Cellulite is a common condition that affects up to 90% of women at some point in their lives, leading to dimpled, uneven skin, most often on the thighs, buttocks, and abdomen. While it's a completely normal and harmless condition, many people seek treatment to reduce its appearance for a smoother, more even skin texture. Advances in cellulite treatment offer a range of options, from non-invasive therapies to minimally invasive procedures, all designed to target the underlying causes of cellulite and deliver noticeable, long-lasting results.</p><p>What Causes Cellulite?<br>Cellulite forms when fat deposits push through the connective tissues beneath the skin, creating a bumpy or dimpled appearance. This can be influenced by a variety of factors, including genetics, hormonal changes, lifestyle, and age. While cellulite is more common in women, men can also develop it, particularly in the abdominal area.</p><p>Non-Invasive Cellulite Treatments<br>For those looking to improve the appearance of cellulite without surgery, there are several non-invasive treatments available that target the problem areas effectively:</p><ol><li><p>Laser Therapy – Laser treatments, such as Cellulaze, use heat energy to break down the fibrous bands under the skin that contribute to cellulite while also stimulating collagen production. This helps smooth the skin and improve elasticity.</p></li><li><p>Radiofrequency (RF) Therapy – RF treatments, like VelaShape or ThermiSmooth, use radiofrequency energy to heat the deeper layers of skin, encouraging fat reduction and tightening the skin. This can reduce the appearance of cellulite over time.</p></li><li><p>Acoustic Wave Therapy (AWT) – AWT uses sound waves to break down fat and improve blood circulation. This treatment promotes skin tightening and helps improve the skin’s overall appearance, reducing cellulite gradually.</p></li><li><p>Topical Creams and Lotions – While not as effective as medical treatments, some creams containing retinol, caffeine, or other active ingredients can temporarily reduce the appearance of cellulite by tightening the skin’s surface and increasing circulation.</p></li></ol><p><br></p></div>
+        <div class="read-more-fade" style="position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; transition: opacity 0.3s;"></div>
+      </div>
+      <button class="btn btn--ghost read-more-btn" style="margin-bottom: 2.5rem;" onclick="
+        const c = this.previousElementSibling;
+        c.style.maxHeight = '8000px';
+        c.querySelector('.read-more-fade').style.opacity = '0';
+        this.style.display = 'none';
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
+      ">Read full overview</button>
+      <script>
+        (function(){
+          const b = document.currentScript.previousElementSibling;
+          const c = b.previousElementSibling;
+          if (c.scrollHeight <= 400) {
+            c.style.maxHeight = 'none';
+            c.querySelector('.read-more-fade').style.display = 'none';
+            b.style.display = 'none';
+          }
+        })();
+      </script>
+    
   </div>
-  <div class="split__visual reveal">
+  <div class="split__visual reveal" style="height: 0; min-height: 100%; display: flex; flex-direction: column;">
     <div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="../appointment.html">Book an assessment <svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></p></div>
     <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div>
-    <div class="reviews-sidebar" style="margin-top:2rem;">
+    <div class="reviews-sidebar" style="margin-top:2rem; display: flex; flex-direction: column; flex: 1; min-height: 0;">
       <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Real Results, Real Stories</h4>
-      <div style="max-height: calc(100vh - 300px); overflow-y: auto; overscroll-behavior: contain; padding-right: .5rem; padding-bottom: 1rem;">
+      <div style="flex: 1; overflow-y: auto; overscroll-behavior: contain; padding-right: 15px; min-height: 0;" data-lenis-prevent>
         
       <div class="card" style="margin-top:1.2rem;padding:1.4rem;">
         <div style="color:var(--gold);margin-bottom:.5rem;">★★★★★</div>

@@ -1474,7 +1474,30 @@ function servicePage(cat, group, service) {
   if (scraped.definition) {
     let cleanDef = scraped.definition.replace(/ (style|dir|role|aria-level|id)="[^"]*"/gi, '');
     cleanDef = cleanDef.replace(/<\/?span[^>]*>/gi, '');
-    contentHTML = `<div class="prose" style="margin-bottom: 2rem;">${cleanDef}</div>`;
+    contentHTML = `
+      <div class="read-more-container" style="position: relative; max-height: 400px; overflow: hidden; transition: max-height 0.5s ease-in-out; margin-bottom: 1.5rem;">
+        <div class="prose">${cleanDef}</div>
+        <div class="read-more-fade" style="position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; transition: opacity 0.3s;"></div>
+      </div>
+      <button class="btn btn--ghost read-more-btn" style="margin-bottom: 2.5rem;" onclick="
+        const c = this.previousElementSibling;
+        c.style.maxHeight = '8000px';
+        c.querySelector('.read-more-fade').style.opacity = '0';
+        this.style.display = 'none';
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 500);
+      ">Read full overview</button>
+      <script>
+        (function(){
+          const b = document.currentScript.previousElementSibling;
+          const c = b.previousElementSibling;
+          if (c.scrollHeight <= 400) {
+            c.style.maxHeight = 'none';
+            c.querySelector('.read-more-fade').style.display = 'none';
+            b.style.display = 'none';
+          }
+        })();
+      </script>
+    `;
   } else {
     contentHTML = `<p class="lead">${esc(description)}</p><p>Every treatment plan is individual. Your consultation considers your concerns, anatomy, health history and the alternatives that may suit you before any recommendation is made.</p>`;
   }
@@ -1488,9 +1511,9 @@ function servicePage(cat, group, service) {
         <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5;">"${esc(r.text)}"</p>
       </div>
     `).join('');
-    reviewsHTML = `<div class="reviews-sidebar" style="margin-top:2rem;">
+    reviewsHTML = `<div class="reviews-sidebar" style="margin-top:2rem; display: flex; flex-direction: column; flex: 1; min-height: 0;">
       <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Real Results, Real Stories</h4>
-      <div style="max-height: calc(100vh - 300px); overflow-y: auto; overscroll-behavior: contain; padding-right: .5rem; padding-bottom: 1rem;">
+      <div style="flex: 1; overflow-y: auto; overscroll-behavior: contain; padding-right: 15px; min-height: 0;" data-lenis-prevent>
         ${reviewCards}
       </div>
     </div>`;
@@ -1513,13 +1536,13 @@ function servicePage(cat, group, service) {
   </div>
 </section>
 
-<section class="section"><div class="container"><div class="split" style="align-items:start">
+<section class="section"><div class="container"><div class="split" style="align-items:stretch">
   <div class="reveal">
     <p class="eyebrow">About this treatment</p>
     <h2 class="h2" style="margin-bottom:1.5rem;">Understanding <em>${esc(name)}</em></h2>
     ${contentHTML}
   </div>
-  <div class="split__visual reveal">
+  <div class="split__visual reveal" style="height: 0; min-height: 100%; display: flex; flex-direction: column;">
     <div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="${base}appointment.html">Book an assessment ${svg(UI.arrow)}</a></p></div>
     <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div>
     ${reviewsHTML}
