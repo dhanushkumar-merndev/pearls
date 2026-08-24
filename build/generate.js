@@ -81,21 +81,21 @@ const img = (base, file, alt, { w = 1200, h = 800, lazy = true, cls = '' } = {})
  */
 const RESULT_TIERS = ['patient', 'illustration'];
 // Purpose-made AI illustrations are deliberately kept separate from patient
-// photography. One image set can support related procedures, but every card
-// still shows a relevant before/after view instead of a generic placeholder.
+// photography. Each card has its own finished side-by-side comparison, so the
+// difference is visible immediately without reusing another procedure's art.
 const AI_ILLUSTRATIONS = Object.freeze({
-  rhinoplasty: 'ai-nose.png',
-  septorhinoplasty: 'ai-nose.png',
-  blepharoplasty: 'ai-face.png',
-  facelift: 'ai-face.png',
-  'breast-augmentation': 'ai-breast.png',
-  'breast-reduction': 'ai-breast.png',
-  gynecomastia: 'ai-male-chest.png',
-  'liposuction-360': 'ai-body.png',
-  'tummy-tuck': 'ai-body.png',
-  bbl: 'ai-body.png',
-  'post-weight-loss': 'ai-body.png',
-  'hair-transplant': 'ai-hair.png'
+  rhinoplasty: 'rhinoplasty-comparison.jpg',
+  septorhinoplasty: 'septorhinoplasty-comparison.jpg',
+  blepharoplasty: 'blepharoplasty-comparison.jpg',
+  facelift: 'facelift-comparison.jpg',
+  'breast-augmentation': 'breast-augmentation-comparison.jpg',
+  'breast-reduction': 'breast-reduction-comparison.jpg',
+  gynecomastia: 'gynecomastia-comparison.jpg',
+  'liposuction-360': 'liposuction-360-comparison.jpg',
+  'tummy-tuck': 'tummy-tuck-comparison.jpg',
+  bbl: 'bbl-comparison.jpg',
+  'post-weight-loss': 'post-weight-loss-comparison.jpg',
+  'hair-transplant': 'hair-transplant-comparison.jpg'
 });
 const RESULT_PHOTOS = Object.fromEntries(RESULT_TIERS.map((tier) => {
   const dir = path.join(ROOT, 'assets/img/results', tier);
@@ -992,12 +992,14 @@ function resultsPage() {
       illustration: {
         badge: 'Illustration &mdash; not a patient',
         alt: (w) => `Illustrative ${w.toLowerCase()} view of ${name} — not a patient of this clinic`,
-        note: 'Drag to compare &middot; illustration &mdash; not a patient result'
+        note: 'Fictional illustration &mdash; not a patient result'
       }
     }[tier];
 
-    const panes = tier
-      ? `<div class="ba__pane ba__pane--before"><img${aiIllustration ? ' class="ba__source--before"' : ''} src="${base}assets/img/results/${tier}/${aiIllustration || `${id}-before.jpg`}" alt="${esc(meta.alt('Before'))}" width="1200" height="900" loading="lazy" decoding="async"></div>
+    const panes = aiIllustration
+      ? `<img class="ba__static" src="${base}assets/img/results/illustration/${aiIllustration}" alt="Fictional illustrative before-and-after ${esc(name)} comparison — not a patient of this clinic" width="1200" height="900" loading="lazy" decoding="async">`
+      : tier
+      ? `<div class="ba__pane ba__pane--before"><img src="${base}assets/img/results/${tier}/${id}-before.jpg" alt="${esc(meta.alt('Before'))}" width="1200" height="900" loading="lazy" decoding="async"></div>
           <div class="ba__pane ba__pane--after"><img${aiIllustration ? ' class="ba__source--after"' : ''} src="${base}assets/img/results/${tier}/${aiIllustration || `${id}-after.jpg`}" alt="${esc(meta.alt('After'))}" width="1200" height="900" loading="lazy" decoding="async"></div>`
       : `<div class="ba__pane ba__pane--before"></div>
           <div class="ba__pane ba__pane--after"></div>
@@ -1006,12 +1008,11 @@ function resultsPage() {
     // No data-lenis-prevent here: that is for panes that scroll internally.
     // On a .ba it just swallows the wheel, and a grid of them stops the page.
     return `<figure class="case reveal">
-        <div class="ba${tier ? '' : ' ba--empty'}">
+        <div class="ba${aiIllustration ? ' ba--static' : tier ? '' : ' ba--empty'}">
           ${panes}
           <span class="ba__label ba__label--before">Before</span>
           <span class="ba__label ba__label--after">After</span>
-          <span class="ba__handle"></span>
-          <span class="ba__note">${tier ? meta.note : 'No patient photograph is published for this case yet'}</span>
+${aiIllustration ? '' : '          <span class="ba__handle"></span>\n'}          <span class="ba__note">${tier ? meta.note : 'No patient photograph is published for this case yet'}</span>
         </div>
         <figcaption class="case__body">
           <p class="case__meta"><span class="case__num">Case ${n}</span> <a href="${base}procedures/${cat.slug}.html">${esc(cat.name)}</a></p>
@@ -2072,4 +2073,3 @@ function build() {
 }
 
 build();
-
