@@ -850,7 +850,7 @@ ${pageHero({
         </ul>
       </div>
       <div class="split__visual reveal" data-dir="right">
-        <div class="fig fig--tall">${img(base, 'about.jpg', 'Consultation space at Pearl Aesthetic & Wellness', { w: 960, h: 1280 })}</div>
+        <figure class="fig fig--tall">${img(base, 'about-consultation-ai.png', 'Illustrative surgeon consultation in a private aesthetic clinic', { w: 960, h: 1280 })}<figcaption>Illustrative consultation image</figcaption></figure>
         <div class="stats" style="margin-top:1.5rem">
           <div><strong data-count="${CATEGORIES.length}">${CATEGORIES.length}</strong><span>Divisions</span></div>
           <div><strong data-count="${totalServices}" data-suffix="+">${totalServices}+</strong><span>Procedures</span></div>
@@ -896,7 +896,7 @@ ${ctaBand(base)}
     keywords: 'plastic surgery clinic Koramangala, aesthetic clinic Bengaluru, surgeon-led consultation Bangalore, accredited theatre Bengaluru',
     base, canonical: `${SITE_URL}/about.html`, active: 'about', body,
     jsonld: [clinicSchema, crumbs([['Home', '/'], ['About Us', '/about.html']])],
-    ogImage: 'about.jpg', ogImageAlt: 'Consultation space at Pearl Aesthetic & Wellness, Koramangala'
+    ogImage: 'about-consultation-ai.png', ogImageAlt: 'Illustrative surgeon consultation in a private aesthetic clinic'
   });
 }
 
@@ -1142,9 +1142,6 @@ ${aiIllustration ? '' : '          <span class="ba__handle"></span>\n'}         
       </figure>`;
   }).join('\n      ');
 
-  const liveCount = CASES.filter(([id]) => caseTier(id) === 'patient').length;
-  const illusCount = CASES.filter(([id]) => caseTier(id) === 'illustration').length;
-
   const body = `
 ${pageHero({
     crumb: 'Before &amp; After',
@@ -1161,26 +1158,6 @@ ${pageHero({
 
 <section class="section">
   <div class="container">
-    <div class="split" style="align-items:start;margin-bottom:clamp(2.5rem,5vw,4rem)">
-      <div class="reveal">
-        <p class="eyebrow">On Photographs</p>
-        <h2 class="h2">Why some frames are <em>empty</em></h2>
-        <p class="lead" style="margin-top:1.3rem">Every image in a before-and-after frame on a surgery website reads as that clinic’s own work. So this gallery shows a photograph only where a patient of this clinic has given written consent for it to be published. Where that consent is not yet on file, the frame stays empty and says so.</p>
-        <p class="lead" style="margin-top:1rem">Illustrations are always labelled clearly. Genuine matched cases are shown privately during your consultation.</p>
-      </div>
-      <div class="split__visual reveal">
-        <div class="info-card">
-          <h4>Gallery status</h4>
-          <p><b>${liveCount} of ${CASES.length}</b> cases carry a consented patient photograph${illusCount ? `, and <b>${illusCount}</b> show a labelled illustration` : ''}. The remainder are reserved frames.</p>
-          <p style="margin-top:.9rem">Results vary between individuals, and no outcome is guaranteed. Suitability is established at consultation, not from a photograph.</p>
-        </div>
-        <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)">
-          <h4>For the clinical team</h4>
-          <p>Drop a pair into <code>assets/img/results/patient/</code> as <code>&lt;case-id&gt;-before.jpg</code> and <code>-after.jpg</code> and rebuild — the frame goes live. Use <code>results/illustration/</code> instead for commissioned or licensed artwork; it renders with a permanent “not a patient” badge.</p>
-        </div>
-      </div>
-    </div>
-
     <div class="case-grid">
       ${cases}
     </div>
