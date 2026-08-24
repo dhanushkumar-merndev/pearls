@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { CLINIC, ICONS: DATA_ICONS, CATEGORIES, RELATED } = require('./data');
+const scrapedContent = JSON.parse(fs.readFileSync(path.join(__dirname, 'scraped_content.json'), 'utf8'));
 const { BLOG } = require('./blog');
 // Icons come from react-icons, rendered to static SVG at build time. The raw
 // path bodies still in data.js are superseded by these and are unused.
@@ -659,7 +660,7 @@ function homePage() {
           <h4>On photographs</h4>
           <p>Photography on this website is illustrative and does not depict patients of this clinic. Genuine patient results are shown at consultation, and are only ever published with explicit written consent.</p>
         </div>
-        <div style="margin-top:1.8rem;display:flex;gap:.8rem;flex-wrap:wrap">
+        <div class="btn-row">
           <a class="btn btn--primary" href="results.html">View the case gallery ${svg(UI.arrow)}</a>
           <a class="btn btn--ghost" href="appointment.html">See cases matched to you</a>
         </div>
@@ -1467,6 +1468,34 @@ function servicePage(cat, group, service) {
     provider: { '@id': SITE_URL + '/#clinic' },
     isPartOf: { '@type': 'MedicalWebPage', name: cat.name, url: `${SITE_URL}/procedures/${cat.slug}.html` }
   };
+  const scraped = scrapedContent[name] || { definition: '', reviews: [] };
+  
+  let contentHTML = '';
+  if (scraped.definition) {
+    let cleanDef = scraped.definition.replace(/ (style|dir|role|aria-level|id)="[^"]*"/gi, '');
+    cleanDef = cleanDef.replace(/<\/?span[^>]*>/gi, '');
+    contentHTML = `<div class="prose" style="margin-bottom: 2rem;">${cleanDef}</div>`;
+  } else {
+    contentHTML = `<p class="lead">${esc(description)}</p><p>Every treatment plan is individual. Your consultation considers your concerns, anatomy, health history and the alternatives that may suit you before any recommendation is made.</p>`;
+  }
+
+  let reviewsHTML = '';
+  if (scraped.reviews && scraped.reviews.length > 0) {
+    const reviewCards = scraped.reviews.map(r => `
+      <div class="card" style="margin-top:1.2rem;padding:1.4rem;">
+        <div style="color:var(--gold);margin-bottom:.5rem;">${'★'.repeat(r.stars)}</div>
+        <h6 style="font-size:.9rem;font-weight:600;margin-bottom:.4rem;">${esc(r.author)}</h6>
+        <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5;">"${esc(r.text)}"</p>
+      </div>
+    `).join('');
+    reviewsHTML = `<div class="reviews-sidebar" style="margin-top:2rem;">
+      <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Real Results, Real Stories</h4>
+      <div style="max-height: calc(100vh - 300px); overflow-y: auto; overscroll-behavior: contain; padding-right: .5rem; padding-bottom: 1rem;">
+        ${reviewCards}
+      </div>
+    </div>`;
+  }
+
   const body = `
 <section class="page-hero">
   <div class="container">
@@ -1484,9 +1513,21 @@ function servicePage(cat, group, service) {
   </div>
 </section>
 
-<section class="section"><div class="container"><div class="split" style="align-items:start"><div class="reveal"><p class="eyebrow">About this treatment</p><h2 class="h2">Understanding <em>${esc(name)}</em></h2><p class="lead">${esc(description)}</p><p>Every treatment plan is individual. Your consultation considers your concerns, anatomy, health history and the alternatives that may suit you before any recommendation is made.</p></div><div class="split__visual reveal"><div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="${base}appointment.html">Book an assessment ${svg(UI.arrow)}</a></p></div><div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div></div></div></div></section>
+<section class="section"><div class="container"><div class="split" style="align-items:start">
+  <div class="reveal">
+    <p class="eyebrow">About this treatment</p>
+    <h2 class="h2" style="margin-bottom:1.5rem;">Understanding <em>${esc(name)}</em></h2>
+    ${contentHTML}
+  </div>
+  <div class="split__visual reveal">
+    <div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="${base}appointment.html">Book an assessment ${svg(UI.arrow)}</a></p></div>
+    <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div>
+    ${reviewsHTML}
+  </div>
+</div></div></section>
 
 ${clinicFeedback(cat)}
+
 
 <section class="section"><div class="container"><div class="section-head" style="margin-bottom:1.8rem"><p class="eyebrow">Explore more</p><h2 class="h2">Related <em>${esc(group.name.toLowerCase())}</em></h2></div><div class="svc-grid">${relatedCards || `<a class="svc" href="../procedures/${cat.slug}.html"><h3>All ${esc(cat.name)} treatments</h3><p>Explore the full range of treatments in this division.</p><span class="svc__link">View division ${svg(UI.arrow)}</span></a>`}</div><p style="margin-top:2rem"><a class="link-arrow" href="../procedures/${cat.slug}.html">Back to all ${esc(cat.name)} procedures ${svg(UI.arrow)}</a></p></div></section>
 
