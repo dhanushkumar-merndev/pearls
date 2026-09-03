@@ -56,6 +56,7 @@ const UI = {
   wa:     render(Fa, 'FaWhatsapp'),      // brand marks exist only in Font Awesome
   fb:     render(Lu, 'LuFacebook'),
   ig:     render(Lu, 'LuInstagram'),
+  yt:     render(Lu, 'LuYoutube'),
   shield: render(Lu, 'LuShieldCheck'),
   spark:  render(Lu, 'LuSparkles'),
   lock:   render(Lu, 'LuLock'),

@@ -204,6 +204,7 @@ function topbar() {
     <div class="topbar__social">
       <a href="${CLINIC.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${svg(UI.ig)}</a>
       <a href="${CLINIC.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${svg(UI.fb)}</a>
+      <a href="${CLINIC.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${svg(UI.yt)}</a>
     </div>
   </div>
 </div>`;
@@ -372,6 +373,7 @@ function footer(base) {
         <div class="footer__social">
           <a href="${CLINIC.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${svg(UI.ig)}</a>
           <a href="${CLINIC.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${svg(UI.fb)}</a>
+          <a href="${CLINIC.youtube}" target="_blank" rel="noopener" aria-label="YouTube">${svg(UI.yt)}</a>
           <a href="https://wa.me/${CLINIC.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp">${svg(UI.wa)}</a>
         </div>
       </div>
@@ -493,7 +495,7 @@ const clinicSchema = {
     dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
     opens: '10:00', closes: '20:00'
   }],
-  sameAs: [CLINIC.instagram, CLINIC.facebook],
+  sameAs: [CLINIC.instagram, CLINIC.facebook, CLINIC.youtube],
   medicalSpecialty: 'PlasticSurgery',
   areaServed: [
     { '@type': 'City', name: 'Bengaluru' },
@@ -950,7 +952,8 @@ function surgeonPage() {
       { '@type': 'CollegeOrUniversity', name: "BLDEA's Medical College, Bijapur" },
       { '@type': 'CollegeOrUniversity', name: 'Vijayanagara Institute of Medical Sciences, Bellary' }
     ],
-    knowsAbout: ['Rhinoplasty', 'Breast Surgery', 'Body Contouring', 'High-definition Liposuction', 'Hair Restoration', 'Reconstructive Surgery']
+    knowsAbout: ['Rhinoplasty', 'Breast Surgery', 'Body Contouring', 'High-definition Liposuction', 'Hair Restoration', 'Reconstructive Surgery'],
+    sameAs: [CLINIC.instagramDoctor]
   };
 
   const body = `
@@ -992,8 +995,9 @@ ${pageHero({
           <div><dt>MCh, Plastic Surgery</dt><dd>St. John's Medical College, Bengaluru</dd></div>
           <div><dt>International Fellowship</dt><dd>Wellness Kliniek, Belgium (Cosmetic Surgery)</dd></div>
         </dl>
-        <div style="margin-top:2rem">
+        <div class="btn-row" style="margin-top:2rem">
           <a class="btn btn--primary" href="appointment.html">Book a consultation</a>
+          <a class="btn btn--ghost" href="${CLINIC.instagramDoctor}" target="_blank" rel="noopener">${svg(UI.ig)} Follow Dr. Praveen</a>
         </div>
       </div>
     </div>

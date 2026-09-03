@@ -28,8 +28,14 @@ const CLINIC = {
      undercuts the local signal it is meant to reinforce. */
   lat: 12.9324785,
   lng: 77.6314766,
-  facebook: 'https://facebook.com/PearlAestheticBengaluru',
-  instagram: 'https://instagram.com/pearl_aesthetic_clinic/'
+  /* Social profiles. `instagram` is the clinic account used in the site-wide
+     social rows; the surgeon keeps a separate personal practice account
+     (`instagramDoctor`), linked only from the surgeon page so the two are
+     not confused for one another. */
+  facebook: 'https://www.facebook.com/PearlAestheticBengaluru',
+  instagram: 'https://www.instagram.com/pearl_aesthetic_clinic/',
+  instagramDoctor: 'https://www.instagram.com/drpraveenklinik/',
+  youtube: 'https://www.youtube.com/@Pearl_Aesthetic_Clinic'
 };
 
 /* Stroke icons (24×24, currentColor) */
