@@ -301,6 +301,7 @@ function nav(base, active) {
     </nav>
     <div class="nav__cta">
       <a class="btn btn--primary" href="${base}appointment.html">Book Appointment</a>
+      <a class="btn btn--ghost nav__btn-login" href="${CLINIC.portalUrl}" target="_blank" rel="noopener">${svg(UI.user)} Login</a>
       <button class="nav__toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">${svg(UI.menu)}</button>
     </div>
   </div>
@@ -331,6 +332,7 @@ function drawer(base) {
   </nav>
   <div class="drawer__actions">
     <a class="btn btn--primary btn--block" href="${base}appointment.html">Book Appointment</a>
+    <a class="btn btn--ghost btn--block" href="${CLINIC.portalUrl}" target="_blank" rel="noopener">${svg(UI.user)} Login</a>
     <a class="btn btn--ghost btn--block" href="tel:${CLINIC.phoneRaw}">${svg(UI.phone)} ${esc(CLINIC.phoneDisplay)}</a>
   </div>
 </aside>`;

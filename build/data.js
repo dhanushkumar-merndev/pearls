@@ -35,7 +35,8 @@ const CLINIC = {
   facebook: 'https://www.facebook.com/PearlAestheticBengaluru',
   instagram: 'https://www.instagram.com/pearl_aesthetic_clinic/',
   instagramDoctor: 'https://www.instagram.com/drpraveenklinik/',
-  youtube: 'https://www.youtube.com/@Pearl_Aesthetic_Clinic'
+  youtube: 'https://www.youtube.com/@Pearl_Aesthetic_Clinic',
+  portalUrl: 'https://app.pearlaesthetic.in'
 };
 
 /* Stroke icons (24×24, currentColor) */
