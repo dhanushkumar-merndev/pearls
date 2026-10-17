@@ -201,7 +201,7 @@ p { margin: 0; }
 .section-head.is-center { margin-inline: auto; text-align: center; }
 .section-head .h2 + .lead { margin-top: 1.15rem; }
 
-.grid { display: grid; gap: var(--space-md); }
+.grid { display: grid; gap: var(--space-sm); }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
@@ -1093,7 +1093,7 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
   background: linear-gradient(140deg, var(--gold), var(--gold-deep));
   transform: rotate(-6deg) scale(1.05);
 }
-.cat-card:hover .cat-card__icon svg { color: #fff; }
+.cat-card:hover .cat-card__icon svg { color: #fff; transition: none; }
 .cat-card h3 {
   font-family: var(--font-serif);
   font-size: 1.5rem;
@@ -1136,9 +1136,17 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
   pointer-events: none;
 }
 .cat-card:hover .cat-card__num { color: var(--sand-200); }
-.treatments__grid { align-items: start; }
+.treatments__grid { align-items: stretch; }
+.cat-card__body {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  flex: 1;
+  padding: 1.7rem 1.8rem 1.9rem;
+}
 .treatments__card .cat-card__tags { margin-bottom: .9rem; }
-.treatments__card .cat-card__foot { margin-top: 0; }
+.treatments__card .cat-card__foot { margin-top: 0; gap: .5rem; }
+.treatments__card .cat-card__count { white-space: nowrap; }
+.treatments__card .cat-card__foot .link-arrow { gap: .4rem; white-space: nowrap; }
 .treatments__more-wrap { display: none; text-align: center; }
 
 /* Feature card (ink section) */
@@ -1554,7 +1562,7 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
   color: var(--ink);
   font-style: italic;
 }
-.quote__by { margin-top: auto; display: flex; align-items: center; gap: .85rem; padding-top: .4rem; }
+.quote__by { margin-top: 0; display: flex; align-items: center; gap: .85rem; padding-top: .4rem; }
 .quote__avatar {
   width: 42px; height: 42px;
   border-radius: 50%;
@@ -1940,6 +1948,7 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
 .results-hero__visual figcaption { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: .8rem; padding: 1.05rem 1.2rem; color: var(--sand-100); background: linear-gradient(0deg, rgba(23, 17, 10, .75), transparent); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 
 .svc-group { margin-bottom: clamp(2.8rem, 5vw, 4.2rem); }
+.svc-group:last-child { margin-bottom: 0; }
 .svc-group__head {
   display: flex;
   align-items: baseline;
@@ -2004,6 +2013,11 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
 }
 .svc:hover::after { background: var(--gold); transform: scale(1.4); }
 .feedback-note { max-width: 760px; margin: 1.2rem auto 0; text-align: center; font-size: .8rem; line-height: 1.6; color: var(--text-muted); }
+
+/* Match the overview height in two columns while keeping reviews scrollable. */
+.service-sidebar { height: 0; min-height: 100%; display: flex; flex-direction: column; }
+.reviews-sidebar { margin-top: 2rem; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.reviews-sidebar__list { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding-right: 15px; min-height: 0; }
 
 /* HTML sitemap listing */
 .sitemap-list {
@@ -2538,6 +2552,9 @@ a.team-card:hover .team-card__media img { transform: scale(1.04); }
   .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .split { grid-template-columns: 1fr; }
+  /* A stacked sidebar needs its own height instead of its desktop grid row's. */
+  .service-sidebar { height: auto; min-height: 0; }
+  .reviews-sidebar__list { flex: none; max-height: 28rem; }
   .split--reverse .split__visual { order: 0; }
   .booking { grid-template-columns: 1fr; }
   .topbar__list li:not(:first-child):not(:nth-child(2)) { display: none; }
@@ -3201,8 +3218,12 @@ html.offer-open { overflow: hidden; }
 .reel__profile { flex: none; border-radius: 4px; padding: .4rem .5rem; background: #4e5eff; color: #fff; font-size: .7rem; font-weight: 700; }
 .reel__profile:hover { background: #3544df; color: #fff; }
 .reel__preview { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #000; }
-.reel__preview > img { width: 100%; height: 100%; display: block; object-fit: contain; transition: transform .4s var(--ease); }
-.reel__preview:hover > img { transform: scale(1.035); }
+.reel__launch { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
+.reel__launch:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+.reel__preview > img, .reel__launch > img { width: 100%; height: 100%; display: block; object-fit: contain; transition: transform .4s var(--ease); }
+.reel__preview:hover > img, .reel__launch:hover > img { transform: scale(1.035); }
+.reel__inline { position: absolute; top: -54px; left: 0; width: 100%; height: calc(125cqw + 212px); border: 0; display: block; }
+.reel__preview.is-playing .reel__watch { display: none; }
 .reel__play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 64px; height: 64px; transform: translate(-50%, -50%); border: 1px solid rgba(255, 255, 255, .75); border-radius: 50%; background: rgba(255, 255, 255, .9); box-shadow: var(--shadow); }
 .reel__play::after { content: ""; margin-left: 5px; border-top: 12px solid transparent; border-bottom: 12px solid transparent; border-left: 19px solid var(--ink); }
 .reel__watch { position: absolute; inset: auto 0 0; display: flex; align-items: center; justify-content: center; gap: .5rem; padding: 2.5rem .75rem .8rem; background: linear-gradient(transparent, rgba(23, 17, 10, .78)); color: #fff; font-size: .75rem; font-weight: 600; }
@@ -3243,4 +3264,38 @@ html.offer-open { overflow: hidden; }
 }
 @media print {
   .lightbox, .gallery-filter { display: none !important; }
+}
+
+/* Balanced card rows: use two cards in each of the final two rows when a
+   three-column collection would leave one card alone. Featured articles and
+   filtered-out gallery cards do not count toward the remaining row sizes. */
+.grid--balanced {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+.grid--balanced > :where(:not(.post-card--feature, [hidden])) {
+  grid-column: span 3;
+  min-width: 0;
+}
+.grid--balanced > :where(:nth-child(odd of :not(.post-card--feature, [hidden])):nth-last-child(1 of :not(.post-card--feature, [hidden]))) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 981px) {
+  .grid--balanced:not(.svc-grid) > :where(:not(.post-card--feature, [hidden])) { grid-column: span 2; }
+  .grid--balanced:not(.svc-grid):where(:has(> :nth-child(3n + 1 of :not(.post-card--feature, [hidden])):nth-last-child(1 of :not(.post-card--feature, [hidden])))) > :where(:nth-last-child(-n + 4 of :not(.post-card--feature, [hidden]))),
+  .grid--balanced:not(.svc-grid):where(:has(> :nth-child(3n + 2 of :not(.post-card--feature, [hidden])):nth-last-child(1 of :not(.post-card--feature, [hidden])))) > :where(:nth-last-child(-n + 2 of :not(.post-card--feature, [hidden]))) { grid-column: span 3; }
+}
+
+@media (min-width: 1081px) {
+  .svc-grid.grid--balanced > :where(:not(.post-card--feature, [hidden])) { grid-column: span 2; }
+  .svc-grid.grid--balanced:where(:has(> :nth-child(3n + 1 of :not(.post-card--feature, [hidden])):nth-last-child(1 of :not(.post-card--feature, [hidden])))) > :where(:nth-last-child(-n + 4 of :not(.post-card--feature, [hidden]))),
+  .svc-grid.grid--balanced:where(:has(> :nth-child(3n + 2 of :not(.post-card--feature, [hidden])):nth-last-child(1 of :not(.post-card--feature, [hidden])))) > :where(:nth-last-child(-n + 2 of :not(.post-card--feature, [hidden]))) { grid-column: span 3; }
+}
+
+.grid--balanced > .post-card--feature,
+.grid--balanced > :only-child { grid-column: 1 / -1; }
+@media (max-width: 700px) {
+  .grid--balanced > :where(:not([hidden])) { grid-column: 1 / -1; }
+  .quote { padding: 1.5rem; }
 }

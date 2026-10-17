@@ -607,16 +607,25 @@ function reelCard(v) {
   const title = v.title || 'Video';
   if (v.poster) {
     const account = v.account || 'pearl_aesthetic_clinic';
+    const cover = `${img('', v.poster, `${title} — Instagram reel cover`, { w: 360, h: 640 })}
+          <span class="reel__play" aria-hidden="true"></span>`;
+    const preview = v.embed === false
+      ? `<a class="reel__preview" href="${url}" target="_blank" rel="noopener" aria-label="Watch ${esc(title)} on Instagram">
+          ${cover}
+          <span class="reel__watch">${svg(UI.ig)} Watch on Instagram</span>
+        </a>`
+      : `<div class="reel__preview">
+          <button class="reel__launch" type="button" data-instagram-reel="${id}" aria-label="Play ${esc(title)} here">
+            ${cover}
+          </button>
+          <a class="reel__watch" href="${url}" target="_blank" rel="noopener">${svg(UI.ig)} Watch on Instagram</a>
+        </div>`;
     return `<article class="reel reel--preview reveal">
         <div class="reel__header">
           <span class="reel__account"><img src="assets/img/logo.png" alt="" width="32" height="32" loading="lazy"><strong>${esc(account)}</strong></span>
           <a class="reel__profile" href="https://www.instagram.com/${esc(account)}/" target="_blank" rel="noopener">View profile</a>
         </div>
-        <a class="reel__preview" href="${url}" target="_blank" rel="noopener" aria-label="Watch ${esc(title)} on Instagram">
-          ${img('', v.poster, `${title} — Instagram reel cover`, { w: 360, h: 640 })}
-          <span class="reel__play" aria-hidden="true"></span>
-          <span class="reel__watch">${svg(UI.ig)} Watch on Instagram</span>
-        </a>
+        ${preview}
         <p class="reel__title">${esc(title)}</p>
       </article>`;
   }
@@ -652,7 +661,7 @@ function homePage() {
     const count = c.groups.reduce((m, g) => m + g.services.length, 0);
     return `<a class="card cat-card treatments__card reveal" data-dir="zoom" href="procedures/${c.slug}.html" style="padding:0">
         <div class="post-card__media cat-card__media" style="aspect-ratio:16/10">${img(base, 'procedures/' + c.slug + '.jpg', c.name + ' treatments at Pearl Aesthetic, Koramangala, Bengaluru', { w: 800, h: 534 })}</div>
-        <div style="padding:1.7rem 1.8rem 1.9rem;display:flex;flex-direction:column;flex:1">
+        <div class="cat-card__body">
           <span class="cat-card__icon">${svg(ICONS[c.icon])}</span>
           <h3>${esc(c.name)}</h3>
           <p>${esc(c.tagline)}</p>
@@ -739,7 +748,7 @@ function homePage() {
 <!-- ============ PILLARS — routes into the three content pages ============ -->
 <section class="section">
   <div class="container">
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${pillars}
     </div>
   </div>
@@ -820,7 +829,7 @@ function homePage() {
       <h2 class="h2">Reading worth <em>your time</em></h2>
       <p class="lead">Plain-language guidance on choosing a surgeon, understanding recovery and knowing when a treatment is not right for you.</p>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${latest}
     </div>
     <div style="text-align:center;margin-top:2.8rem">
@@ -837,7 +846,7 @@ function homePage() {
       <h2 class="h2">How a plan is <em>put together</em></h2>
       <p class="lead">What was treated, how it was approached and what recovery involved — published only with the patient's consent.</p>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${caseTeasers}
     </div>
     <div style="text-align:center;margin-top:2.8rem">
@@ -853,7 +862,7 @@ function homePage() {
       <p class="eyebrow is-center" style="justify-content:center">Patient Voices</p>
       <h2 class="h2">In their <em>own words</em></h2>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${quotes}
     </div>
     <div style="text-align:center;margin-top:2.8rem">
@@ -1058,7 +1067,7 @@ ${pageHero({
       <h2 class="h2">${CENTRES.length} centres across <em>Bengaluru</em></h2>
       <p class="lead">Visit the centre closest to you. Every centre offers surgeon-led consultations by appointment.</p>
     </div>
-    <div class="centre-grid">
+    <div class="centre-grid grid--balanced">
       ${centres}
     </div>
   </div>
@@ -1209,7 +1218,7 @@ ${pageHero({
       <h2 class="h2">A comprehensive aesthetic<br><em>practice</em></h2>
       <p class="lead">A focused practice across face, breast, body, hair and reconstructive surgery — built around an individual treatment plan rather than a one-size-fits-all outcome.</p>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${specialties}
     </div>
   </div>
@@ -1241,7 +1250,7 @@ ${pageHero({
       <h2 class="h2">The equipment behind<br>the <em>result</em></h2>
       <p class="lead">Technology does not replace surgical judgement — but it widens what judgement can deliver. These are the platforms our treatment plans are built on.</p>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${tech}
     </div>
   </div>
@@ -1367,13 +1376,13 @@ ${pageHero({
     <p class="gallery-filter__count" aria-live="polite"></p>
 ${posters ? `    <div class="gallery-group">
       <h2 class="gallery-group__title">Patient results</h2>
-      <div class="case-grid case-grid--posters">
+      <div class="case-grid grid--balanced case-grid--posters">
       ${posters}
       </div>
     </div>
 ` : ''}${cases ? `    <div class="gallery-group">
       <h2 class="gallery-group__title">Before &amp; after</h2>
-      <div class="case-grid">
+      <div class="case-grid grid--balanced">
       ${cases}
       </div>
     </div>` : ''}
@@ -1431,7 +1440,7 @@ ${pageHero({
 
 <section class="section">
   <div class="container">
-    <div class="grid grid-3 cs-grid">
+    <div class="grid grid-3 grid--balanced cs-grid">
       ${cards}
     </div>
   </div>
@@ -1502,7 +1511,7 @@ function caseStudyPage(cs) {
     <div class="section-head is-center">
       <p class="eyebrow is-center" style="justify-content:center">More Case Studies</p>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${others}
     </div>
     <div style="text-align:center;margin-top:2.8rem">
@@ -1555,7 +1564,7 @@ ${videos ? `<section class="section">
       <p class="eyebrow">Written Reviews</p>
       <h2 class="h2">What patients <em>tell us</em></h2>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${text}
     </div>
   </div>
@@ -1740,7 +1749,7 @@ ${pageHero({
       <p class="eyebrow is-center" style="justify-content:center">Our Centres</p>
       <h2 class="h2">Find the centre <em>nearest you</em></h2>
     </div>
-    <div class="centre-grid">
+    <div class="centre-grid grid--balanced">
       ${CENTRES.map((c) => centreCard(base, c)).join('\n      ')}
     </div>
   </div>
@@ -1833,7 +1842,7 @@ function categoryPage(cat, index) {
           <h2>${esc(g.name)}</h2>
           <span>${g.services.length} procedures</span>
         </div>
-        <div class="svc-grid">
+        <div class="svc-grid grid--balanced">
           ${g.services.map(([n, d]) =>
             `<a class="svc" href="../services/${serviceFile(cat, n)}"><h3>${esc(n)}</h3><p>${esc(d)}</p><span class="svc__link">View treatment details ${svg(UI.arrow)}</span></a>`).join('\n          ')}
         </div>
@@ -2019,9 +2028,9 @@ function servicePage(cat, group, service) {
         <p style="font-size:.85rem;color:var(--text-muted);line-height:1.5;">"${esc(r.text)}"</p>
       </div>
     `).join('');
-    reviewsHTML = `<div class="reviews-sidebar" style="margin-top:2rem; display: flex; flex-direction: column; flex: 1; min-height: 0;">
+    reviewsHTML = `<div class="reviews-sidebar">
       <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Real Results, Real Stories</h4>
-      <div style="flex: 1; overflow-y: auto; overscroll-behavior: contain; padding-right: 15px; min-height: 0;" data-lenis-prevent>
+      <div class="reviews-sidebar__list" data-lenis-prevent>
         ${reviewCards}
       </div>
     </div>`;
@@ -2050,7 +2059,7 @@ function servicePage(cat, group, service) {
     <h2 class="h2" style="margin-bottom:1.5rem;">Understanding <em>${esc(name)}</em></h2>
     ${contentHTML}
   </div>
-  <div class="split__visual reveal" style="height: 0; min-height: 100%; display: flex; flex-direction: column;">
+  <div class="split__visual service-sidebar reveal">
     <div class="info-card"><h4>Your consultation</h4><p>We discuss appropriate options, likely recovery, scars or side effects where relevant, and what is realistically achievable for you.</p><p style="margin-top:.9rem"><a class="link-arrow" href="${base}appointment.html">Book an assessment ${svg(UI.arrow)}</a></p></div>
     <div class="info-card" style="margin-top:1.2rem;border-left-color:var(--sand-400)"><h4>Fees &amp; recovery</h4><p>Technique, theatre or anaesthetic needs and aftercare differ by person. You receive specific guidance and a written quotation following assessment.</p></div>
     ${reviewsHTML}
@@ -2060,7 +2069,7 @@ function servicePage(cat, group, service) {
 ${clinicFeedback(cat)}
 
 
-<section class="section"><div class="container"><div class="section-head" style="margin-bottom:1.8rem"><p class="eyebrow">Explore more</p><h2 class="h2">Related <em>${esc(group.name.toLowerCase())}</em></h2></div><div class="svc-grid">${relatedCards || `<a class="svc" href="../procedures/${cat.slug}.html"><h3>All ${esc(cat.name)} treatments</h3><p>Explore the full range of treatments in this division.</p><span class="svc__link">View division ${svg(UI.arrow)}</span></a>`}</div><p style="margin-top:2rem"><a class="link-arrow" href="../procedures/${cat.slug}.html">Back to all ${esc(cat.name)} procedures ${svg(UI.arrow)}</a></p></div></section>
+<section class="section"><div class="container"><div class="section-head" style="margin-bottom:1.8rem"><p class="eyebrow">Explore more</p><h2 class="h2">Related <em>${esc(group.name.toLowerCase())}</em></h2></div><div class="svc-grid grid--balanced">${relatedCards || `<a class="svc" href="../procedures/${cat.slug}.html"><h3>All ${esc(cat.name)} treatments</h3><p>Explore the full range of treatments in this division.</p><span class="svc__link">View division ${svg(UI.arrow)}</span></a>`}</div><p style="margin-top:2rem"><a class="link-arrow" href="../procedures/${cat.slug}.html">Back to all ${esc(cat.name)} procedures ${svg(UI.arrow)}</a></p></div></section>
 
 ${ctaBand(base, bannerForCategory(cat.slug))}`;
   return shell({
@@ -2108,7 +2117,7 @@ function blogIndexPage() {
 
 <section class="section">
   <div class="container">
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${postCard(base, first, true)}
       ${rest.map((p) => postCard(base, p)).join('\n      ')}
     </div>
@@ -2216,7 +2225,7 @@ function blogPostPage(post, index) {
       <p class="eyebrow">Keep Reading</p>
       <h2 class="h2">More from <em>the journal</em></h2>
     </div>
-    <div class="grid grid-3">
+    <div class="grid grid-3 grid--balanced">
       ${others}
     </div>
   </div>

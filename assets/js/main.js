@@ -651,6 +651,26 @@
     });
   }
 
+  // Keep the matching reel covers, then load the player in the same card.
+  $$('[data-instagram-reel]').forEach(function (btn) {
+    on(btn, 'click', function () {
+      var id = btn.getAttribute('data-instagram-reel');
+      if (!/^[A-Za-z0-9_-]+$/.test(id)) return;
+      var preview = btn.closest('.reel__preview');
+      var iframe = document.createElement('iframe');
+      iframe.className = 'reel__inline';
+      iframe.src = 'https://www.instagram.com/reel/' + id + '/embed/';
+      iframe.title = btn.getAttribute('aria-label') || 'Instagram video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.setAttribute('scrolling', 'no');
+      preview.classList.add('is-playing');
+      btn.replaceWith(iframe);
+      iframe.focus();
+    });
+  });
+
   // Video testimonials load YouTube only when the visitor asks for them.
   $$('[data-yt]').forEach(function (btn) {
     on(btn, 'click', function () {

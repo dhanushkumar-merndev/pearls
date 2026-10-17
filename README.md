@@ -361,8 +361,9 @@ shows the clinic-supplied patient posters and seven treatment reel covers. Banne
 existing photographs of the Koramangala clinic.
 
 Real reel covers are cached in `assets/img/reels/`; `sources.json` records their original
-Instagram URLs. Preview play links open those reels on Instagram, and each card keeps
-a View profile link. This also covers posts whose public embedded player is unavailable.
+Instagram URLs. Supported reels load an Instagram player inside the card when Play is
+clicked. Posts whose public player is unavailable retain a preview linking to Instagram.
+Each card keeps its View profile link.
 
 Only matched photographs in `assets/img/results/patient/<case-id>-before.jpg` and
 `<case-id>-after.jpg` are eligible for additional before-and-after comparisons.

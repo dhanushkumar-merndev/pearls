@@ -143,20 +143,20 @@ const TESTIMONIALS = [
   // Patient video testimonials from the clinic's Instagram. A cached real
   // cover keeps a preview visible when a public embedded player is unavailable.
   { type: 'video', title: 'Hair transplant — patient story', instagram: 'DbLvJwVJdT7', poster: 'reels/DbLvJwVJdT7.jpg' },
-  { type: 'video', title: 'Patient story', instagram: 'DbS9-f1Bd89', poster: 'reels/DbS9-f1Bd89.jpg' },
+  { type: 'video', title: 'Patient story', instagram: 'DdQHl27hToI', poster: 'reels/DdQHl27hToI.jpg' },
   { type: 'video', title: 'Patient testimonial', instagram: 'DcvCybbxUJO', poster: 'reels/DcvCybbxUJO.jpg' },
-  { type: 'video', title: 'Tummy tuck — patient story', instagram: 'Dc-cBQjRait', poster: 'reels/Dc-cBQjRait.jpg' }
+  { type: 'video', title: 'Tummy tuck — patient story', instagram: 'Dc-cBQjRait', poster: 'reels/Dc-cBQjRait.jpg', embed: false }
 ];
 
-/* Real reel covers cached from the public Instagram pages. Each preview
-   opens its original reel; profile links remain available on every card. */
+/* Real reel covers cached from the public Instagram pages. Supported posts
+   play inside the website. Posts whose embed is unavailable open Instagram. */
 const TREATMENT_VIDEOS = [
-  { title: 'Hair transplant — choosing your surgeon', instagram: 'DebytdmBEI4', poster: 'reels/DebytdmBEI4.jpg' },
+  { title: 'Hair transplant — choosing your surgeon', instagram: 'DebytdmBEI4', poster: 'reels/DebytdmBEI4.jpg', embed: false },
   { title: 'EVOLVE X body contouring', instagram: 'Ddq6sBDhlwK', poster: 'reels/Ddq6sBDhlwK.jpg' },
-  { title: 'Liposuction & fat transfer', instagram: 'Dd1OghypsCO', poster: 'reels/Dd1OghypsCO.jpg' },
+  { title: 'Liposuction & fat transfer', instagram: 'Dd1OghypsCO', poster: 'reels/Dd1OghypsCO.jpg', embed: false },
   { title: 'A daughter and her mother — patient story', instagram: 'DdQHl27hToI', poster: 'reels/DdQHl27hToI.jpg' },
-  { title: 'Deep plane facelift & traditional facelift', instagram: 'DbbLua8zPIG', poster: 'reels/DbbLua8zPIG.jpg', account: 'drpraveenklinik' },
-  { title: 'Liposuction & body contouring — behind the scenes', instagram: 'Dax1yeDpjxR', poster: 'reels/Dax1yeDpjxR.jpg' },
+  { title: 'Deep plane facelift & traditional facelift', instagram: 'DbbLua8zPIG', poster: 'reels/DbbLua8zPIG.jpg', account: 'drpraveenklinik', embed: false },
+  { title: 'Liposuction & body contouring — behind the scenes', instagram: 'Dax1yeDpjxR', poster: 'reels/Dax1yeDpjxR.jpg', embed: false },
   { title: 'Care with Dr. Praveen Chandra K', instagram: 'Da0Yd2EJMkc', poster: 'reels/Da0Yd2EJMkc.jpg' }
 ];
 
