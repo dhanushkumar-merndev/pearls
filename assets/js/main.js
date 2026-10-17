@@ -5,13 +5,6 @@
 (function () {
   'use strict';
 
-  /* ---- Clinic constants (edit these in one place) ---- */
-  var CLINIC = {
-    phone: '+917900802060',
-    whatsapp: '917900802060',
-    email: 'info@pearlaesthetic.in'
-  };
-
   var on = function (el, ev, fn, opt) { if (el) el.addEventListener(ev, fn, opt); };
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -44,6 +37,8 @@
       requestAnimationFrame(raf);
     };
     requestAnimationFrame(raf);
+    // offers.js pauses smooth scroll while its modal is open.
+    window.__pearlLenis = lenis;
 
     // Anchor links go through Lenis so the easing matches the rest of the page.
     var navH = function () {
@@ -557,70 +552,118 @@
   });
 
   /* =========================================================
-     8. Booking form → WhatsApp (mailto fallback)
+     8. Gallery — treatment filter, fullscreen viewer, video testimonials
+     (The enquiry form lives in enquiry.js, loaded only where it is used.)
      ========================================================= */
-  var form = $('#bookingForm');
-  if (form) {
-    on(form, 'submit', function (e) {
-      e.preventDefault();
+  var chips = $$('.gallery-filter [data-filter]');
+  var cases = $$('.case[data-cat]');
+  var countEl = $('.gallery-filter__count');
+  var emptyEl = $('.gallery-empty');
 
-      var data = new FormData(form);
-      var get = function (k) { return (data.get(k) || '').toString().trim(); };
+  function applyFilter(cat) {
+    var shown = 0;
+    cases.forEach(function (c) {
+      var match = cat === 'all' || c.getAttribute('data-cat') === cat;
+      c.hidden = !match;
+      if (match) { shown++; c.classList.add('is-in'); }
+    });
+    chips.forEach(function (chip) {
+      var on = chip.getAttribute('data-filter') === cat;
+      chip.classList.toggle('is-active', on);
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    // Hide a group heading when the filter leaves nothing under it.
+    $$('.gallery-group').forEach(function (g) {
+      g.hidden = !$$('.case', g).some(function (c) { return !c.hidden; });
+    });
+    if (countEl) countEl.textContent = shown + (shown === 1 ? ' case' : ' cases');
+    if (emptyEl) emptyEl.hidden = shown > 0;
+  }
+  chips.forEach(function (chip) {
+    on(chip, 'click', function () { applyFilter(chip.getAttribute('data-filter')); });
+  });
+  if (chips.length) applyFilter('all');
 
-      var name      = get('name');
-      var phone     = get('phone');
-      var email     = get('email');
-      var procedure = get('procedure');
-      var consult   = get('consult');
-      var pref      = get('preferred');
-      var time      = get('time');
-      var message   = get('message');
+  var box = $('.lightbox');
+  if (box) {
+    var frame = $('.lightbox__frame', box);
+    var capTitle = $('.lightbox__caption strong', box);
+    var capBadge = $('.lightbox__caption span', box);
+    var current = null;
+    var opener = null;
 
-      var status = $('#formStatus');
-      var reject = function (field, msg) {
-        if (field) field.focus();
-        if (status) { status.textContent = msg; status.style.color = '#b4342b'; }
-      };
+    var picture = function (src, alt) {
+      var im = document.createElement('img');
+      im.src = src; im.alt = alt; im.decoding = 'async';
+      return im;
+    };
+    var visible = function () {
+      return cases.filter(function (c) { return !c.hidden && (c.hasAttribute('data-full') || c.hasAttribute('data-full-before')); });
+    };
 
-      if (!name)  return reject(form.elements.name, 'Please enter your name so we know who to call back.');
-      if (!phone) return reject(form.elements.phone, 'Please enter a phone number so we can reach you.');
-
-      var consent = form.elements.consent;
-      if (consent && !consent.checked) {
-        return reject(consent, 'Please tick the consent box so we are allowed to contact you.');
+    function show(c) {
+      current = c;
+      var title = c.getAttribute('data-title') || '';
+      var badge = c.getAttribute('data-badge') || '';
+      frame.textContent = '';
+      frame.classList.toggle('is-pair', !c.hasAttribute('data-full'));
+      if (c.hasAttribute('data-full')) {
+        frame.appendChild(picture(c.getAttribute('data-full'), title + ' — before and after. ' + badge));
+      } else {
+        frame.appendChild(picture(c.getAttribute('data-full-before'), title + ' — before. ' + badge));
+        frame.appendChild(picture(c.getAttribute('data-full-after'), title + ' — after. ' + badge));
       }
+      capTitle.textContent = title;
+      capBadge.textContent = badge;
+      var list = visible();
+      $$('.lightbox__nav', box).forEach(function (b) { b.hidden = list.length < 2; });
+    }
+    function step(dir) {
+      var list = visible();
+      if (!current || list.length < 2) return;
+      var i = list.indexOf(current);
+      show(list[(i + dir + list.length) % list.length]);
+    }
+    function open(c, trigger) {
+      opener = trigger;
+      show(c);
+      if (box.showModal) box.showModal(); else box.setAttribute('open', '');
+      if (lenis) lenis.stop();
+    }
+    function close() {
+      if (box.close) box.close(); else box.removeAttribute('open');
+    }
+    on(box, 'close', function () {
+      if (lenis) lenis.start();
+      if (opener) opener.focus();
+    });
 
-      var lines = [
-        'New appointment request — Pearl Aesthetic',
-        '',
-        'Name: ' + name,
-        'Phone: ' + phone
-      ];
-      if (email)     lines.push('Email: ' + email);
-      if (procedure) lines.push('Interested in: ' + procedure);
-      if (consult)   lines.push('Consultation type: ' + consult);
-      if (pref)      lines.push('Preferred date: ' + pref);
-      if (time)      lines.push('Preferred time: ' + time);
-      if (message)   lines.push('', 'Notes: ' + message);
-
-      var body = lines.join('\n');
-      var win = window.open('https://wa.me/' + CLINIC.whatsapp + '?text=' + encodeURIComponent(body),
-        '_blank', 'noopener');
-
-      if (!win) {
-        window.location.href = 'mailto:' + CLINIC.email +
-          '?subject=' + encodeURIComponent('Appointment request — ' + name) +
-          '&body=' + encodeURIComponent(body);
-      }
-
-      if (status) {
-        status.textContent = 'Opening WhatsApp with your details… if nothing happens, call ' +
-          CLINIC.phone.replace('+91', '+91 ') + '.';
-        status.style.color = 'var(--gold-deep)';
-      }
-      form.reset();
+    $$('[data-open-full]').forEach(function (btn) {
+      on(btn, 'click', function () { open(btn.closest('.case'), btn); });
+    });
+    on($('.lightbox__close', box), 'click', close);
+    on($('.lightbox__nav--prev', box), 'click', function () { step(-1); });
+    on($('.lightbox__nav--next', box), 'click', function () { step(1); });
+    on(box, 'click', function (e) { if (e.target === box) close(); });
+    on(box, 'keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
     });
   }
+
+  // Video testimonials load YouTube only when the visitor asks for them.
+  $$('[data-yt]').forEach(function (btn) {
+    on(btn, 'click', function () {
+      var id = btn.getAttribute('data-yt');
+      if (!/^[A-Za-z0-9_-]{6,20}$/.test(id)) return;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      iframe.title = btn.getAttribute('aria-label') || 'Video testimonial';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      btn.replaceWith(iframe);
+    });
+  });
 
   /* =========================================================
      9. Active nav link on scroll (home page only)

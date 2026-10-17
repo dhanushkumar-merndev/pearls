@@ -36,8 +36,192 @@ const CLINIC = {
   instagram: 'https://www.instagram.com/pearl_aesthetic_clinic/',
   instagramDoctor: 'https://www.instagram.com/drpraveenklinik/',
   youtube: 'https://www.youtube.com/@Pearl_Aesthetic_Clinic',
-  portalUrl: 'https://app.pearlaesthetic.in'
+  portalUrl: 'https://app.pearlaesthetic.in',
+  // Live offers come from the CRM. OFFERS_API_URL overrides it at build time.
+  offersApi: 'https://app.pearlaesthetic.in/api/public/offers',
+  // Website enquiries are saved straight into the CRM as leads.
+  // ENQUIRY_API_URL overrides it at build time.
+  enquiryApi: 'https://app.pearlaesthetic.in/api/public/enquiries',
+  // ⚠️ PLACEHOLDER — confirm the year the clinic was established.
+  established: 2017,
+  establishedConfirmed: false
 };
+
+/* =========================================================
+   CONTENT AWAITING CONFIRMATION
+   Anything marked `placeholder: true` is a stand-in, not a fact. The build
+   counts them and prints the list, so nothing ships unnoticed. Replace the
+   text (and set placeholder to false) once the clinic confirms it.
+   ========================================================= */
+
+/* The three Bengaluru centres. Koramangala is the confirmed flagship; the
+   other two need their real names, addresses, phones and Maps links.
+   Images are stand-ins: add `imageIsReal: true` once a real photograph of
+   that centre is in place, which removes the "Illustrative image" note. */
+const CENTRES = [
+  {
+    name: 'Koramangala',
+    label: 'Flagship centre',
+    address: [CLINIC.addressLine1, CLINIC.addressLine2, CLINIC.addressLine3],
+    phoneDisplay: CLINIC.phoneDisplay,
+    phoneRaw: CLINIC.phoneRaw,
+    whatsapp: CLINIC.whatsapp,
+    hours: CLINIC.hours,
+    mapsUrl: CLINIC.mapsUrl,
+    image: 'clinic/building-exterior.jpg',
+    imageIsReal: true
+  },
+  {
+    name: 'Second centre',
+    label: 'Bengaluru',
+    address: ['Address to be confirmed', 'Bengaluru, Karnataka'],
+    phoneDisplay: CLINIC.phoneDisplay,
+    phoneRaw: CLINIC.phoneRaw,
+    whatsapp: CLINIC.whatsapp,
+    hours: CLINIC.hours,
+    mapsUrl: null,
+    image: null,
+    placeholder: true
+  },
+  {
+    name: 'Third centre',
+    label: 'Bengaluru',
+    address: ['Address to be confirmed', 'Bengaluru, Karnataka'],
+    phoneDisplay: CLINIC.phoneDisplay,
+    phoneRaw: CLINIC.phoneRaw,
+    whatsapp: CLINIC.whatsapp,
+    hours: CLINIC.hours,
+    mapsUrl: null,
+    image: 'about.jpg',
+    placeholder: true
+  }
+];
+
+/* Milestones: only verified facts belong here. Years shown as "TBC" until
+   confirmed. */
+const MILESTONES = [
+  { year: String(CLINIC.established), title: 'Pearl Aesthetic & Wellness opens in Koramangala', text: 'Surgeon-led aesthetic and reconstructive care under one roof.', placeholder: !CLINIC.establishedConfirmed },
+  { year: 'TBC', title: 'Second Bengaluru centre opens', text: 'Details to be confirmed by the clinic.', placeholder: true },
+  { year: 'TBC', title: 'Third Bengaluru centre opens', text: 'Details to be confirmed by the clinic.', placeholder: true },
+  { year: 'TBC', title: 'Fotona® laser suite introduced', text: 'Year to be confirmed by the clinic.', placeholder: true }
+];
+
+/* Clinic photographs for the About page — real photographs of the
+   Koramangala centre (assets/img/clinic/). */
+const CLINIC_PHOTOS = [
+  { file: 'clinic/reception.jpg', caption: 'Reception' },
+  { file: 'clinic/reception-lounge.jpg', caption: 'Reception lounge' },
+  { file: 'clinic/laser-suite.jpg', caption: 'Laser suite' },
+  { file: 'clinic/treatment-room.jpg', caption: 'Treatment room' },
+  { file: 'clinic/body-contouring-suite.jpg', caption: 'Body contouring suite' },
+  { file: 'clinic/led-therapy-room.jpg', caption: 'LED therapy room' }
+];
+
+/* Before/after posters the clinic publishes (assets/img/results/posters/).
+   Shown in the gallery as patient results. Set consentConfirmed: true once
+   the patient's written consent for website publication is on file; until
+   then the build lists them as needing confirmation. */
+const PATIENT_POSTERS = [
+  { file: 'results/posters/rhinoplasty-1.jpg', title: 'Rhinoplasty', category: 'nose-surgery', consentConfirmed: false },
+  { file: 'results/posters/rhinoplasty-2.jpg', title: 'Rhinoplasty', category: 'nose-surgery', consentConfirmed: false },
+  { file: 'results/posters/rhinoplasty-3.jpg', title: 'Rhinoplasty', category: 'nose-surgery', consentConfirmed: false },
+  { file: 'results/posters/liposuction-1.jpg', title: 'Liposuction', category: 'body-surgery', consentConfirmed: false },
+  { file: 'results/posters/liposuction-2.jpg', title: 'Liposuction', category: 'body-surgery', consentConfirmed: false }
+];
+
+/* Testimonials. Only approved, consented patient feedback may be published.
+   type: 'text' | 'image' (set `image`, a consented photo) | 'video' (set
+   `instagram` to a reel ID, or `youtubeId`). Never put a stock face on a
+   testimonial. */
+const TESTIMONIALS = [
+  // From the clinic's existing official review listing.
+  { type: 'text', name: 'Satveer', text: 'I was very pleased with my experience at his place. I really appreciate the way he make patients comfortable.' },
+  { type: 'text', name: 'Satendra Kumar', text: 'The appointment scheduling system is amazing. I am delighted with the medical care.' },
+  { type: 'text', name: 'A. R.', area: 'Koramangala', text: 'The consultation was the opposite of what I expected — no pressure, and I was actually talked out of one of the two procedures I came in asking about.', placeholder: true },
+  { type: 'text', name: 'S. M.', area: 'Indiranagar', text: 'Everything about recovery was explained in writing beforehand, so there were no surprises. The follow-up calls made a genuine difference.', placeholder: true },
+  { type: 'text', name: 'N. K.', area: 'HSR Layout', text: 'I had spent two years reading about this procedure. It was the first appointment where someone explained why my case was different.', placeholder: true },
+  // Patient video testimonials from the clinic's Instagram. A cached real
+  // cover keeps a preview visible when a public embedded player is unavailable.
+  { type: 'video', title: 'Hair transplant — patient story', instagram: 'DbLvJwVJdT7', poster: 'reels/DbLvJwVJdT7.jpg' },
+  { type: 'video', title: 'Patient story', instagram: 'DbS9-f1Bd89', poster: 'reels/DbS9-f1Bd89.jpg' },
+  { type: 'video', title: 'Patient testimonial', instagram: 'DcvCybbxUJO', poster: 'reels/DcvCybbxUJO.jpg' },
+  { type: 'video', title: 'Tummy tuck — patient story', instagram: 'Dc-cBQjRait', poster: 'reels/Dc-cBQjRait.jpg' }
+];
+
+/* Real reel covers cached from the public Instagram pages. Each preview
+   opens its original reel; profile links remain available on every card. */
+const TREATMENT_VIDEOS = [
+  { title: 'Hair transplant — choosing your surgeon', instagram: 'DebytdmBEI4', poster: 'reels/DebytdmBEI4.jpg' },
+  { title: 'EVOLVE X body contouring', instagram: 'Ddq6sBDhlwK', poster: 'reels/Ddq6sBDhlwK.jpg' },
+  { title: 'Liposuction & fat transfer', instagram: 'Dd1OghypsCO', poster: 'reels/Dd1OghypsCO.jpg' },
+  { title: 'A daughter and her mother — patient story', instagram: 'DdQHl27hToI', poster: 'reels/DdQHl27hToI.jpg' },
+  { title: 'Deep plane facelift & traditional facelift', instagram: 'DbbLua8zPIG', poster: 'reels/DbbLua8zPIG.jpg', account: 'drpraveenklinik' },
+  { title: 'Liposuction & body contouring — behind the scenes', instagram: 'Dax1yeDpjxR', poster: 'reels/Dax1yeDpjxR.jpg' },
+  { title: 'Care with Dr. Praveen Chandra K', instagram: 'Da0Yd2EJMkc', poster: 'reels/Da0Yd2EJMkc.jpg' }
+];
+
+/* Case studies. Treatment information is general; patient details, images
+   and outcomes must be real, consented and verified before replacing the
+   placeholders. `comparison` is used only for clinic-supplied patient photos. */
+const CASE_STUDIES = [
+  {
+    slug: 'rhinoplasty',
+    title: 'Rhinoplasty',
+    category: 'nose-surgery',
+    thumb: 'procedures/nose-surgery.jpg',
+    comparison: 'results/posters/rhinoplasty-1.jpg',
+    comparisonIsPatient: true,
+    summary: 'Reshaping the nose for proportion and, where needed, breathing — planned from profile and frontal analysis.',
+    treatment: 'Rhinoplasty changes the shape of the bony and cartilaginous framework of the nose. It can be performed open or closed, and is often combined with septal work when breathing is affected.',
+    profile: 'Patient profile to be added with consent.',
+    approach: 'Surgical plan and technique to be added from the case record.',
+    recovery: 'Typical return to work is ten to fourteen days; swelling settles over months.',
+    outcome: 'Verified outcome to be added after patient consent.',
+    placeholder: true
+  },
+  {
+    slug: 'gynecomastia',
+    title: 'Gynecomastia Correction',
+    category: 'male-surgery',
+    thumb: 'procedures/male-surgery.jpg',
+    comparison: null,
+    summary: 'Addressing enlarged male breast tissue with liposuction, gland excision, or both.',
+    treatment: 'Gynecomastia surgery removes excess glandular tissue and fat from the male chest. The mix of liposuction and excision depends on how much of the enlargement is gland and how much is fat.',
+    profile: 'Patient profile to be added with consent.',
+    approach: 'Surgical plan and technique to be added from the case record.',
+    recovery: 'Most people return to desk work within a week and wear a compression garment for several weeks.',
+    outcome: 'Verified outcome to be added after patient consent.',
+    placeholder: true
+  },
+  {
+    slug: 'hair-transplant',
+    title: 'Hair Transplant',
+    category: 'hair-transplant',
+    thumb: 'procedures/hair-transplant.jpg',
+    comparison: null,
+    summary: 'Restoring density with follicular units moved from the donor area, planned around long-term hair loss.',
+    treatment: 'A hair transplant relocates follicular units from the donor area to thinning regions. The hairline and graft count are planned around how hair loss is expected to progress.',
+    profile: 'Patient profile to be added with consent.',
+    approach: 'Surgical plan and technique to be added from the case record.',
+    recovery: 'Transplanted hairs typically shed in the first weeks; new growth is assessed over many months.',
+    outcome: 'Verified outcome to be added after patient consent.',
+    placeholder: true
+  },
+  {
+    slug: 'acne-scar-treatment',
+    title: 'Acne & Acne Scar Treatment',
+    category: 'laser-dermatology',
+    thumb: 'procedures/laser-dermatology.jpg',
+    comparison: null,
+    summary: 'A staged plan for active acne and the marks it leaves, combining medical skin care with laser or resurfacing.',
+    treatment: 'Active acne is brought under control first; scarring is then treated with resurfacing, laser or other procedures chosen for the scar type.',
+    profile: 'Patient profile to be added with consent.',
+    approach: 'Treatment plan to be added from the case record.',
+    recovery: 'Depends on the treatment used; some need no downtime, resurfacing needs several days.',
+    outcome: 'Verified outcome to be added after patient consent.',
+    placeholder: true
+  }
+];
 
 /* Stroke icons (24×24, currentColor) */
 const ICONS = {
@@ -979,4 +1163,4 @@ const RELATED = {
   'hair-transplant':        ['male-surgery', 'non-surgical-aesthetics', 'face-surgery']
 };
 
-module.exports = { CLINIC, ICONS, CATEGORIES, RELATED };
+module.exports = { CLINIC, ICONS, CATEGORIES, RELATED, CENTRES, MILESTONES, CLINIC_PHOTOS, PATIENT_POSTERS, TESTIMONIALS, TREATMENT_VIDEOS, CASE_STUDIES };

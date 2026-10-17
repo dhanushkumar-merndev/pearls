@@ -84,6 +84,7 @@
 </a>
     <nav class="nav__primary" aria-label="Primary">
       <ul class="nav__links">
+        <li><a href="../index.html">Home</a></li>
         <li class="has-menu">
           <a href="../index.html#treatments">Treatments <svg class="nav__caret" stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m6 9 6 6 6-6"></path></svg></a>
           <div class="mega mega--split">
@@ -656,11 +657,10 @@
     </div>
         </li>
         <li><a href="../about.html">About Us</a></li>
-        <li><a href="../surgeon.html">Our Surgeon</a></li>
-        <li><a href="../results.html">Before &amp; After</a></li>
-        <li><a href="../blog.html" class="is-active">Blog</a></li>
-        <li><a href="../contact.html">Contact</a></li>
-        <li><a href="../privacy-terms.html">Privacy</a></li>
+        <li><a href="../results.html">Gallery</a></li>
+        <li><a href="../testimonials.html">Testimonials</a></li>
+        <li><a href="../blog.html" class="is-active" aria-current="page">Blogs</a></li>
+        <li><a href="../contact.html">Contact Us</a></li>
       </ul>
     </nav>
     <div class="nav__cta">
@@ -671,6 +671,12 @@
   </div>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
 </header>
+<section class="offers-bar" aria-label="Current offers" data-offers-api="https://app.pearlaesthetic.in/api/public/offers" hidden>
+  <div class="container offers-bar__inner">
+    <span class="offers-bar__label"><svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg> Offers</span>
+    <ul class="offers-bar__list" role="list"></ul>
+  </div>
+</section>
 <div class="scrim"></div>
 <aside class="drawer" id="drawer" aria-label="Mobile menu" data-lenis-prevent>
   <div class="drawer__head">
@@ -688,12 +694,14 @@
     <button class="drawer__close" type="button" aria-label="Close menu"><svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
   </div>
   <nav>
-    <a href="../about.html">About</a>
-    <a href="../surgeon.html">Our Surgeon</a>
-    <a href="../results.html">Before &amp; After</a>
-    <a href="../blog.html">Blog</a>
+    <a href="../index.html">Home</a>
+    <a href="../about.html">About Us</a>
+    <a class="drawer__sub" href="../surgeon.html">Our Surgeon</a>
+    <a href="../results.html">Gallery</a>
+    <a href="../testimonials.html">Testimonials</a>
+    <a href="../blog.html">Blogs</a>
+    <a href="../contact.html">Contact Us</a>
     <a href="../appointment.html">Book an Appointment</a>
-    <a href="../contact.html">Contact</a>
     <a href="../privacy-terms.html">Privacy &amp; Terms</a>
     <p class="drawer__group">Treatments</p>
     <a class="drawer__sub" href="../procedures/nose-surgery.html">Nose Surgery</a>
@@ -837,7 +845,7 @@
 </article>
 
 <section class="band">
-  <div class="band__img" style="background-image:url('../assets/img/banner-clinic-ai.png')" aria-hidden="true"></div>
+  <div class="band__img" style="background-image:url('../assets/img/clinic/reception-lounge.jpg')" aria-hidden="true"></div>
   <div class="container" style="text-align:center">
     <p class="eyebrow is-center" style="justify-content:center">Begin Your Consultation</p>
     <h2 class="h2" style="max-width:26ch;margin-inline:auto">Every plan starts with an <em>honest conversation</em></h2>
@@ -915,9 +923,11 @@
     <nav class="footer__nav" aria-label="Footer">
       <a href="../about.html">About Us</a>
       <a href="../surgeon.html">Our Surgeon</a>
-      <a href="../results.html">Before &amp; After</a>
-      <a href="../blog.html">Blog</a>
-      <a href="../contact.html">Contact</a>
+      <a href="../results.html">Gallery</a>
+      <a href="../case-studies.html">Case Studies</a>
+      <a href="../testimonials.html">Testimonials</a>
+      <a href="../blog.html">Blogs</a>
+      <a href="../contact.html">Contact Us</a>
       <a href="../appointment.html">Book Appointment</a>
       <a href="../privacy-terms.html">Privacy &amp; Terms</a>
     </nav>
@@ -948,7 +958,28 @@
   <a class="float-wa" href="https://wa.me/917900802060" target="_blank" rel="noopener" aria-label="WhatsApp us"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path></svg></a>
   <a class="float-call" href="tel:+917900802060" aria-label="Call the clinic"><svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></a>
 </div>
+<dialog class="offer-modal" aria-labelledby="offer-modal-title" data-lenis-prevent>
+  <div class="offer-modal__panel">
+    <button class="offer-modal__close" type="button" aria-label="Close offer details"><svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    <figure class="offer-modal__media" hidden><img alt=""></figure>
+    <div class="offer-modal__body">
+      <p class="eyebrow">Limited-time offer</p>
+      <h2 id="offer-modal-title" class="offer-modal__title"></h2>
+      <p class="offer-modal__price" hidden></p>
+      <p class="offer-modal__validity" hidden></p>
+      <div class="offer-modal__desc"></div>
+      <details class="offer-modal__terms" hidden><summary>Terms &amp; conditions</summary><div class="offer-modal__terms-body"></div></details>
+      <p class="offer-modal__status" role="status" hidden></p>
+      <div class="offer-modal__actions">
+        <a class="btn btn--primary" href="../appointment.html" data-href="../appointment.html" data-offer-book><svg stroke="currentColor" fill="none" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg> Book this offer</a>
+        <a class="btn btn--ghost" href="https://wa.me/917900802060" data-number="917900802060" data-offer-wa target="_blank" rel="noopener"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"></path></svg> Ask on WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</dialog>
 <script src="../assets/js/lenis.min.js" defer></script>
 <script src="../assets/js/main.js" defer></script>
+<script src="../assets/js/offers.js" defer></script>
+
 </body>
 </html>

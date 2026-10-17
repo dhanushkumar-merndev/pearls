@@ -58,6 +58,10 @@ Do not hand-edit the generated `.html` files — they get overwritten.
 | Blog articles | `build/blog.js` → `BLOG` |
 | Page layout / SEO tags | `build/generate.js` |
 | Styling | `assets/css/style.css` |
+| Offers under the navbar | **Not here** — the CRM (see *Live offers* below) |
+| Centres, milestones, clinic photos | `build/data.js` → `CENTRES`, `MILESTONES`, `CLINIC_PHOTOS` |
+| Testimonials, case studies | `build/data.js` → `TESTIMONIALS`, `CASE_STUDIES` |
+| Enquiry form endpoint | `build/data.js` → `CLINIC.enquiryApi` (see *How the enquiry form works*) |
 
 Then run:
 
@@ -96,6 +100,43 @@ Rebuild and it appears in the index, the sitemap, the home-page teaser and the
 
 ---
 
+## Live offers (from the CRM)
+
+The dark strip under the navbar and its details modal are filled at runtime
+from the clinic CRM (`app.pearlaesthetic.in`). The CRM is the single source of
+truth: admins create, publish, re-price, disable, reorder and delete offers
+there. Nothing about offers is edited or rebuilt here.
+
+| Piece | File |
+|---|---|
+| Strip + modal markup (on every page) | `build/generate.js` → `offersBar()`, `offerModal()` |
+| Fetching, rendering, modal behaviour | `assets/js/offers.js` |
+| Styles | `assets/css/style.css` → *Live offers* block |
+| API address | `build/data.js` → `CLINIC.offersApi` (override at build time with `OFFERS_API_URL`) |
+
+**API used** (contract owned by the CRM; CORS-enabled, no credentials):
+
+- `GET {offersApi}` → `{ offers: PublicOffer[], generatedAt }`, already filtered to live offers and sorted
+- `GET {offersApi}/{id}` → `{ offer: PublicOffer }`, or `404` once the offer is unpublished, disabled, expired or deleted
+- `PublicOffer`: `id, title, description, terms, imageUrl, originalPricePaise, offerPricePaise, currency, startsOn, endsOn (YYYY-MM-DD, IST, inclusive), displayOrder, updatedAt`
+
+**How changes reach visitors.** Each page load revalidates with the CRM (`cache: no-cache`),
+and the CRM expires its own cache on every change. A price edit, unpublish or expiry
+therefore shows on the visitor's next page load, or when they come back to the tab after a minute.
+Opening the modal always re-fetches that one offer, so it never shows a stale price.
+The site stays static: no webhook, rebuild or redeploy is involved.
+
+**Safety rules in `offers.js`:**
+
+- All CRM text is set with `textContent`, never `innerHTML`.
+- Image URLs must be `https:`.
+- Dates are re-checked against today in Asia/Kolkata, so an expired offer never shows, even from a cache.
+- If the CRM is down or returns an error, the strip stays hidden. A copy less than five minutes old is the only fallback.
+- Deep links work: `/index.html#offer-<id>` opens that offer.
+- "Book this offer" opens `appointment.html?offer=<title>` and pre-fills the message field.
+
+With no live offers, or with JavaScript off, the strip is not shown at all.
+
 ## ⚠️ Before this goes live
 
 These are placeholders and **must** be replaced. Each is marked with a `⚠️` comment
@@ -107,7 +148,7 @@ in `build/generate.js` or `build/blog.js`.
 | **Clinic logo (dark variant)** | `assets/img/logo-dark.png` | Optional. The light lockup is in place and working. Supply the gold-on-black version only if you want a dark header — see "The logo" below. |
 | **Surgeon photograph** | Home → "Your Surgeon" | Currently shows a **clinic interior**, deliberately — a stock portrait must never sit under a named doctor. Swap in their own photo. |
 | **Patient testimonials** | Home → "Patient Voices" | Three illustrative placeholders. Replace with genuine consented reviews. Publishing invented reviews is misleading and a legal risk. |
-| **Before/after images** | Home → "Results" | ⚠️ Currently **AI-generated illustrations**, not patients. Disclosed in the alt text, in a persistent on-image badge, and in the caption. Replace with genuine consented patient photographs — see the note below. |
+| **Before/after images** | Gallery | Clinic-supplied patient posters only. AI-generated illustrations have been removed. |
 | **Article authorship** | `build/blog.js` → `AUTHOR` | Attributed to "Pearl Aesthetic Clinical Team". Change to a named clinician once someone has reviewed and signed off the medical content. |
 | **Consultation fee** | `appointment.html` FAQ | Says the fee is quoted at booking. Replace with the actual figure if the clinic prefers to publish it. |
 | **Experience figures** | Home hero | A marked slot for a "years of experience" figure once the clinic confirms a real number. Nothing invented has been published. |
@@ -313,24 +354,18 @@ instantly on open and is delayed until after the fade on close.
 
 ---
 
-## ⚠️ The AI before/after images
+## Gallery photography and reel previews
 
-The Results slider on the home page currently shows two **AI-generated portraits** of a
-person who does not exist, presented as a rhinoplasty before/after.
+AI-generated images have been removed from the site and its image assets. The gallery
+shows the clinic-supplied patient posters and seven treatment reel covers. Banners use
+existing photographs of the Koramangala clinic.
 
-They are disclosed three ways — descriptive `alt` text, a persistent badge on the image
-itself ("Illustration — not a patient"), and the caption strip. That disclosure is
-deliberate and should not be removed: an undisclosed synthetic image inside a
-Before/After frame on a surgery site reads as a real surgical outcome, and India's
-medical advertising rules (NMC code; Drugs & Magic Remedies Act) treat misleading
-outcome claims seriously.
+Real reel covers are cached in `assets/img/reels/`; `sources.json` records their original
+Instagram URLs. Preview play links open those reels on Instagram, and each card keeps
+a View profile link. This also covers posts whose public embedded player is unavailable.
 
-Even disclosed, this is a judgement call the clinic should make consciously. The safest
-options, in order: use **genuine consented patient photographs**; or remove the slider
-and keep the section's text about what a realistic result looks like; or keep the
-illustration with the disclosure as it stands.
-
-The files were re-encoded from ~4 MB of PNG to 87 KB / 95 KB JPEG.
+Only matched photographs in `assets/img/results/patient/<case-id>-before.jpg` and
+`<case-id>-after.jpg` are eligible for additional before-and-after comparisons.
 
 ---
 
@@ -391,15 +426,52 @@ canonicals, Open Graph URLs and the sitemap point to the right place.
 
 ---
 
-## How the booking form works
+## How the enquiry form works
 
-There is no backend. On submit the form validates name, phone and the consent
-checkbox, then opens **WhatsApp** to the clinic's number with everything pre-filled.
-If the popup is blocked it falls back to `mailto:`. The WhatsApp number is set once,
-in `CLINIC.whatsapp` in `build/data.js`.
+The form on **Book Appointment** and **Contact Us** is one shared form (`enquiryForm()` in
+`build/generate.js`). `assets/js/enquiry.js` sends it straight into the clinic **CRM**,
+where it becomes a lead with source "Website" for the patient-care team.
 
-To send submissions by email or into a CRM instead, replace the handler in
-`assets/js/main.js` (section 6) with a Formspree / Web3Forms endpoint or your own POST.
+- **Endpoint:** `CLINIC.enquiryApi` in `build/data.js`
+  (`https://app.pearlaesthetic.in/api/public/enquiries`). Override it at build time with `ENQUIRY_API_URL`.
+- **Sent as** `multipart/form-data`, with no cookies. Fields:
+  - `name, phone, email, procedure, consultType, preferredDate, preferredTime, message`
+  - `offer` (from `?offer=`, set by the offers modal), `sourcePage`
+  - `consent=yes`, `idempotencyKey`, `website` (hidden spam trap), `startedAt`
+- **Validated in the browser first:** name, 10-digit Indian mobile, optional email, date not in the past, and consent. The CRM validates again.
+- **Responses:**
+  - `201`: thank-you message with the CRM reference, then the form clears.
+  - `400`: errors appear under the matching fields.
+  - `429`, `503` or network failure: the visitor is offered the same details as a pre-filled **WhatsApp** message, so no enquiry is lost.
+- **Retries never duplicate a lead:** the `idempotencyKey` is reused until the CRM confirms.
+- No photos are collected.
+- **CRM rules worth knowing:**
+  - The preferred date must be between today and one year ahead; the form enforces this too.
+  - Each connection can send 5 enquiries per 10 minutes.
+  - An enquiry from a mobile number that already has an open lead is added to that lead, so it shows the same reference.
+  - The CRM's `PUBLIC_WEBSITE_ORIGINS` setting lists which sites may call it. It is shared with the offers API, and unset means any site.
+
+---
+
+## Missing images & content (replace before launch)
+
+Every stand-in is marked `placeholder: true` in `build/data.js`. Each build prints the full list.
+Stand-ins show a visible **"To be confirmed"**, **"Sample — to be replaced"** or **"Illustrative image"** label on the page.
+
+| Item | Where to change it | What is needed |
+|---|---|---|
+| Year established (2017) | `CLINIC.established`, `establishedConfirmed` | Confirm the year |
+| Centres 2 and 3 | `CENTRES` | Name, address, phone, WhatsApp, Google Maps link, photo |
+| Centre photos (centres 2 and 3) | `CENTRES[].image` | Real photo of each centre, then set `imageIsReal: true` (Koramangala is done) |
+| Milestones | `MILESTONES` | Verified years and events only |
+| Testimonials | `TESTIMONIALS` | Approved text reviews and consented photos (`image`). Videos are Instagram reel IDs (`instagram`); set `embed: false` for a reel Instagram won't embed |
+| Treatment videos (Gallery) | `TREATMENT_VIDEOS` | Instagram reel IDs and a `title` for each |
+| Case studies | `CASE_STUDIES` | Patient profile, approach, verified outcome, consented images |
+| Patient result posters (5) | `PATIENT_POSTERS` | Confirm written consent for website use, then set `consentConfirmed: true` |
+| Before & After gallery | `assets/img/results/patient/` | Consented `<case>-before.jpg` / `-after.jpg` pairs (see *The AI before/after images*) |
+| Offer names (Carbone, States, Dureha, Medical Facial, Acne) | CRM → Website Offers | Correct spellings, prices, dates, images |
+
+Images go in `assets/img/`. Then run `node build/generate.js`.
 
 ---
 
